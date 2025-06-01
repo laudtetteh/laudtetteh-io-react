@@ -1,2 +1,2 @@
-# laudtetteh_io_react
+# laudtetteh-io-react
 New personal portfolio site
