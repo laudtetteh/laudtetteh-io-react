@@ -1,49 +1,74 @@
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
+import { API_BASE_URL } from '../../utils/api';
 
-type BlogPost = {
+interface BlogPost {
   title: string;
-  summary: string;
-  date: string;
-  featuredImage: string;
-  categories: string[];
   slug: string;
   content: string;
-};
+  summary?: string;
+  date?: string;
+}
 
-const BlogPostPage: React.FC = () => {
+interface PostPageProps {
+  post: BlogPost;
+}
+
+export default function BlogPostPage({ post }: PostPageProps) {
   const router = useRouter();
-  const { slug } = router.query;
-  const [post, setPost] = useState<BlogPost | null>(null);
 
-  useEffect(() => {
-    if (slug) {
-      fetch('/api/blog')
-        .then(res => res.json())
-        .then((data: BlogPost[]) => {
-          const found = data.find(p => p.slug === slug);
-          setPost(found || null);
-        });
-    }
-  }, [slug]);
-
-  if (!post) return <div className="max-w-2xl mx-auto py-12 px-4">Loading...</div>;
+  if (router.isFallback) {
+    return <p className="p-6 text-center">Loading post...</p>;
+  }
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
-      <img src={post.featuredImage} alt={post.title} className="w-full h-64 object-cover rounded mb-6" />
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="text-gray-500 text-sm mb-4">{post.date}</p>
-      <div className="mb-4">
-        {post.categories.map(cat => (
-          <span key={cat} className="inline-block bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded mr-2">{cat}</span>
-        ))}
-      </div>
-      <div className="prose dark:prose-invert max-w-none">
-        {post.content}
-      </div>
-    </div>
+    <>
+      <Head>
+        <title>{post.title} | Laud Tetteh</title>
+      </Head>
+      <main className="max-w-3xl mx-auto px-4 py-16 space-y-6">
+        <h1 className="text-3xl font-bold">{post.title}</h1>
+        {post.date && <p className="text-sm text-gray-500">Published on {post.date}</p>}
+        <article className="prose prose-lg" dangerouslySetInnerHTML={{ __html: post.content }} />
+      </main>
+    </>
   );
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/posts`);
+    const posts: BlogPost[] = await res.json();
+
+    const paths = posts.map((post) => ({
+      params: { slug: post.slug },
+    }));
+
+    return { paths, fallback: true }; // fallback allows dynamic build
+  } catch (err) {
+    console.error('[getStaticPaths] Failed to fetch slugs:', err);
+    return { paths: [], fallback: true };
+  }
 };
 
-export default BlogPostPage; 
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const slug = params?.slug as string;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
+    const post: BlogPost = await res.json();
+    return { props: { post }, revalidate: 10 };
+  } catch (err) {
+    console.error(`[getStaticProps] Failed to fetch post for slug '${slug}':`, err);
+    return {
+      props: {
+        post: {
+          title: 'Post not found',
+          slug,
+          content: '<p>This post could not be loaded.</p>',
+        },
+      },
+    };
+  }
+};

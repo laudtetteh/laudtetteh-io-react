@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: nextjs-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:8000
+      - NEXT_PUBLIC_IS_DOCKER=true
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./backend
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - MAILGUN_API_KEY=138902f2dfda324c326fc062cda0883a-08c79601-cb26e3b7
+      - MAILGUN_DOMAIN=laudtetteh.io
+      - MAILGUN_FROM=hello@laudtetteh.io
+      - MAILGUN_TO=hello@laudtetteh.io
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

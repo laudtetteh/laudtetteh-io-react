@@ -1,14 +1,38 @@
-import React from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-const BlogSection: React.FC = () => (
-  <section className="space-y-6">
-    <h2 className="text-2xl font-semibold text-center mb-4">My Tech Journey</h2>
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <div className="card border rounded-lg p-4 shadow bg-white dark:bg-gray-900">Blog Post 1</div>
-      <div className="card border rounded-lg p-4 shadow bg-white dark:bg-gray-900">Blog Post 2</div>
-      <div className="card border rounded-lg p-4 shadow bg-white dark:bg-gray-900">Blog Post 3</div>
-    </div>
-  </section>
-);
+interface BlogPostSummary {
+  title: string;
+  slug: string;
+  summary: string;
+  date: string;
+}
 
-export default BlogSection; 
+export default function BlogSection() {
+  const [posts, setPosts] = useState<BlogPostSummary[]>([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/posts') // Use localhost for dev, switch to backend in Docker
+      .then((res) => res.json())
+      .then((data) => setPosts(data))
+      .catch((err) => {
+        console.error('Failed to load blog posts:', err);
+        setPosts([]);
+      });
+  }, []);
+
+  return (
+    <section className="space-y-6">
+      <h2 className="text-2xl font-semibold text-center">My Tech Journey</h2>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <Link key={post.slug} href={`/blog/${post.slug}`} className="block p-4 border rounded hover:bg-gray-50">
+            <h3 className="text-xl font-semibold">{post.title}</h3>
+            <p className="text-sm text-gray-500">{post.summary}</p>
+            <p className="text-xs text-gray-400 mt-2">{post.date}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
