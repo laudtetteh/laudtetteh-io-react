@@ -1,18 +1,23 @@
 FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY tailwind.config.js ./
 COPY postcss.config.mjs ./
-
 RUN npm install --include=dev
 
-COPY public ./public
-COPY pages ./pages
-COPY components ./components
-COPY styles ./styles
-COPY utils ./utils
+# Copy source files
+COPY . .
 
-CMD ["npm", "run", "dev"]
+# Build the production-ready app
+RUN npm run build
+
+# Expose port (optional, but helpful)
+EXPOSE 3000
+
+# Start the production server
+CMD ["npm", "run", "start"]
