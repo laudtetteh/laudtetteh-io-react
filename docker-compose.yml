@@ -9,6 +9,8 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://api:8000
       - NEXT_PUBLIC_IS_DOCKER=true
+      - NEXT_PUBLIC_API_DOCKER=http://api:8000
+      - NEXT_PUBLIC_API_LOCAL=http://localhost:8000
     depends_on:
       - api
 
@@ -21,10 +23,10 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - MAILGUN_API_KEY=138902f2dfda324c326fc062cda0883a-08c79601-cb26e3b7
-      - MAILGUN_DOMAIN=laudtetteh.io
-      - MAILGUN_FROM=hello@laudtetteh.io
-      - MAILGUN_TO=hello@laudtetteh.io
+      - MAILGUN_API_KEY
+      - MAILGUN_DOMAIN
+      - MAILGUN_FROM
+      - MAILGUN_TO
     depends_on:
       - mongo
 
