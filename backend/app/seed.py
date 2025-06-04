@@ -1,6 +1,16 @@
+"""
+Script to seed blog posts into the MongoDB collection.
+
+Usage:
+$ python backend/app/seed.py
+
+Note:
+Make sure `.env` or environment has MONGO_URI and MONGO_DB_NAME set.
+"""
+
 import asyncio
-from db import connect_to_mongo, get_db
 from datetime import datetime
+from db import connect_to_mongo, get_db
 
 posts = [
     {
@@ -29,8 +39,14 @@ posts = [
 async def seed():
     await connect_to_mongo()
     db = get_db()
-    await db.posts.delete_many({})  # clear existing
-    await db.posts.insert_many(posts)
-    print("✅ Blog posts seeded.")
 
-asyncio.run(seed())
+    print("🔄 Clearing existing posts...")
+    await db.posts.delete_many({})
+
+    print("🌱 Inserting sample posts...")
+    await db.posts.insert_many(posts)
+
+    print("✅ Blog posts seeded successfully.")
+
+if __name__ == "__main__":
+    asyncio.run(seed())

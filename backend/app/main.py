@@ -1,15 +1,17 @@
 """
-FastAPI entry point:
-- Includes blog routes
-- Contact form email via Mailgun
+FastAPI app entry point.
+
+Handles:
+- CORS setup
+- Contact form (via Mailgun)
+- Blog routes (mounted from blog_api)
 """
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-import os
-import logging
-import requests
+import os, logging, requests
+
 from blog_api import router as blog_router
 
 app = FastAPI()
@@ -21,23 +23,24 @@ logger = logging.getLogger("contact-form")
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Use real domain in production
+    allow_origins=["*"],  # Change to client origin in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Mount blog routes
+# Blog API routes
 app.include_router(blog_router)
 
-# Contact form schema
+# ----------------
+# Contact Form
+# ----------------
 class ContactSubmission(BaseModel):
     name: str
     email: EmailStr
     message: str
 
 def send_email_via_mailgun(name: str, email: str, message: str) -> bool:
-    """Send email using Mailgun REST API."""
     mailgun_domain = os.getenv("MAILGUN_DOMAIN")
     mailgun_api_key = os.getenv("MAILGUN_API_KEY")
     mailgun_from = os.getenv("MAILGUN_FROM")
@@ -52,7 +55,7 @@ def send_email_via_mailgun(name: str, email: str, message: str) -> bool:
             f"https://api.mailgun.net/v3/{mailgun_domain}/messages",
             auth=("api", mailgun_api_key),
             data={
-                "from": mailgun_from,
+                "from": f"{mailgun_from}",
                 "to": [mailgun_to],
                 "subject": "💬 New Contact Form Message",
                 "text": f"From: {name} <{email}>\n\n{message}"
