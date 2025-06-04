@@ -1,11 +1,16 @@
-from fastapi import status
-from fastapi import FastAPI, HTTPException, Request
+"""
+FastAPI entry point:
+- Includes blog routes
+- Contact form email via Mailgun
+"""
+
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-from typing import List
 import os
 import logging
 import requests
+from blog_api import router as blog_router
 
 app = FastAPI()
 
@@ -13,70 +18,26 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("contact-form")
 
-# Allow CORS from frontend
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific origin in production
+    allow_origins=["*"],  # Use real domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --------------------
-# Blog Post Endpoints
-# --------------------
-posts = [
-    {
-        "title": "Blog Post 1",
-        "slug": "first-post",
-        "summary": "This is a short summary of the first post.",
-        "content": "<p>This is the full content of the first blog post. You can use HTML here.</p>",
-        "date": "2024-01-01"
-    },
-    {
-        "title": "Blog Post 2",
-        "slug": "second-post",
-        "summary": "Another brief summary.",
-        "content": "<p>This is the second post’s content. Lots of interesting insights go here.</p>",
-        "date": "2024-02-01"
-    },
-    {
-        "title": "Blog Post 3",
-        "slug": "third-post",
-        "summary": "A summary of the third post.",
-        "content": "<p>This is the content of blog post number three.</p>",
-        "date": "2024-03-01"
-    }
-]
+# Mount blog routes
+app.include_router(blog_router)
 
-@app.get("/api/posts")
-def get_all_posts():
-    return [
-        {
-            "title": post["title"],
-            "slug": post["slug"],
-            "summary": post["summary"],
-            "date": post["date"]
-        }
-        for post in posts
-    ]
-
-@app.get("/api/posts/{slug}")
-def get_post_by_slug(slug: str):
-    for post in posts:
-        if post["slug"] == slug:
-            return post
-    raise HTTPException(status_code=404, detail="Post not found")
-
-# --------------------
-# Contact Form Email Support
-# --------------------
+# Contact form schema
 class ContactSubmission(BaseModel):
     name: str
     email: EmailStr
     message: str
 
 def send_email_via_mailgun(name: str, email: str, message: str) -> bool:
+    """Send email using Mailgun REST API."""
     mailgun_domain = os.getenv("MAILGUN_DOMAIN")
     mailgun_api_key = os.getenv("MAILGUN_API_KEY")
     mailgun_from = os.getenv("MAILGUN_FROM")
@@ -91,14 +52,14 @@ def send_email_via_mailgun(name: str, email: str, message: str) -> bool:
             f"https://api.mailgun.net/v3/{mailgun_domain}/messages",
             auth=("api", mailgun_api_key),
             data={
-                "from": f"{mailgun_from}",
+                "from": mailgun_from,
                 "to": [mailgun_to],
                 "subject": "💬 New Contact Form Message",
                 "text": f"From: {name} <{email}>\n\n{message}"
             },
         )
         print(f"📤 Mailgun response: {response.status_code} - {response.text}")
-        return response.status_code == status.HTTP_200_OK or response.status_code == status.HTTP_202_ACCEPTED
+        return response.status_code in [status.HTTP_200_OK, status.HTTP_202_ACCEPTED]
     except Exception as e:
         print(f"❌ Mailgun error: {e}")
         return False
