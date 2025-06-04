@@ -7,19 +7,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Clone repo
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Copy all project files to DigitalOcean server (~/app)
       - name: Copy files to DO via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: "."
-          target: "~/app"
+          source: "." # Send everything in repo
+          target: "~/app" # Destination path on droplet
 
+      # Step 3: Connect via SSH, write .env.local, and start Docker
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -28,5 +32,10 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
             cd ~/app
+
+            # Write .env.local from GitHub secret
+            echo "${{ secrets.ENV_LOCAL }}" > .env.local
+
+            # Rebuild and restart Docker containers
             docker compose down
             docker compose up -d --build
