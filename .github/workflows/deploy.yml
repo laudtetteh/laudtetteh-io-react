@@ -33,19 +33,16 @@ jobs:
           script: |
             cd ~/app
 
-            # Write .env.production
+            # Write .env.production to disk
             echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
             export ENV_FILE=.env.production
 
-            # Shut down containers gracefully
             docker compose down --volumes --remove-orphans || true
 
-            # Start backend API first
             docker compose up -d api
 
-            # Build frontend (web) fresh with no cache
-            docker compose build --no-cache web
+            # ✅ Explicitly pass --env-file so that build args work
+            docker compose --env-file .env.production build --no-cache web
 
-            # Then bring web up
             docker compose up -d web
