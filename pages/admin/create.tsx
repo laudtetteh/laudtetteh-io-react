@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import AdminPostForm from "@/components/AdminPostForm";
-import useAuthRedirect from "@/lib/useAuthRedirect";
+import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
 export default function CreatePostPage() {
-  useAuthRedirect();
+  UseAuthRedirect();
 
   const router = useRouter();
 

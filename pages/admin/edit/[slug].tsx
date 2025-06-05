@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import AdminPostForm from "@/components/AdminPostForm";
-import useAuthRedirect from "@/lib/useAuthRedirect";
+import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
 export default function EditPostPage() {
-  useAuthRedirect();
+  UseAuthRedirect();
 
   const router = useRouter();
   const { slug } = router.query;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import useAuthRedirect from "@/lib/useAuthRedirect";
+import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
 interface BlogPost {
   title: string;
@@ -10,7 +10,7 @@ interface BlogPost {
 }
 
 export default function AdminDashboard() {
-  useAuthRedirect();
+  UseAuthRedirect();
 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [error, setError] = useState("");

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-export default function useAuthRedirect() {
+export default function UseAuthRedirect() {
   const router = useRouter();
 
   useEffect(() => {
