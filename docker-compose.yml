@@ -5,10 +5,10 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_API_URL: http://localhost:8000
-        NEXT_PUBLIC_IS_DOCKER: "true"
-        NEXT_PUBLIC_API_LOCAL: "http://localhost:8000"
-        NEXT_PUBLIC_API_DOCKER: "http://api:8000"
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_IS_DOCKER: ${NEXT_PUBLIC_IS_DOCKER}
+        NEXT_PUBLIC_API_DOCKER: ${NEXT_PUBLIC_API_DOCKER}
+        NEXT_PUBLIC_API_LOCAL: ${NEXT_PUBLIC_API_LOCAL}
     container_name: nextjs-app
     ports:
       - "3000:3000"
