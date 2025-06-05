@@ -33,23 +33,14 @@ jobs:
           script: |
             cd ~/app
 
-            # Step 1: Write .env.production to disk
+            # Step 1: Write .env.production from GitHub secret
             echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-            # Step 2: Export each line for use as ARG in Dockerfile build
-            set -a
-            source .env.production
-            set +a
-
-            # Step 3: Clean and prep
+            # Step 2: Start clean
             docker compose down --volumes --remove-orphans || true
-            docker compose up -d api
 
-            # Step 4: Build web with correct build args (now available from env)
-            docker compose build --no-cache web
+            # Step 3: Build both containers with proper env vars
+            docker compose --env-file .env.production up -d --build
 
-            # Step 5: Start web
-            docker compose up -d web
-
-            # Optional cleanup
-            # rm .env.production
+            # Step 4: Confirm everything is running
+            docker ps
