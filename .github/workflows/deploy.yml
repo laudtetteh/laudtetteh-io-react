@@ -33,20 +33,19 @@ jobs:
           script: |
             cd ~/app
 
-            # Write .env.production
-            echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
-
-            # Load env vars into shell for docker-compose build arg resolution
-            export $(grep -v '^#' .env.production | xargs)
+            # Parse .env content directly from secret and export key/value pairs
+            echo "${{ secrets.ENV_PRODUCTION }}" | grep -v '^#' | xargs -L1 | while read line; do
+              export "$line"
+            done
 
             # Clean slate
             docker compose down --volumes --remove-orphans || true
 
-            # Start API first
+            # Start API
             docker compose up -d api
 
-            # 🔥 Build web with proper env context
-            docker compose --env-file .env.production build --no-cache web
+            # Build web with env passed in as args (already in shell)
+            docker compose --env-file <(echo "${{ secrets.ENV_PRODUCTION }}") build --no-cache web
 
             # Start web
             docker compose up -d web
