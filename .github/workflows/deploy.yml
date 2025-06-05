@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Copy all project files to DigitalOcean server (~/app)
+      # Step 2: Copy all project files to DigitalOcean server
       - name: Copy files to DO via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -23,7 +23,7 @@ jobs:
           source: "."  # Everything in repo
           target: "~/app"
 
-      # Step 3: SSH into server, write .env.production, and deploy
+      # Step 3: SSH into server and deploy
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -33,16 +33,20 @@ jobs:
           script: |
             cd ~/app
 
-            # Write .env.production to disk
+            # Write .env.production
             echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-            export ENV_FILE=.env.production
+            # Load env vars into shell for docker-compose build arg resolution
+            export $(grep -v '^#' .env.production | xargs)
 
+            # Clean slate
             docker compose down --volumes --remove-orphans || true
 
+            # Start API first
             docker compose up -d api
 
-            # ✅ Explicitly pass --env-file so that build args work
+            # 🔥 Build web with proper env context
             docker compose --env-file .env.production build --no-cache web
 
+            # Start web
             docker compose up -d web
