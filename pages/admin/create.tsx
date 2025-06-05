@@ -1,4 +1,4 @@
-import useAuthRedirect from "@/lib/useAuthRedirect";
+import useAuthRedirect from "../lib/useAuthRedirect";
 
 import { useRouter } from "next/router";
 import AdminPostForm from "@/components/AdminPostForm";
