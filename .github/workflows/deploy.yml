@@ -9,28 +9,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Clone repo
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Generate .env.production from secret
       - name: Generate .env.production from secret
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-      # Step 3: Copy app files to DigitalOcean
       - name: Copy app files to DigitalOcean
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: |
-            ./*
-            .env.production
+          source: "./"  # 👈 make sure it's pointing to your repo root
           target: "~/app"
+          strip_components: 0  # 👈 ensures full directory is copied
 
-      # Step 4: SSH into server and deploy
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -40,13 +35,12 @@ jobs:
           script: |
             cd ~/app
 
-            echo "Starting fresh deployment..."
+            echo "Writing env file..."
+            echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-            # Ensure Docker is clean
+            echo "Restarting containers..."
             docker compose down --volumes --remove-orphans || true
-
-            # Build and start all containers with the correct env file
             docker compose --env-file .env.production up -d --build
 
-            # Verify containers are running
+            echo "Showing container status:"
             docker ps
