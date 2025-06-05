@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import useAuthRedirect from "../lib/useAuthRedirect";
+import useAuthRedirect from "@/lib/useAuthRedirect";
 
 interface BlogPost {
   title: string;
