@@ -33,19 +33,23 @@ jobs:
           script: |
             cd ~/app
 
-            # Parse .env content directly from secret and export key/value pairs
-            echo "${{ secrets.ENV_PRODUCTION }}" | grep -v '^#' | xargs -L1 | while read line; do
-              export "$line"
-            done
+            # Step 1: Write .env.production to disk
+            echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-            # Clean slate
+            # Step 2: Export each line for use as ARG in Dockerfile build
+            set -a
+            source .env.production
+            set +a
+
+            # Step 3: Clean and prep
             docker compose down --volumes --remove-orphans || true
-
-            # Start API
             docker compose up -d api
 
-            # Build web with env passed in as args (already in shell)
-            docker compose --env-file <(echo "${{ secrets.ENV_PRODUCTION }}") build --no-cache web
+            # Step 4: Build web with correct build args (now available from env)
+            docker compose build --no-cache web
 
-            # Start web
+            # Step 5: Start web
             docker compose up -d web
+
+            # Optional cleanup
+            rm .env.production
