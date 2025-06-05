@@ -44,22 +44,3 @@ jobs:
 
             echo "Showing container status:"
             docker ps
-
-      - name: Send deployment status email
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Deployment ${{ job.status }} for laudtetteh-io-react
-          to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: GitHub Actions
-          body: |
-            Deployment job has completed with status: ${{ job.status }}
-
-            Commit: ${{ github.sha }}
-            Workflow: ${{ github.workflow }}
-
-            View logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
