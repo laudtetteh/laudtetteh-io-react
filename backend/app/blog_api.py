@@ -9,24 +9,20 @@ Blog API routes for:
 Backed by MongoDB via Motor.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from datetime import datetime
 from models import BlogPost, BlogPostIn
-from db import connect_to_mongo, get_db
+from auth import verify_token
 
 router = APIRouter()
 
 # Connect to DB and access collection
 posts_collection = None
 
-@router.on_event("startup")
-async def init_db():
-    """Initialize DB connection when router starts."""
+def set_posts_collection(collection):
     global posts_collection
-    await connect_to_mongo()
-    db = get_db()
-    posts_collection = db["posts"]
+    posts_collection = collection
 
 @router.get("/api/posts", response_model=List[BlogPost])
 async def get_all_posts():
@@ -42,7 +38,8 @@ async def get_post_by_slug(slug: str):
         raise HTTPException(status_code=404, detail="Post not found")
     return post
 
-@router.post("/api/posts", response_model=BlogPost)
+# Secure post creation
+@router.post("/api/posts", response_model=BlogPost, dependencies=[Depends(verify_token)])
 async def create_post(post_in: BlogPostIn):
     """Create a new blog post. Slugs must be unique."""
     existing = await posts_collection.find_one({ "slug": post_in.slug })
@@ -55,7 +52,8 @@ async def create_post(post_in: BlogPostIn):
     await posts_collection.insert_one(post)
     return post
 
-@router.put("/api/posts/{slug}", response_model=BlogPost)
+# Secure post update
+@router.put("/api/posts/{slug}", response_model=BlogPost, dependencies=[Depends(verify_token)])
 async def update_post(slug: str, updated: BlogPostIn):
     """Update an existing blog post."""
     updated_post = updated.dict()
@@ -72,7 +70,8 @@ async def update_post(slug: str, updated: BlogPostIn):
 
     return result
 
-@router.delete("/api/posts/{slug}")
+# Secure post deletion
+@router.delete("/api/posts/{slug}", dependencies=[Depends(verify_token)])
 async def delete_post(slug: str):
     """Delete a blog post by its slug."""
     result = await posts_collection.delete_one({ "slug": slug })

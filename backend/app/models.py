@@ -27,3 +27,9 @@ class BlogPost(BaseModel):
                 "content": "<p>This is the full article...</p>",
             }
         }
+
+class BlogPostIn(BaseModel):
+    title: str = Field(..., example="New Blog Post")
+    slug: str = Field(..., example="new-blog-post")
+    summary: str = Field(..., example="A short summary of the blog post.")
+    content: str = Field(..., example="<p>Full content in HTML here.</p>")

@@ -7,12 +7,15 @@ Handles:
 - Blog routes (mounted from blog_api)
 """
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
+from auth import Token, create_access_token, verify_token, ADMIN_USERNAME, ADMIN_PASSWORD
 from pydantic import BaseModel, EmailStr
 import os, logging, requests
-
-from blog_api import router as blog_router
+from blog_api import router as blog_router, set_posts_collection
+from s3_upload import router as upload_router
+from db import connect_to_mongo, get_db
 
 app = FastAPI()
 
@@ -23,7 +26,7 @@ logger = logging.getLogger("contact-form")
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to client origin in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -78,3 +81,21 @@ async def submit_contact(data: ContactSubmission, request: Request):
         return { "message": "✅ Message received and email sent. Thank you!" }
     else:
         raise HTTPException(status_code=500, detail="❌ Failed to send email via Mailgun.")
+
+
+@app.post("/api/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Admin login. Issues JWT on correct credentials.
+    """
+    if form_data.username != ADMIN_USERNAME or form_data.password != ADMIN_PASSWORD:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
+    
+    access_token = create_access_token(data={"sub": form_data.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.on_event("startup")
+async def init_db():
+    await connect_to_mongo()
+    db = get_db()
+    set_posts_collection(db["posts"])

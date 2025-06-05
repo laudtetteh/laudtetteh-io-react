@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../utils/api';
 
 interface BlogPostSummary {
   title: string;
@@ -9,10 +10,11 @@ interface BlogPostSummary {
 }
 
 export default function BlogSection() {
+  console.log("📡 API_BASE_URL = ", API_BASE_URL);
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/posts') // Use localhost for dev, switch to backend in Docker
+    fetch(`${API_BASE_URL}/api/posts`)
       .then((res) => res.json())
       .then((data) => setPosts(data))
       .catch((err) => {

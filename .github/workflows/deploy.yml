@@ -20,10 +20,10 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: "." # Send everything in repo
-          target: "~/app" # Destination path on droplet
+          source: "."  # Everything in repo
+          target: "~/app"
 
-      # Step 3: Connect via SSH, write .env.local, and start Docker
+      # Step 3: SSH into server, write .env.production, and deploy
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -33,9 +33,19 @@ jobs:
           script: |
             cd ~/app
 
-            # Write .env.local from GitHub secret
-            echo "${{ secrets.ENV_LOCAL }}" > .env.local
+            # Write .env.production
+            echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-            # Rebuild and restart Docker containers
-            docker compose down
-            docker compose up -d --build
+            export ENV_FILE=.env.production
+
+            # Shut down containers gracefully
+            docker compose down --volumes --remove-orphans || true
+
+            # Start backend API first
+            docker compose up -d api
+
+            # Build frontend (web) fresh with no cache
+            docker compose build --no-cache web
+
+            # Then bring web up
+            docker compose up -d web
