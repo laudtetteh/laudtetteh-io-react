@@ -52,4 +52,4 @@ jobs:
             docker compose up -d web
 
             # Optional cleanup
-            rm .env.production
+            # rm .env.production
