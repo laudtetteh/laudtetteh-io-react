@@ -26,7 +26,7 @@ logger = logging.getLogger("contact-form")
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://dev.laudtetteh.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
