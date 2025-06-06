@@ -12,7 +12,6 @@ services:
     env_file:
       - ${ENV_FILE:-.env.local}
     depends_on:
-      # - api
       api:
         condition: service_healthy
 
@@ -27,12 +26,10 @@ services:
     env_file:
       - ${ENV_FILE:-.env.local}
     healthcheck:
-      # test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/posts"]
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/posts"]
       interval: 10s
       timeout: 5s
       retries: 5
-      # disable: true
 
 volumes:
   mongo_data:
