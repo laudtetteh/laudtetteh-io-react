@@ -36,7 +36,9 @@ jobs:
             cd ~/app
 
             echo "Writing env file..."
-            echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
+            cat <<EOF > .env.production
+            ${{ secrets.ENV_PRODUCTION }}
+            EOF
 
             echo "Restarting containers..."
             docker compose down --volumes --remove-orphans || true

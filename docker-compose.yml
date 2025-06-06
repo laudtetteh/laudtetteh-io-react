@@ -7,6 +7,7 @@ services:
         NEXT_PUBLIC_IS_DOCKER: ${NEXT_PUBLIC_IS_DOCKER}
         NEXT_PUBLIC_API_DOCKER: ${NEXT_PUBLIC_API_DOCKER}
         NEXT_PUBLIC_API_LOCAL: ${NEXT_PUBLIC_API_LOCAL}
+        NEXT_PUBLIC_AWS_S3_BUCKET: ${NEXT_PUBLIC_AWS_S3_BUCKET}
     container_name: nextjs-app
     ports:
       - "3000:3000"
