@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { API_BASE_URL } from '../../utils/api';
+import { API_BASE_URL } from '@/utils/api';
 
 interface BlogPost {
   title: string;

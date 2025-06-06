@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL } from '@/utils/api';
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });

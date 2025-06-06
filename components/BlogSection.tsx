@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL } from '@/utils/api';
 
 interface BlogPostSummary {
   title: string;
