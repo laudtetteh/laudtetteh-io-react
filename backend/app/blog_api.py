@@ -78,3 +78,22 @@ async def delete_post(slug: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Post not found")
     return { "message": "Post deleted" }
+
+# Admin-only view of all posts
+@router.get("/api/admin/posts", response_model=List[BlogPost], dependencies=[Depends(verify_token)])
+async def get_all_posts_admin():
+    """Return all blog posts (protected route for admin dashboard)."""
+    posts = await posts_collection.find().sort("date", -1).to_list(100)
+    return posts
+
+@router.get("/api/blog/{slug}", response_model=BlogPost)
+async def get_public_post(slug: str):
+    """Public route to fetch post by slug, no JWT required"""
+    post = await posts_collection.find_one({"slug": slug})
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
+@router.get("/api/blog", response_model=List[BlogPost])
+async def blog_alias():
+    return await get_all_posts()

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { API_BASE_URL } from '@/utils/api';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("admin");
@@ -10,7 +11,7 @@ export default function AdminLogin() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
-    const res = await fetch("/api/login", {
+    const res = await fetch(`${API_BASE_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -27,7 +28,7 @@ export default function AdminLogin() {
     }
 
     const data = await res.json();
-    localStorage.setItem("jwt", data.access_token);
+    localStorage.setItem("token", data.access_token);
     router.push("/admin");
   }
 

@@ -23,7 +23,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    fetch("/api/posts", {
+    fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
 
     if (!confirm("Are you sure you want to delete this post?")) return;
 
-    const res = await fetch(`/api/posts/${slug}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts/${slug}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -73,6 +73,12 @@ export default function AdminDashboard() {
                   className="text-blue-600 hover:underline"
                 >
                   ✏️ Edit
+                </button>
+                <button
+                  onClick={() => router.push(`/blog/${post.slug}`)}
+                  className="text-green-600 hover:underline"
+                >
+                  🔍 View
                 </button>
                 <button
                   onClick={() => handleDelete(post.slug)}

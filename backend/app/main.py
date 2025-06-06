@@ -5,6 +5,8 @@ Handles:
 - CORS setup
 - Contact form (via Mailgun)
 - Blog routes (mounted from blog_api)
+- Auth
+- S3 upload
 """
 
 from fastapi import FastAPI, HTTPException, Request, status, Depends
@@ -13,31 +15,48 @@ from fastapi.security import OAuth2PasswordRequestForm
 from auth import Token, create_access_token, verify_token, ADMIN_USERNAME, ADMIN_PASSWORD
 from pydantic import BaseModel, EmailStr
 import os, logging, requests
+
 from blog_api import router as blog_router, set_posts_collection
 from s3_upload import router as upload_router
 from db import connect_to_mongo, get_db
 
 app = FastAPI()
 
-# Logging
+# ----------------------
+# Logging Configuration
+# ----------------------
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("contact-form")
 
-# CORS setup
+# ----------------------
+# CORS Setup
+# ----------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # In production, restrict to frontend domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Blog API routes
-app.include_router(blog_router)
+# ----------------------
+# MongoDB Startup Hook
+# ----------------------
+@app.on_event("startup")
+async def init_db():
+    await connect_to_mongo()
+    db = get_db()
+    set_posts_collection(db["posts"])
 
-# ----------------
-# Contact Form
-# ----------------
+# ----------------------
+# Blog + Upload Routers
+# ----------------------
+app.include_router(blog_router)
+app.include_router(upload_router)
+
+# ----------------------
+# Contact Form Endpoint
+# ----------------------
 class ContactSubmission(BaseModel):
     name: str
     email: EmailStr
@@ -82,7 +101,9 @@ async def submit_contact(data: ContactSubmission, request: Request):
     else:
         raise HTTPException(status_code=500, detail="❌ Failed to send email via Mailgun.")
 
-
+# ----------------------
+# Login Endpoint (JWT)
+# ----------------------
 @app.post("/api/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
@@ -92,10 +113,4 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         raise HTTPException(status_code=400, detail="Invalid username or password")
     
     access_token = create_access_token(data={"sub": form_data.username})
-    return {"access_token": access_token, "token_type": "bearer"}
-
-@app.on_event("startup")
-async def init_db():
-    await connect_to_mongo()
-    db = get_db()
-    set_posts_collection(db["posts"])
+    return { "access_token": access_token, "token_type": "bearer" }

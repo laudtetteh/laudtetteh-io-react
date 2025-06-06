@@ -45,17 +45,23 @@ export default function BlogPostPage({ post }: PostPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  console.log("🔧 [getStaticPaths] API_BASE_URL:", API_BASE_URL);
+
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts`);
     const posts: BlogPost[] = await res.json();
+
+    console.log(`📦 [getStaticPaths] Retrieved ${posts.length} posts`);
 
     const paths = posts.map((post) => ({
       params: { slug: post.slug },
     }));
 
+    console.log("📍 [getStaticPaths] Slug paths:", paths);
+
     return { paths, fallback: true };
   } catch (err) {
-    console.error('[getStaticPaths] Failed to fetch slugs:', err);
+    console.error('[getStaticPaths] ❌ Failed to fetch slugs:', err);
     return { paths: [], fallback: true };
   }
 };
@@ -63,13 +69,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
 
+  console.log("✅ [getStaticProps] SLUG:", slug);
+  console.log("🔧 [getStaticProps] API_BASE_URL:", API_BASE_URL);
+
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
-    if (!res.ok) throw new Error("Post not found");
+
+    if (!res.ok) {
+      console.warn(`[getStaticProps] ❗️Post not found for slug '${slug}'. Status: ${res.status}`);
+      throw new Error("Post not found");
+    }
+
     const post: BlogPost = await res.json();
+    console.log(`[getStaticProps] ✅ Loaded post '${slug}'`);
+
     return { props: { post }, revalidate: 10 };
   } catch (err) {
-    console.error(`[getStaticProps] Failed to fetch post for slug '${slug}':`, err);
+    console.error(`[getStaticProps] ❌ Failed to fetch post for slug '${slug}':`, err);
     return {
       props: {
         post: {

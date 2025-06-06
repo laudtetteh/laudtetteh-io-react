@@ -3,10 +3,8 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-        NEXT_PUBLIC_IS_DOCKER: ${NEXT_PUBLIC_IS_DOCKER}
-        NEXT_PUBLIC_API_DOCKER: ${NEXT_PUBLIC_API_DOCKER}
-        NEXT_PUBLIC_API_LOCAL: ${NEXT_PUBLIC_API_LOCAL}
+        API_SERVER: ${API_SERVER}
+        NEXT_PUBLIC_API_BROWSER: ${NEXT_PUBLIC_API_BROWSER}
         NEXT_PUBLIC_AWS_S3_BUCKET: ${NEXT_PUBLIC_AWS_S3_BUCKET}
     container_name: nextjs-app
     ports:
@@ -14,7 +12,9 @@ services:
     env_file:
       - ${ENV_FILE:-.env.local}
     depends_on:
-      - api
+      # - api
+      api:
+        condition: service_healthy
 
   api:
     build:
@@ -26,6 +26,13 @@ services:
       - ./backend/app:/app
     env_file:
       - ${ENV_FILE:-.env.local}
+    healthcheck:
+      # test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/posts"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/posts"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # disable: true
 
 volumes:
   mongo_data:

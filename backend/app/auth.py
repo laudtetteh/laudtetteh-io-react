@@ -47,10 +47,8 @@ def create_access_token(data: dict) -> str:
     return encoded_jwt
 
 def verify_token(token: str = Depends(oauth2_scheme)):
-    """
-    Dependency to verify token validity and extract username.
-    Raises HTTP 401 if token is invalid or expired.
-    """
+    print("🔐 Verifying token...")
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid credentials",
@@ -58,8 +56,11 @@ def verify_token(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("✅ JWT payload:", payload)
         username = payload.get("sub")
         if username != ADMIN_USERNAME:
+            print(f"❌ Token 'sub' does not match admin. Got {username}, expected {ADMIN_USERNAME}")
             raise credentials_exception
-    except JWTError:
+    except JWTError as e:
+        print(f"❌ JWTError: {str(e)}")
         raise credentials_exception

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import AdminPostForm from "@/components/AdminPostForm";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
+const API_URL = process.env.NEXT_PUBLIC_API_BROWSER;
+
 export default function EditPostPage() {
   UseAuthRedirect();
 
@@ -16,7 +18,7 @@ export default function EditPostPage() {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) return;
 
-    fetch(`/api/posts/${slug}`, {
+    fetch(`${API_URL}/api/posts/${slug}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -30,7 +32,7 @@ export default function EditPostPage() {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) return;
 
-    const res = await fetch(`/api/posts/${slug}`, {
+    const res = await fetch(`${API_URL}/api/posts/${slug}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
