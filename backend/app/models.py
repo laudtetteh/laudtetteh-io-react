@@ -19,7 +19,7 @@ class BlogPost(BaseModel):
     date: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "title": "Understanding FastAPI",
                 "slug": "understanding-fastapi",
