@@ -42,7 +42,14 @@ jobs:
 
             echo "Restarting containers..."
             docker compose down --volumes --remove-orphans || true
-            docker compose --env-file .env.production up -d --build
+            
+            echo "Exporting env vars..."
+            set -a
+            source .env.production
+            set +a
 
-            echo "Showing container status:"
+            echo "Rebuilding and starting containers..."
+            docker compose up -d --build
+
+            echo "Container status:"
             docker ps

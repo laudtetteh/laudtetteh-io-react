@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_API_LOCAL: process.env.NEXT_PUBLIC_API_LOCAL,
     NEXT_PUBLIC_API_DOCKER: process.env.NEXT_PUBLIC_API_DOCKER,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_AWS_S3_BUCKET: process.env.NEXT_PUBLIC_AWS_S3_BUCKET,
   },
   webpack: (config) => {
     config.resolve.alias = {
