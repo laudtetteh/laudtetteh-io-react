@@ -5,12 +5,22 @@ import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
 const API_URL = process.env.NEXT_PUBLIC_API_BROWSER;
 
+interface BlogPost {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  status?: "draft" | "published";
+  categories?: string[];
+  featuredImage?: string;
+}
+
 export default function EditPostPage() {
   UseAuthRedirect();
 
   const router = useRouter();
   const { slug } = router.query;
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -21,14 +31,17 @@ export default function EditPostPage() {
     fetch(`${API_URL}/api/posts/${slug}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch post");
+        return res.json();
+      })
       .then(setPost)
       .catch((err) => {
         console.error("Failed to fetch post:", err);
       });
   }, [slug]);
 
-  async function handleSubmit(updated: any) {
+  async function handleSubmit(updated: BlogPost) {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) return;
 

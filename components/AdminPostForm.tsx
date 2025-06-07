@@ -1,4 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, FormEvent } from "react";
+import { API_BASE_URL } from "@/utils/api";
+import Link from "next/link";
 
 interface FormProps {
   initial?: {
@@ -8,6 +10,7 @@ interface FormProps {
     content: string;
     status?: "draft" | "published";
     categories?: string[];
+    featuredImage?: string;
   };
   onSubmit: (data: {
     title: string;
@@ -16,184 +19,147 @@ interface FormProps {
     content: string;
     status: "draft" | "published";
     categories: string[];
+    featuredImage?: string;
   }) => Promise<void>;
   isEdit?: boolean;
 }
 
-export default function AdminPostForm({ initial, onSubmit, isEdit = false }: FormProps) {
+const AdminPostForm = ({ initial, onSubmit, isEdit = false }: FormProps) => {
   const [title, setTitle] = useState(initial?.title || "");
   const [slug, setSlug] = useState(initial?.slug || "");
   const [summary, setSummary] = useState(initial?.summary || "");
   const [content, setContent] = useState(initial?.content || "");
   const [status, setStatus] = useState<"draft" | "published">(initial?.status || "draft");
-  const [error, setError] = useState("");
+  const [categories, setCategories] = useState<string[]>(initial?.categories || []);
+  const [featuredImage, setFeaturedImage] = useState(initial?.featuredImage || "");
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setError("");
+
     try {
-      await onSubmit({ title, slug, summary, content, status, categories });
-    } catch (err) {
+      let finalImageUrl = featuredImage;
+
+      if (pendingFile) {
+        setUploading(true);
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No auth token");
+
+        const res = await fetch(`${API_BASE_URL}/api/upload-url`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            filename: pendingFile.name,
+            content_type: pendingFile.type,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Failed to get presigned URL");
+
+        const uploadRes = await fetch(data.upload_url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": pendingFile.type,
+          },
+          body: pendingFile,
+        });
+
+        if (!uploadRes.ok) throw new Error("Upload failed");
+        finalImageUrl = data.file_url;
+      }
+
+      await onSubmit({ title, slug, summary, content, status, categories, featuredImage: finalImageUrl });
+      setPendingFile(null);
+    } catch (err: any) {
       console.error(err);
       setError("Something went wrong.");
-    }
-  }
-
-  async function handleUpload() {
-    const file = fileInputRef.current?.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setPreviewUrl("");
-
-    try {
-      const res = await fetch("/api/upload-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename: file.name, content_type: file.type }),
-      });
-
-      const { url, key } = await res.json();
-      await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": file.type, "ACL": "public-read" },
-        body: file,
-      });
-
-      const publicUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
-      setPreviewUrl(publicUrl);
-    } catch (err) {
-      console.error("Upload failed", err);
-      setError("Image upload failed.");
     } finally {
       setUploading(false);
     }
   }
 
-  function insertImageIntoContent() {
-    if (previewUrl) {
-      setContent(content + `<p><img src="${previewUrl}" alt="Image" /></p>`);
-      setPreviewUrl("");
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+  function handleCategoryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { value, checked } = e.target;
+    setCategories(checked ? [...categories, value] : categories.filter(c => c !== value));
   }
 
-  const [categories, setCategories] = useState<string[]>(initial?.categories || []);
-  const allCategories = ["Tech", "Life", "Career", "DevOps", "Personal"];
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) setPendingFile(file);
+  }
 
-  function toggleCategory(cat: string) {
-    setCategories(prev =>
-      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
-    );
+  function handleClearImage() {
+    setFeaturedImage("");
+    setPendingFile(null);
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <h2 className="text-2xl font-semibold">{isEdit ? "Edit" : "Create"} Post</h2>
-        {error && <p className="text-red-500">{error}</p>}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && <p className="text-red-600">{error}</p>}
 
-        <select
-          className="w-full p-2 border border-gray-300 rounded"
-          value={status}
-          onChange={e => setStatus(e.target.value as "draft" | "published")}
-        >
+      <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" className="input" />
+      <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="Slug" className="input" disabled={isEdit} />
+      <textarea value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="Summary" className="textarea" />
+      <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Content (HTML allowed)" className="textarea" />
+
+      <div>
+        <label>Status:</label>
+        <select value={status} onChange={(e) => setStatus(e.target.value as "draft" | "published")} className="select">
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
-
-        <div>
-          <label className="block font-medium mb-1">Categories:</label>
-          <div className="flex flex-wrap gap-4">
-            {allCategories.map(cat => (
-              <label key={cat} className="inline-flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={categories.includes(cat)}
-                  onChange={() => toggleCategory(cat)}
-                />
-                <span>{cat}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <input
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          required
-        />
-
-        <input
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Slug"
-          value={slug}
-          onChange={e => setSlug(e.target.value)}
-          required
-          disabled={isEdit}
-        />
-
-        <input
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="Summary"
-          value={summary}
-          onChange={e => setSummary(e.target.value)}
-          required
-        />
-
-        <textarea
-          className="w-full p-2 border border-gray-300 rounded h-40"
-          placeholder="Content (HTML allowed)"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          required
-        />
-
-        <div>
-          <label className="block font-medium mb-1">Upload image:</label>
-          <input type="file" ref={fileInputRef} className="mb-2" />
-          <button
-            type="button"
-            onClick={handleUpload}
-            disabled={uploading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            {uploading ? "Uploading..." : "Upload"}
-          </button>
-
-          {previewUrl && (
-            <div className="mt-4">
-              <img src={previewUrl} alt="Preview" className="max-w-full rounded shadow" />
-              <button
-                type="button"
-                onClick={insertImageIntoContent}
-                className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Insert into Content
-              </button>
-            </div>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-        >
-          {isEdit ? "Update" : "Create"}
-        </button>
-      </form>
-
-      <div className="prose max-w-none mt-8 md:mt-0">
-        <h2 className="text-xl font-semibold mb-4">Live Preview</h2>
-        <div
-          className="prose prose-lg"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
       </div>
-    </div>
+
+      <div>
+        <label>Categories:</label>
+        {["tech", "life", "career"].map((cat) => (
+          <label key={cat} className="block">
+            <input type="checkbox" value={cat} checked={categories.includes(cat)} onChange={handleCategoryChange} />
+            {cat}
+          </label>
+        ))}
+      </div>
+
+      <div>
+        <label>Featured Image:</label>
+        {!featuredImage && !pendingFile && <input type="file" accept="image/*" onChange={handleFileChange} />}
+        {uploading && <p>Uploading...</p>}
+        {(featuredImage || pendingFile) && (
+          <div className="relative">
+            <img
+              src={pendingFile ? URL.createObjectURL(pendingFile) : featuredImage}
+              alt="Featured"
+              className="mt-2 h-32 object-cover rounded"
+            />
+            <button
+              type="button"
+              onClick={handleClearImage}
+              className="absolute top-1 right-1 bg-white border px-2 py-1 rounded text-sm"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+      </div>
+
+      <button type="submit" className="btn">
+        {isEdit ? "Update Post" : "Create Post"}
+      </button>
+
+      {isEdit && status === "published" && (
+        <Link href={`/blog/${slug}`} className="inline-block ml-4 text-blue-600 underline">
+          View post
+        </Link>
+      )}
+    </form>
   );
-}
+};
+
+export default AdminPostForm;

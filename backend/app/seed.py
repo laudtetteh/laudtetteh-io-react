@@ -19,6 +19,9 @@ posts = [
         "summary": "This is a short summary of the first post.",
         "content": "<p>This is the full content of the first blog post. You can use HTML here.</p>",
         "date": datetime(2024, 1, 1),
+        "status": "published",
+        "categories": ["Tech", "FastAPI"],
+        "featuredImage": "https://via.placeholder.com/800x400.png?text=First+Post"
     },
     {
         "title": "Blog Post 2",
@@ -26,6 +29,9 @@ posts = [
         "summary": "Another brief summary.",
         "content": "<p>This is the second post’s content. Lots of interesting insights go here.</p>",
         "date": datetime(2024, 2, 1),
+        "status": "draft",
+        "categories": ["DevOps", "MongoDB"],
+        "featuredImage": "https://via.placeholder.com/800x400.png?text=Second+Post"
     },
     {
         "title": "Blog Post 3",
@@ -33,6 +39,9 @@ posts = [
         "summary": "A summary of the third post.",
         "content": "<p>This is the content of blog post number three.</p>",
         "date": datetime(2024, 3, 1),
+        "status": "published",
+        "categories": ["React", "CMS"],
+        "featuredImage": "https://via.placeholder.com/800x400.png?text=Third+Post"
     }
 ]
 

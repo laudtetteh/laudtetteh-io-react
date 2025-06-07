@@ -9,6 +9,7 @@ interface BlogPost {
   date: string;
   status: string;
   categories: string[];
+  featuredImage?: string;
 }
 
 export default function AdminDashboard() {
@@ -30,12 +31,7 @@ export default function AdminDashboard() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          throw new Error("Unauthorized");
-        }
-        if (!res.ok) {
-          throw new Error("Failed to fetch posts");
-        }
+        if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
       .then(setPosts)
@@ -74,6 +70,9 @@ export default function AdminDashboard() {
         <ul className="space-y-4">
           {posts.map((post) => (
             <li key={post.slug} className="border p-4 rounded shadow">
+              {post.featuredImage && (
+                <img src={post.featuredImage} alt="Cover" className="w-full h-40 object-cover mb-2 rounded" />
+              )}
               <p className="text-sm text-gray-500">Status: {post.status}</p>
               <p className="text-sm text-gray-500">
                 Categories: {post.categories?.join(", ")}

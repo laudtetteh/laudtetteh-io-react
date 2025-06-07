@@ -1,7 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import { API_BASE_URL } from '@/utils/api';
+import { useEffect, useState } from 'react';
 
 interface BlogPost {
   title: string;
@@ -11,8 +13,8 @@ interface BlogPost {
   date?: string;
   status?: string;
   categories?: string[];
+  featuredImage?: string;
 }
-
 
 interface PostPageProps {
   post: BlogPost;
@@ -20,6 +22,12 @@ interface PostPageProps {
 
 export default function BlogPostPage({ post }: PostPageProps) {
   const router = useRouter();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = typeof window !== 'undefined' && localStorage.getItem('token');
+    setLoggedIn(Boolean(token));
+  }, []);
 
   if (router.isFallback) {
     return <p className="p-6 text-center">Loading post...</p>;
@@ -31,7 +39,15 @@ export default function BlogPostPage({ post }: PostPageProps) {
         <title>{post.title} | Laud Tetteh</title>
         <meta name="description" content={post.summary ?? ''} />
       </Head>
+
       <main className="max-w-3xl mx-auto px-4 py-16 space-y-6">
+        {post.featuredImage && (
+          <img
+            src={post.featuredImage}
+            alt={`Featured image for ${post.title}`}
+            className="w-full h-64 object-cover rounded"
+          />
+        )}
 
         {post.status && (
           <p className="text-sm text-gray-500">Status: {post.status}</p>
@@ -55,29 +71,30 @@ export default function BlogPostPage({ post }: PostPageProps) {
           className="prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        <div className="pt-6 text-sm space-x-4">
+          <a href={`/blog/${post.slug}`} className="text-blue-600 underline">🔗 View Post</a>
+          {loggedIn && (
+            <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
+          )}
+        </div>
       </main>
     </>
   );
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  console.log("🔧 [getStaticPaths] API_BASE_URL:", API_BASE_URL);
-
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts`);
     const posts: BlogPost[] = await res.json();
-
-    console.log(`📦 [getStaticPaths] Retrieved ${posts.length} posts`);
 
     const paths = posts.map((post) => ({
       params: { slug: post.slug },
     }));
 
-    console.log("📍 [getStaticPaths] Slug paths:", paths);
-
     return { paths, fallback: true };
   } catch (err) {
-    console.error('[getStaticPaths] ❌ Failed to fetch slugs:', err);
+    console.error("[getStaticPaths] ❌ Failed to fetch posts:", err);
     return { paths: [], fallback: true };
   }
 };
@@ -85,20 +102,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
 
-  console.log("✅ [getStaticProps] SLUG:", slug);
-  console.log("🔧 [getStaticProps] API_BASE_URL:", API_BASE_URL);
-
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
-
-    if (!res.ok) {
-      console.warn(`[getStaticProps] ❗️Post not found for slug '${slug}'. Status: ${res.status}`);
-      throw new Error("Post not found");
-    }
+    if (!res.ok) throw new Error("Post not found");
 
     const post: BlogPost = await res.json();
-    console.log(`[getStaticProps] ✅ Loaded post '${slug}'`);
-
     return { props: { post }, revalidate: 10 };
   } catch (err) {
     console.error(`[getStaticProps] ❌ Failed to fetch post for slug '${slug}':`, err);

@@ -17,7 +17,7 @@ router = APIRouter()
 # Load S3 config from environment
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-2")
 S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 
 # Initialize boto3 S3 client
@@ -38,7 +38,8 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
     Generate a presigned URL for uploading to S3.
     Requires valid JWT token.
     """
-    key = f"uploads/{uuid4()}_{data.filename}"
+    UPLOAD_PREFIX = "uploads/"
+    key = f"{UPLOAD_PREFIX}{uuid4()}_{data.filename}"
 
     try:
         url = s3_client.generate_presigned_url(
@@ -47,11 +48,16 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
                 "Bucket": S3_BUCKET,
                 "Key": key,
                 "ContentType": data.content_type,
-                "ACL": "public-read"
+                # "ACL": "public-read"
             },
             ExpiresIn=3600
         )
         full_url = f"https://{S3_BUCKET}.s3.{AWS_REGION}.amazonaws.com/{key}"
+
+        print("🪪 Generated S3 upload URL:", url)
+        print("🌍 File will be accessible at:", full_url)
+
         return { "upload_url": url, "file_url": full_url }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating URL: {e}")
+        print("❌ Failed to generate presigned URL:", str(e))
+        raise HTTPException(status_code=500, detail=f"Error generating URL: {str(e)}")

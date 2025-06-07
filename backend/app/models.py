@@ -19,6 +19,7 @@ class BlogPost(BaseModel):
     status: str  # "draft" or "published"
     categories: List[str] = []
     date: Optional[datetime] = Field(default_factory=datetime.utcnow)
+    featuredImage: Optional[str] = ""
 
     class Config:
         json_schema_extra = {
@@ -39,6 +40,7 @@ class BlogPostIn(BaseModel):
     content: str
     status: str
     categories: List[str] = []
+    featuredImage: Optional[str] = ""
 
 
 class BlogPostOut(BaseModel):
@@ -49,3 +51,4 @@ class BlogPostOut(BaseModel):
     date: datetime
     status: str = Field(default="draft")
     categories: List[str] = Field(default=[])
+    featuredImage: Optional[str] = ""
