@@ -8,14 +8,16 @@ Defines Pydantic models for:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
 
 class BlogPost(BaseModel):
-    title: str = Field(..., example="Understanding FastAPI")
-    slug: str = Field(..., example="understanding-fastapi")
-    summary: str = Field(..., example="Intro to FastAPI.")
-    content: str = Field(..., example="<p>HTML content here</p>")
+    title: str
+    slug: str
+    summary: str
+    content: str
+    status: str  # "draft" or "published"
+    categories: List[str] = []
     date: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
     class Config:
@@ -25,11 +27,25 @@ class BlogPost(BaseModel):
                 "slug": "understanding-fastapi",
                 "summary": "Intro to FastAPI with examples.",
                 "content": "<p>This is the full article...</p>",
+                "status": "<p>draft...</p>",
+                "categories": "",
             }
         }
 
 class BlogPostIn(BaseModel):
-    title: str = Field(..., example="New Blog Post")
-    slug: str = Field(..., example="new-blog-post")
-    summary: str = Field(..., example="A short summary of the blog post.")
-    content: str = Field(..., example="<p>Full content in HTML here.</p>")
+    title: str
+    slug: str
+    summary: str
+    content: str
+    status: str
+    categories: List[str] = []
+
+
+class BlogPostOut(BaseModel):
+    title: str
+    slug: str
+    summary: str
+    content: str
+    date: datetime
+    status: str = Field(default="draft")
+    categories: List[str] = Field(default=[])

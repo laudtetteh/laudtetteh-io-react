@@ -1,12 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { API_BASE_URL } from '@/utils/api';
+import { API_BASE_URL } from "@/utils/api";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("changeme");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const redirectTo = (typeof router.query["redirect-to"] === "string" && router.query["redirect-to"]) || "/admin";
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    // Optional: make a quick check to validate token
+    fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log("✅ Valid token, redirecting to", redirectTo);
+          router.push(redirectTo);
+        } else {
+          console.warn("⚠️ Token exists but API rejected it");
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Token check failed:", err);
+      });
+  }, [router, redirectTo]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +53,7 @@ export default function AdminLogin() {
 
     const data = await res.json();
     localStorage.setItem("token", data.access_token);
-    router.push("/admin");
+    router.push(redirectTo); // 👈 redirect to original destination (or fallback)
   }
 
   return (

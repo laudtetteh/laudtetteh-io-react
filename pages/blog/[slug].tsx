@@ -9,7 +9,10 @@ interface BlogPost {
   content: string;
   summary?: string;
   date?: string;
+  status?: string;
+  categories?: string[];
 }
+
 
 interface PostPageProps {
   post: BlogPost;
@@ -29,12 +32,25 @@ export default function BlogPostPage({ post }: PostPageProps) {
         <meta name="description" content={post.summary ?? ''} />
       </Head>
       <main className="max-w-3xl mx-auto px-4 py-16 space-y-6">
+
+        {post.status && (
+          <p className="text-sm text-gray-500">Status: {post.status}</p>
+        )}
+
         <h1 className="text-3xl font-bold">{post.title}</h1>
+
         {post.date && (
           <p className="text-sm text-gray-500">
             Published on {new Date(post.date).toLocaleDateString()}
           </p>
         )}
+
+        {(post.categories ?? []).length > 0 && (
+          <p className="text-sm text-gray-500">
+            Categories: {(post.categories ?? []).join(", ")}
+          </p>
+        )}
+
         <article
           className="prose prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: post.content }}

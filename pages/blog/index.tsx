@@ -8,6 +8,7 @@ type BlogPost = {
   featuredImage: string;
   categories: string[];
   slug: string;
+  status: string;
 };
 
 const BlogIndex: React.FC = () => {

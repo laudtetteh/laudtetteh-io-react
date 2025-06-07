@@ -6,12 +6,16 @@ interface FormProps {
     slug: string;
     summary: string;
     content: string;
+    status?: "draft" | "published";
+    categories?: string[];
   };
   onSubmit: (data: {
     title: string;
     slug: string;
     summary: string;
     content: string;
+    status: "draft" | "published";
+    categories: string[];
   }) => Promise<void>;
   isEdit?: boolean;
 }
@@ -21,6 +25,7 @@ export default function AdminPostForm({ initial, onSubmit, isEdit = false }: For
   const [slug, setSlug] = useState(initial?.slug || "");
   const [summary, setSummary] = useState(initial?.summary || "");
   const [content, setContent] = useState(initial?.content || "");
+  const [status, setStatus] = useState<"draft" | "published">(initial?.status || "draft");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -29,7 +34,7 @@ export default function AdminPostForm({ initial, onSubmit, isEdit = false }: For
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await onSubmit({ title, slug, summary, content });
+      await onSubmit({ title, slug, summary, content, status, categories });
     } catch (err) {
       console.error(err);
       setError("Something went wrong.");
@@ -75,11 +80,45 @@ export default function AdminPostForm({ initial, onSubmit, isEdit = false }: For
     }
   }
 
+  const [categories, setCategories] = useState<string[]>(initial?.categories || []);
+  const allCategories = ["Tech", "Life", "Career", "DevOps", "Personal"];
+
+  function toggleCategory(cat: string) {
+    setCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         <h2 className="text-2xl font-semibold">{isEdit ? "Edit" : "Create"} Post</h2>
         {error && <p className="text-red-500">{error}</p>}
+
+        <select
+          className="w-full p-2 border border-gray-300 rounded"
+          value={status}
+          onChange={e => setStatus(e.target.value as "draft" | "published")}
+        >
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+
+        <div>
+          <label className="block font-medium mb-1">Categories:</label>
+          <div className="flex flex-wrap gap-4">
+            {allCategories.map(cat => (
+              <label key={cat} className="inline-flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={categories.includes(cat)}
+                  onChange={() => toggleCategory(cat)}
+                />
+                <span>{cat}</span>
+              </label>
+            ))}
+          </div>
+        </div>
 
         <input
           className="w-full p-2 border border-gray-300 rounded"

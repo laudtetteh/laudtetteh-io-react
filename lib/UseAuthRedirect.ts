@@ -6,8 +6,10 @@ export default function UseAuthRedirect() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
-      router.push("/admin/login");
+      const encodedPath = encodeURIComponent(router.asPath);
+      router.replace(`/admin/login?redirect-to=${encodedPath}`);
     }
-  }, []);
+  }, [router]);
 }

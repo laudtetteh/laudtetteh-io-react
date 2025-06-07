@@ -7,7 +7,7 @@ const posts = [
     date: '2024-06-01',
     featuredImage: '/blog/first.jpg',
     categories: ['Next.js', 'React'],
-    slug: 'first-blog-post',
+    status: 'published',
     content: 'This is the full content of the first blog post.'
   },
   {
@@ -16,7 +16,7 @@ const posts = [
     date: '2024-06-02',
     featuredImage: '/blog/second.jpg',
     categories: ['TypeScript', 'Full Stack'],
-    slug: 'second-blog-post',
+    status: 'published',
     content: 'This is the full content of the second blog post.'
   }
 ];

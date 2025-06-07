@@ -7,6 +7,8 @@ interface BlogPost {
   slug: string;
   summary: string;
   date: string;
+  status: string;
+  categories: string[];
 }
 
 export default function AdminDashboard() {
@@ -18,6 +20,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       router.push("/admin/login");
       return;
@@ -27,13 +30,19 @@ export default function AdminDashboard() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch posts");
+        if (res.status === 401 || res.status === 403) {
+          throw new Error("Unauthorized");
+        }
+        if (!res.ok) {
+          throw new Error("Failed to fetch posts");
+        }
         return res.json();
       })
       .then(setPosts)
       .catch((err) => {
         console.error(err);
         setError("Unauthorized or failed to load posts.");
+        router.push("/admin/login");
       });
   }, [router]);
 
@@ -65,6 +74,10 @@ export default function AdminDashboard() {
         <ul className="space-y-4">
           {posts.map((post) => (
             <li key={post.slug} className="border p-4 rounded shadow">
+              <p className="text-sm text-gray-500">Status: {post.status}</p>
+              <p className="text-sm text-gray-500">
+                Categories: {post.categories?.join(", ")}
+              </p>
               <h3 className="text-lg font-semibold">{post.title}</h3>
               <p className="text-sm text-gray-500">{post.date}</p>
               <div className="mt-2 flex gap-4">

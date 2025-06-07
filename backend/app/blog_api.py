@@ -48,7 +48,6 @@ async def create_post(post_in: BlogPostIn):
 
     post = post_in.dict()
     post["date"] = datetime.utcnow()
-
     await posts_collection.insert_one(post)
     return post
 
@@ -58,16 +57,13 @@ async def update_post(slug: str, updated: BlogPostIn):
     """Update an existing blog post."""
     updated_post = updated.dict()
     updated_post["date"] = datetime.utcnow()
-
     result = await posts_collection.find_one_and_update(
         { "slug": slug },
         { "$set": updated_post },
         return_document=True
     )
-
     if not result:
         raise HTTPException(status_code=404, detail="Post not found")
-
     return result
 
 # Secure post deletion
