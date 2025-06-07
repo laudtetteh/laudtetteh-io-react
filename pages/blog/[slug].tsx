@@ -40,7 +40,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
         <meta name="description" content={post.summary ?? ''} />
       </Head>
 
-      <main className="max-w-3xl mx-auto px-4 py-16 space-y-6">
+      <main className="max-w-3xl mx-auto px-4 py-16 space-y-6 featured-image-1">
         {post.featuredImage && (
           <img
             src={post.featuredImage}

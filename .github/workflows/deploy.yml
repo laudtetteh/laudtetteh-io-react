@@ -44,10 +44,10 @@ jobs:
             # Load env vars early so Docker Compose doesn't complain
             export $(grep -v '^#' .env.production | xargs)
 
-            docker compose down --volumes --remove-orphans || true
+            docker compose -f docker-compose.yml down --volumes --remove-orphans || true
 
             echo "Rebuilding and starting containers..."
-            docker compose up -d --build
+            docker compose -f docker-compose.yml up -d --build
 
             echo "Container status:"
             docker ps
