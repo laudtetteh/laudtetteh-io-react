@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import FlashMessage from './FlashMessage';
 
 const AdminBar = () => {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -26,15 +26,6 @@ const AdminBar = () => {
     };
   }, [router.events]);
 
-  useEffect(() => {
-    const message = sessionStorage.getItem("flashMessage");
-    if (message) {
-      setFlashMessage(message);
-      sessionStorage.removeItem("flashMessage");
-      setTimeout(() => setFlashMessage(null), 3000);
-    }
-  }, []);
-
   if (!loggedIn) return null;
 
   const isEditPage = router.pathname.startsWith("/admin/edit/");
@@ -43,20 +34,22 @@ const AdminBar = () => {
 
   return (
     <>
-      {flashMessage && (
-        <div className="fixed top-0 inset-x-0 bg-green-600 text-white text-center py-2 z-50">
-          {flashMessage}
-        </div>
-      )}
+      <FlashMessage />
       <div className="fixed top-0 inset-x-0 bg-black text-white text-sm py-2 px-4 flex justify-between items-center z-40 shadow">
         <div className="space-x-4 flex items-center">
           {isViewablePostPage && (
-            <Link href={`/admin/edit/${slug}`} className="underline hover:text-gray-300">✏️ Edit Post</Link>
+            <Link href={`/admin/edit/${slug}`} className="underline hover:text-gray-300">
+              ✏️ Edit Post
+            </Link>
           )}
           {isEditPage && (
-            <Link href="/admin" className="underline hover:text-gray-300">🔙 Back to Posts</Link>
+            <Link href="/admin" className="underline hover:text-gray-300">
+              🔙 Back to Posts
+            </Link>
           )}
-          <Link href="/admin/create" className="underline hover:text-gray-300">➕ New Post</Link>
+          <Link href="/admin/create" className="underline hover:text-gray-300">
+            ➕ New Post
+          </Link>
         </div>
         <div className="relative">
           <button onClick={() => setShowDropdown(!showDropdown)} className="hover:text-gray-300">
@@ -64,8 +57,12 @@ const AdminBar = () => {
           </button>
           {showDropdown && (
             <div className="absolute right-0 mt-2 bg-white text-black rounded shadow p-2 space-y-2 w-48">
-              <Link href="/admin" className="block hover:bg-gray-100 px-2 py-1 rounded">📂 My Posts</Link>
-              <Link href="/logout" className="block hover:bg-gray-100 px-2 py-1 rounded">🚪 Log out</Link>
+              <Link href="/admin" className="block hover:bg-gray-100 px-2 py-1 rounded">
+                📂 My Posts
+              </Link>
+              <Link href="/logout" className="block hover:bg-gray-100 px-2 py-1 rounded">
+                🚪 Log out
+              </Link>
             </div>
           )}
         </div>

@@ -6,6 +6,7 @@ export default function LogoutPage() {
 
   useEffect(() => {
     localStorage.removeItem("token");
+    sessionStorage.setItem("flashMessage", "✅ You’ve been logged out.");
     router.replace("/admin/login");
   }, [router]);
 
