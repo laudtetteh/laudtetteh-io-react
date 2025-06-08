@@ -1,17 +1,12 @@
-import '../styles/output.css';
-import type { AppProps } from "next/app";
+import '@/styles/output.css';
+import type { AppProps } from 'next/app';
+import AdminBar from '@/components/AdminBar';
 
-// import Layout from "@/components/Layout";        ❌ not created yet
-// import { MyAppProvider } from "@/lib/context";   ❌ not created yet
-
-function MyApp({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    // <MyAppProvider>
-    //   <Layout>
-        <Component {...pageProps} />
-    //   </Layout>
-    // </MyAppProvider>
+    <>
+      <AdminBar />
+      <Component {...pageProps} />
+    </>
   );
 }
-
-export default MyApp;
