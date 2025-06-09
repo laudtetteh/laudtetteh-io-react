@@ -1,14 +1,13 @@
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useFlashMessage } from "@/hooks/useFlashMessage";
 
 export default function LogoutPage() {
-  const router = useRouter();
+  const { redirectWithMessage } = useFlashMessage();
 
   useEffect(() => {
     localStorage.removeItem("token");
-    sessionStorage.setItem("flashMessage", "✅ You’ve been logged out.");
-    router.replace("/admin/login");
-  }, [router]);
+    redirectWithMessage('/admin/login', "Logged out successfully", "top-center", "replace", "success");
+  }, []);
 
-  return <p className="p-6">Logging you out...</p>;
+  return null;
 }

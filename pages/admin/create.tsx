@@ -1,39 +1,45 @@
-import { useRouter } from "next/router";
-import AdminPostForm from "@/components/AdminPostForm";
-import UseAuthRedirect from "@/lib/UseAuthRedirect";
+'use client';
+
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import AdminPostForm from '@/components/AdminPostForm';
+import { useFlashMessage } from '@/hooks/useFlashMessage';
 
 export default function CreatePostPage() {
-  UseAuthRedirect();
-
   const router = useRouter();
+  const { pushMessage } = useFlashMessage();
 
-  async function handleSubmit(data: any) {
-    const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) router.push('/admin/login');
+  }, [router]);
 
-    // Enforce unique slug warning if missing
-    if (!data.slug || !data.slug.trim()) {
-      alert("Slug is required and must be unique.");
-      return;
-    }
+  const handleCreate = async (data: any) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
     if (res.ok) {
-      router.push("/admin"); // ✅ Redirect to dashboard to wait for ISR to catch up
-    } else if (res.status === 400) {
-      const err = await res.json();
-      alert(`❌ ${err.detail}`);
+      pushMessage('Post created successfully!', 'top-center', 'success');
+      router.push('/admin');
     } else {
-      alert("Failed to create post");
+      const error = await res.json();
+      pushMessage(`Failed to create post: ${error.detail || 'Unknown error'}`, 'top-center', 'error');
     }
-  }
+  };
 
-  return <AdminPostForm onSubmit={handleSubmit} />;
+  return (
+    <div className="max-w-4xl mx-auto py-12 px-4">
+      <h1 className="text-3xl font-bold mb-6">➕ Create New Post</h1>
+      <AdminPostForm onSubmit={handleCreate} />
+    </div>
+  );
 }

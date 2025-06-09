@@ -1,4 +1,4 @@
-import '@/styles/output.css';
+import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import AdminBar from '@/components/AdminBar';
 import FlashMessage from '@/components/FlashMessage';

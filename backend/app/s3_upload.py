@@ -48,7 +48,6 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
                 "Bucket": S3_BUCKET,
                 "Key": key,
                 "ContentType": data.content_type,
-                # "ACL": "public-read"
             },
             ExpiresIn=3600
         )
@@ -57,7 +56,10 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
         print("🪪 Generated S3 upload URL:", url)
         print("🌍 File will be accessible at:", full_url)
 
-        return { "upload_url": url, "file_url": full_url }
+        return {
+            "upload_url": url,
+            "file_url": full_url
+        }
     except Exception as e:
         print("❌ Failed to generate presigned URL:", str(e))
         raise HTTPException(status_code=500, detail=f"Error generating URL: {str(e)}")

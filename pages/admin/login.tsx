@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { API_BASE_URL } from "@/utils/api";
+import { useFlashMessage } from "@/hooks/useFlashMessage";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("admin");
@@ -9,6 +10,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const usernameRef = useRef<HTMLInputElement>(null);
+  const { redirectWithMessage } = useFlashMessage();
 
   const redirectTo =
     (typeof router.query["redirect-to"] === "string" && router.query["redirect-to"]) || "/admin";
@@ -50,9 +52,7 @@ export default function AdminLogin() {
 
       const data = await res.json();
       localStorage.setItem("token", data.access_token);
-      sessionStorage.setItem("flashMessage", "✅ Logged in successfully");
-      router.push(redirectTo);
-
+      redirectWithMessage(redirectTo, "Logged in successfully", "top-center", "push", "success");
     } catch (err) {
       console.error("Login error:", err);
       setError("Unexpected error during login");

@@ -1,5 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { useFlashMessage } from "@/hooks/useFlashMessage";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 
 interface BlogPost {
@@ -10,6 +25,88 @@ interface BlogPost {
   status: string;
   categories: string[];
   featuredImage?: string;
+  weight?: number;
+}
+
+function SortablePost({
+  post,
+  onEdit,
+  onView,
+  onDelete,
+}: {
+  post: BlogPost;
+  onEdit: () => void;
+  onView: () => void;
+  onDelete: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: post.slug });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className="border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-white"
+    >
+      {post.featuredImage && (
+        <img
+          src={post.featuredImage}
+          alt="Cover"
+          className="w-full h-48 object-cover"
+        />
+      )}
+      <div className="p-4 space-y-2">
+        <div className="flex flex-wrap items-center justify-between">
+          <h2 className="text-xl font-semibold">{post.title}</h2>
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${
+                post.status === "published"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
+            >
+              {post.status}
+            </span>
+            {/* ✅ Apply drag handle only here */}
+            <span
+              className="cursor-move text-gray-400 text-lg"
+              title="Drag to reorder"
+              {...attributes}
+              {...listeners}
+            >
+              ≡
+            </span>
+          </div>
+        </div>
+
+        <p className="text-sm text-gray-500">
+          {post.date
+            ? `Created: ${new Date(post.date).toLocaleDateString()}`
+            : "No publish date"}
+        </p>
+
+        {post.categories?.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {post.categories.map((cat) => (
+              <span
+                key={cat}
+                className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded"
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="flex gap-4 mt-4">
+          <button onClick={onEdit} className="text-blue-600 hover:underline">✏️ Edit</button>
+          <button onClick={onView} className="text-green-600 hover:underline">🔍 View</button>
+          <button onClick={onDelete} className="text-red-600 hover:underline">🗑️ Delete</button>
+        </div>
+      </div>
+    </li>
+  );
 }
 
 export default function AdminDashboard() {
@@ -17,11 +114,16 @@ export default function AdminDashboard() {
 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
   const router = useRouter();
+  const sensors = useSensors(useSensor(PointerSensor));
+  const { redirectWithMessage } = useFlashMessage();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       router.push("/admin/login");
       return;
@@ -34,7 +136,13 @@ export default function AdminDashboard() {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
-      .then(setPosts)
+      .then((fetchedPosts) => {
+        const withWeights = fetchedPosts.map((p: BlogPost, i: number) => ({
+          ...p,
+          weight: p.weight ?? i,
+        }));
+        setPosts(withWeights);
+      })
       .catch((err) => {
         console.error(err);
         setError("Unauthorized or failed to load posts.");
@@ -42,7 +150,24 @@ export default function AdminDashboard() {
       });
   }, [router]);
 
-  async function handleDelete(slug: string) {
+  const allCategories = useMemo(() => {
+    const cats = new Set(posts.flatMap((p) => p.categories || []));
+    return Array.from(cats);
+  }, [posts]);
+
+  const filtered = useMemo(() => (
+    posts
+      .filter(p => p.title.toLowerCase().includes(search.toLowerCase()))
+      .filter(p => !statusFilter || p.status === statusFilter)
+      .filter(p => !categoryFilter || p.categories.includes(categoryFilter))
+      .filter(p =>
+        !dateFilter ||
+        new Date(p.date).toDateString() === new Date(dateFilter).toDateString()
+      )
+      .sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0))
+  ), [posts, search, statusFilter, categoryFilter, dateFilter]);
+
+  const handleDelete = async (slug: string) => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -54,55 +179,116 @@ export default function AdminDashboard() {
     });
 
     if (res.ok) {
-      setPosts(posts.filter((post) => post.slug !== slug));
+      setPosts(posts.filter((p) => p.slug !== slug));
+      redirectWithMessage('/admin', "Post deleted", "top-center", "push", "success");
     } else {
       alert("Failed to delete post.");
     }
-  }
+  };
+
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = filtered.findIndex((p) => p.slug === active.id);
+    const newIndex = filtered.findIndex((p) => p.slug === over.id);
+    const newSorted = arrayMove(filtered, oldIndex, newIndex).map((p, i) => ({
+      ...p,
+      weight: i,
+    }));
+
+    setPosts((prev) =>
+      prev.map((post) => {
+        const updated = newSorted.find((p) => p.slug === post.slug);
+        return updated ? { ...post, weight: updated.weight } : post;
+      })
+    );
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/update-weights`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(
+            newSorted.map((p) => ({ slug: p.slug, weight: p.weight }))
+          ),
+        });
+      } catch (err) {
+        console.error("❌ Failed to update weights:", err);
+      }
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">📋 Admin Dashboard</h1>
-      {error && <p className="text-red-600">{error}</p>}
-      {posts.length === 0 ? (
-        <p>No posts found.</p>
-      ) : (
-        <ul className="space-y-4">
-          {posts.map((post) => (
-            <li key={post.slug} className="border p-4 rounded shadow">
-              {post.featuredImage && (
-                <img src={post.featuredImage} alt="Cover" className="w-full h-40 object-cover mb-2 rounded" />
-              )}
-              <p className="text-sm text-gray-500">Status: {post.status}</p>
-              <p className="text-sm text-gray-500">
-                Categories: {post.categories?.join(", ")}
-              </p>
-              <h3 className="text-lg font-semibold">{post.title}</h3>
-              <p className="text-sm text-gray-500">{post.date}</p>
-              <div className="mt-2 flex gap-4">
-                <button
-                  onClick={() => router.push(`/admin/edit/${post.slug}`)}
-                  className="text-blue-600 hover:underline"
-                >
-                  ✏️ Edit
-                </button>
-                <button
-                  onClick={() => router.push(`/blog/${post.slug}`)}
-                  className="text-green-600 hover:underline"
-                >
-                  🔍 View
-                </button>
-                <button
-                  onClick={() => handleDelete(post.slug)}
-                  className="text-red-600 hover:underline"
-                >
-                  🗑️ Delete
-                </button>
-              </div>
-            </li>
+    <div className="max-w-4xl mx-auto py-12 px-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">🛠️ Admin Dashboard</h1>
+        <button
+          onClick={() => router.push("/admin/create")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          ➕ New Post
+        </button>
+      </div>
+
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <input
+          type="text"
+          placeholder="🔍 Search title..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border rounded px-3 py-2"
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border rounded px-3 py-2"
+        >
+          <option value="">All Statuses</option>
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="border rounded px-3 py-2"
+        >
+          <option value="">All Categories</option>
+          {allCategories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
-        </ul>
-      )}
+        </select>
+        <input
+          type="date"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+          className="border rounded px-3 py-2"
+        />
+      </div>
+
+      {error && <p className="text-red-600">{error}</p>}
+
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={filtered.map(p => p.slug)} strategy={verticalListSortingStrategy}>
+          <ul className="space-y-6">
+            {filtered.map((post) => (
+              <SortablePost
+                key={post.slug}
+                post={post}
+                onEdit={() => router.push(`/admin/edit/${post.slug}`)}
+                onView={() => router.push(`/blog/${post.slug}`)}
+                onDelete={() => handleDelete(post.slug)}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }

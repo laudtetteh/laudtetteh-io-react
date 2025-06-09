@@ -8,11 +8,19 @@ const nextConfig: NextConfig = {
     API_SERVER: process.env.API_SERVER,
     NEXT_PUBLIC_AWS_S3_BUCKET: process.env.NEXT_PUBLIC_AWS_S3_BUCKET,
   },
-  webpack: (config) => {
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      };
+    }
+
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
       "@": path.resolve(__dirname),
     };
+
     return config;
   },
 };

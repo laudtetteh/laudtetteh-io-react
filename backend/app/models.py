@@ -1,54 +1,57 @@
 """
-Data models and validation schemas for the blog.
+Data models and validation schemas for the blog CMS.
 
-Defines Pydantic models for:
-- BlogPost (core structure)
-- BlogPostIn (input-only model for creation)
-- BlogPostOut (optional, for controlled response shaping)
+Includes:
+- BlogPost: Complete post model (used in DB and admin views)
+- BlogPostIn: Input model for creation/updating
+- BlogPostOut: Output model for safe public API exposure
+- Category: Grouped + labeled category model
 """
 
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Literal
 from datetime import datetime
 
 class BlogPost(BaseModel):
-    title: str
-    slug: str
-    summary: str
-    content: str
-    status: str  # "draft" or "published"
-    categories: List[str] = []
-    date: Optional[datetime] = Field(default_factory=datetime.utcnow)
-    featuredImage: Optional[str] = ""
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "title": "Understanding FastAPI",
-                "slug": "understanding-fastapi",
-                "summary": "Intro to FastAPI with examples.",
-                "content": "<p>This is the full article...</p>",
-                "status": "<p>draft...</p>",
-                "categories": "",
-            }
-        }
+    """Full representation of a blog post, including internal metadata."""
+    title: str = Field(..., example="Understanding FastAPI")
+    slug: str = Field(..., example="understanding-fastapi")
+    summary: str = Field(..., example="Intro to FastAPI with examples.")
+    content: str = Field(..., example="<p>This is the full article...</p>")
+    status: Literal["draft", "published"] = Field(default="draft")
+    categories: List[str] = Field(default=[], example=["Python", "Backend"])
+    date: datetime = Field(default_factory=datetime.utcnow)
+    featuredImage: Optional[str] = Field(default="", example="https://example.com/image.jpg")
+    featured: bool = Field(default=False)
+    weight: int = Field(default=0)
 
 class BlogPostIn(BaseModel):
+    """Input schema for creating or updating blog posts (admin only)."""
     title: str
     slug: str
     summary: str
     content: str
-    status: str
-    categories: List[str] = []
+    status: Literal["draft", "published"] = "draft"
+    categories: List[str] = Field(default=[])
     featuredImage: Optional[str] = ""
-
+    featured: bool = False
+    weight: int = 0
 
 class BlogPostOut(BaseModel):
+    """Output schema for exposing safe post fields to public routes."""
     title: str
     slug: str
     summary: str
     content: str
     date: datetime
-    status: str = Field(default="draft")
+    status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
     featuredImage: Optional[str] = ""
+    featured: bool = False
+    weight: int = 0
+
+class Category(BaseModel):
+    """Represents a post category with optional group and label."""
+    name: str = Field(..., example="Python")
+    group: Optional[str] = Field(default="Other", example="Tech")
+    label: Optional[str] = Field(default=None, example="Python (Tech)")

@@ -16,7 +16,7 @@ from auth import Token, create_access_token, verify_token, ADMIN_USERNAME, ADMIN
 from pydantic import BaseModel, EmailStr
 import os, logging, requests
 
-from blog_api import router as blog_router, set_posts_collection
+from blog_api import router as blog_router, set_posts_collection, set_categories_collection
 from s3_upload import router as upload_router
 from db import connect_to_mongo, get_db
 
@@ -47,6 +47,7 @@ async def init_db():
     await connect_to_mongo()
     db = get_db()
     set_posts_collection(db["posts"])
+    set_categories_collection(db["categories"])
 
 # ----------------------
 # Blog + Upload Routers

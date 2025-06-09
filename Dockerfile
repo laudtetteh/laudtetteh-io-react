@@ -17,7 +17,7 @@ ENV NEXT_PUBLIC_AWS_S3_BUCKET=${NEXT_PUBLIC_AWS_S3_BUCKET}
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY tailwind.config.js ./
-COPY postcss.config.mjs ./
+COPY postcss.config.js ./
 RUN npm install --include=dev
 
 # Copy source files
