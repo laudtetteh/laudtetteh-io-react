@@ -13,8 +13,9 @@ Backed by MongoDB via Motor.
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List, Dict
 from datetime import datetime
-from models import BlogPost, BlogPostIn, Category
-from auth import verify_token
+from models.blog import BlogPost, BlogPostIn
+from models.category import Category
+from core.auth import verify_token
 from pydantic import BaseModel
 from utils.sanitize import sanitize_html
 

@@ -5,7 +5,6 @@ Includes:
 - BlogPost: Complete post model (used in DB and admin views)
 - BlogPostIn: Input model for creation/updating
 - BlogPostOut: Output model for safe public API exposure
-- Category: Grouped + labeled category model
 """
 
 from pydantic import BaseModel, Field
@@ -49,9 +48,3 @@ class BlogPostOut(BaseModel):
     featuredImage: Optional[str] = ""
     featured: bool = False
     weight: int = 0
-
-class Category(BaseModel):
-    """Represents a post category with optional group and label."""
-    name: str = Field(..., example="Python")
-    group: Optional[str] = Field(default="Other", example="Tech")
-    label: Optional[str] = Field(default=None, example="Python (Tech)")

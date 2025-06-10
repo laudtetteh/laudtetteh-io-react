@@ -7,26 +7,10 @@ Access is protected using JWT admin authentication.
 
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from auth import verify_token
-import boto3
-import os
-from uuid import uuid4
+from core.auth import verify_token
+from services.s3 import generate_presigned_upload_url
 
 router = APIRouter()
-
-# Load S3 config from environment
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_REGION", "us-east-2")
-S3_BUCKET = os.getenv("AWS_S3_BUCKET")
-
-# Initialize boto3 S3 client
-s3_client = boto3.client(
-    "s3",
-    region_name=AWS_REGION,
-    aws_access_key_id=AWS_ACCESS_KEY,
-    aws_secret_access_key=AWS_SECRET_KEY
-)
 
 class UploadRequest(BaseModel):
     filename: str
@@ -38,24 +22,10 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
     Generate a presigned URL for uploading to S3.
     Requires valid JWT token.
     """
-    UPLOAD_PREFIX = "uploads/"
-    key = f"{UPLOAD_PREFIX}{uuid4()}_{data.filename}"
-
     try:
-        url = s3_client.generate_presigned_url(
-            ClientMethod="put_object",
-            Params={
-                "Bucket": S3_BUCKET,
-                "Key": key,
-                "ContentType": data.content_type,
-            },
-            ExpiresIn=3600
-        )
-        full_url = f"https://{S3_BUCKET}.s3.{AWS_REGION}.amazonaws.com/{key}"
-
+        url, full_url = generate_presigned_upload_url(data.filename, data.content_type)
         print("🪪 Generated S3 upload URL:", url)
         print("🌍 File will be accessible at:", full_url)
-
         return {
             "upload_url": url,
             "file_url": full_url
