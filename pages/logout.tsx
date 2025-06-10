@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFlashMessage } from "@/hooks/useFlashMessage";
+import { useFlashMessage } from "@/lib/useFlashMessage";
 
 export default function LogoutPage() {
   const { redirectWithMessage } = useFlashMessage();

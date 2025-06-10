@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
-import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { useFlashMessage } from '@/lib/useFlashMessage';
 import dynamic from 'next/dynamic';
 
 interface BlogPost {

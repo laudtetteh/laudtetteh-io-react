@@ -77,4 +77,4 @@ export function useFlashMessage() {
   };
 
   return { pushMessage, redirectWithMessage, confirmPrompt };
-}
+} 

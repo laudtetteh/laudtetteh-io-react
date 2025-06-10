@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { API_BASE_URL } from "@/utils/api";
-import { useFlashMessage } from "@/hooks/useFlashMessage";
+import { useFlashMessage } from "@/lib/useFlashMessage";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("admin");

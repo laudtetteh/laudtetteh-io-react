@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { useFlashMessage } from '@/lib/useFlashMessage';
 import { uploadImage } from '@/lib/api';
 
 interface ImageUploaderProps {

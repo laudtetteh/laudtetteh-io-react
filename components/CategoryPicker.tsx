@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { useFlashMessage } from '@/lib/useFlashMessage';
 import { getCategories } from '@/lib/api';
 import type { Category } from '@/types/category';
 

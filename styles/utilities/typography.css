@@ -1,0 +1,8 @@
+/* Custom typography utilities */
+.text-gradient {
+  background: linear-gradient(90deg, #0070f3, #ff4081);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+} 

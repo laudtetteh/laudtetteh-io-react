@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { useFlashMessage } from '@/lib/useFlashMessage';
 import CategoryPicker from './CategoryPicker';
 import ImageUploader from './shared/ImageUploader';
 import {

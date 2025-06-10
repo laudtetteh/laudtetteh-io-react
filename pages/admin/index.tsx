@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { useFlashMessage } from "@/hooks/useFlashMessage";
+import { useFlashMessage } from "@/lib/useFlashMessage";
 import {
   DndContext,
   closestCenter,
