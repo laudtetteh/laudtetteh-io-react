@@ -3,11 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { useFlashMessage } from '@/hooks/useFlashMessage';
-
-interface Category {
-  name: string;
-  group?: string;
-}
+import { getCategories } from '@/lib/api';
+import type { Category } from '@/types/category';
 
 interface CategoryPickerProps {
   selected: string[];
@@ -22,8 +19,7 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/categories`);
-        const grouped = await res.json();
+        const grouped = await getCategories();
         if (grouped && typeof grouped === 'object') {
           setGroupedCategories(grouped);
         } else {

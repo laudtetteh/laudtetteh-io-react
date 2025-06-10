@@ -1,7 +1,11 @@
+/**
+ * WysiwygEditor
+ * A modular rich text editor with visual and HTML modes, toolbar, and character count.
+ */
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
@@ -11,14 +15,20 @@ import Underline from '@tiptap/extension-underline';
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 import WysiwygToolbar from './WysiwygToolbar';
+import WysiwygVisualEditor from './WysiwygVisualEditor';
+import WysiwygHtmlEditor from './WysiwygHtmlEditor';
+import WysiwygCharacterCount from './WysiwygCharacterCount';
 
-interface Props {
+/**
+ * Props for WysiwygEditor
+ */
+export interface WysiwygEditorProps {
   content: string;
   onChange: (html: string) => void;
   limit?: number;
 }
 
-export default function WysiwygEditor({ content, onChange, limit = 5000 }: Props) {
+export default function WysiwygEditor({ content, onChange, limit = 5000 }: WysiwygEditorProps) {
   const [mode, setMode] = useState<'visual' | 'html'>('visual');
   const [isClient, setIsClient] = useState(false);
   const [localContent, setLocalContent] = useState(content);
@@ -124,27 +134,21 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Props
           setHtmlMode={(val) => setMode(val ? 'html' : 'visual')}
         />
       </div>
-
       {mode === 'visual' ? (
-        <EditorContent
-          editor={editor}
-          className="px-4 py-6 min-h-[400px] prose max-w-none focus:outline-none"
-        />
+        <WysiwygVisualEditor editor={editor} />
       ) : (
-        <textarea
-          className="w-full h-[400px] px-4 py-3 font-mono border-t focus:outline-none"
+        <WysiwygHtmlEditor
           value={localContent}
-          onChange={(e) => {
-            const val = e.target.value;
+          onChange={(val) => {
             setLocalContent(val);
             editor?.commands.setContent(val);
           }}
         />
       )}
-
-      <div className="text-sm text-right text-gray-500 px-4 pb-2">
-        {editor.storage.characterCount.characters()} / {limit} characters
-      </div>
+      <WysiwygCharacterCount
+        current={editor.storage.characterCount.characters()}
+        limit={limit}
+      />
     </div>
   );
 }

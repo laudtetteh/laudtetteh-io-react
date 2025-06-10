@@ -7,4 +7,4 @@ const AboutSection: React.FC = () => (
   </section>
 );
 
-export default AboutSection; 
+export default AboutSection;

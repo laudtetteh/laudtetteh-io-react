@@ -11,4 +11,4 @@ const ProjectsSection: React.FC = () => (
   </section>
 );
 
-export default ProjectsSection; 
+export default ProjectsSection;

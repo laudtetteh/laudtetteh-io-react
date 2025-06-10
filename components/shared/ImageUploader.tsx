@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useFlashMessage } from '@/hooks/useFlashMessage';
+import { uploadImage } from '@/lib/api';
 
 interface ImageUploaderProps {
   imageUrl?: string;
@@ -16,40 +17,13 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setUploading(true);
-    const token = localStorage.getItem('token');
-
+    const token = localStorage.getItem('token') || '';
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/upload-url`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filename: file.name,
-          content_type: file.type,
-        }),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error?.detail || 'Failed to get upload URL');
-      }
-
-      const { upload_url, file_url } = await res.json();
-
-      await fetch(upload_url, {
-        method: 'PUT',
-        headers: { 'Content-Type': file.type },
-        body: file,
-      });
-
+      const file_url = await uploadImage(file, token);
       onChange(file_url);
     } catch (error: any) {
       console.error('❌ Upload error:', error);
-      // pushMessage(error.message || 'Image upload failed.', 'top-center', 'error');
     } finally {
       setUploading(false);
     }

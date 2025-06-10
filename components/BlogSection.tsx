@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/utils/api';
+import { getPosts } from '@/lib/api';
+import type { PostData } from '@/types/blog';
 
-interface BlogPostSummary {
-  title: string;
-  slug: string;
-  summary: string;
-  date: string;
+interface BlogPostSummary extends Omit<PostData, 'content' | 'categories' | 'status' | 'featured' | 'featuredImage' | 'weight'> {
+  date?: string;
 }
 
 export default function BlogSection() {
@@ -14,8 +13,7 @@ export default function BlogSection() {
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/posts`)
-      .then((res) => res.json())
+    getPosts()
       .then((data) => setPosts(data))
       .catch((err) => {
         console.error('Failed to load blog posts:', err);
@@ -31,10 +29,11 @@ export default function BlogSection() {
           <Link key={post.slug} href={`/blog/${post.slug}`} className="block p-4 border rounded hover:bg-gray-50">
             <h3 className="text-xl font-semibold">{post.title}</h3>
             <p className="text-sm text-gray-500">{post.summary}</p>
-            <p className="text-xs text-gray-400 mt-2">{post.date}</p>
+            {post.date && <p className="text-xs text-gray-400 mt-2">{post.date}</p>}
           </Link>
         ))}
       </div>
     </section>
   );
 }
+ 

@@ -1,6 +1,12 @@
+/**
+ * FlashMessage
+ * Displays flash messages with animation, icons, and actions.
+ */
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
+import FlashIcon from './FlashIcon';
+import FlashActions from './FlashActions';
 
 type FlashType = "success" | "error" | "info" | "confirm";
 type FlashPosition =
@@ -35,6 +41,10 @@ const ICONS: Record<FlashType, string> = {
   confirm: "❓",
 };
 
+/**
+ * FlashMessage component
+ * Displays flash messages with animation, icons, and actions.
+ */
 export default function FlashMessage() {
   const [queue, setQueue] = useState<FlashItem[]>([]);
   const [current, setCurrent] = useState<FlashItem | null>(null);
@@ -84,18 +94,15 @@ export default function FlashMessage() {
 
   const resolveConfirm = (value: boolean) => {
     if (!current?.confirmId) return;
-
     const channel = new BroadcastChannel("flashConfirm");
     channel.postMessage({ id: current.confirmId, result: value });
     channel.close();
-
     handleClose();
   };
 
   if (!current) return null;
 
   const { message, position, type = "info", action } = current;
-  const icon = ICONS[type];
 
   const baseClasses = classNames(
     "fixed z-50 px-5 py-4 rounded shadow-md text-white transition-all duration-300 transform flex flex-col items-center justify-between gap-4 w-[90vw] max-w-sm",
@@ -113,45 +120,15 @@ export default function FlashMessage() {
   return (
     <div role="alert" aria-live="assertive" className={baseClasses}>
       <div className="flex items-start gap-2 w-full">
-        <span className="text-xl">{icon}</span>
+        <FlashIcon type={type} />
         <span className="flex-1 text-left">{message}</span>
       </div>
-
-      {type === "confirm" ? (
-        <div className="flex gap-4 justify-end w-full pt-2">
-          <button
-            onClick={() => resolveConfirm(false)}
-            className="bg-gray-300 text-gray-800 px-4 py-1 rounded hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => resolveConfirm(true)}
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-          >
-            OK
-          </button>
-        </div>
-      ) : (
-        <div className="flex justify-between items-center w-full pt-2">
-          {action && (
-            <button
-              onClick={action.onClick}
-              className="text-sm text-white underline hover:text-gray-200"
-            >
-              {action.label}
-            </button>
-          )}
-          <button
-            onClick={handleClose}
-            className="ml-2 text-white hover:text-gray-300 text-lg leading-none"
-            aria-label="Dismiss"
-            title="Dismiss"
-          >
-            ×
-          </button>
-        </div>
-      )}
+      <FlashActions
+        type={type}
+        action={action}
+        onClose={handleClose}
+        onConfirm={type === 'confirm' ? resolveConfirm : undefined}
+      />
     </div>
   );
 }

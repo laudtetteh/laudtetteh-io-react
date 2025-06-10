@@ -44,3 +44,6 @@ next-env.d.ts
 __pycache__/
 *.pyc
 /backend/__pycache__/*
+
+# Workspace
+*.code-workspace
