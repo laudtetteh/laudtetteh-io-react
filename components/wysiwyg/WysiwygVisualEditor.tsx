@@ -13,7 +13,7 @@ export interface WysiwygVisualEditorProps {
 const WysiwygVisualEditor: React.FC<WysiwygVisualEditorProps> = ({ editor, className }) => (
   <EditorContent
     editor={editor}
-    className={className || 'px-4 py-6 min-h-[400px] prose max-w-none focus:outline-none'}
+    className={className || 'prose min-h-[400px] max-w-none px-4 py-6 focus:outline-none'}
   />
 );
 

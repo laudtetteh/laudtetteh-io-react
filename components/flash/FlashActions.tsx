@@ -14,16 +14,16 @@ export interface FlashActionsProps {
 const FlashActions: React.FC<FlashActionsProps> = ({ type, action, onClose, onConfirm }) => {
   if (type === 'confirm' && onConfirm) {
     return (
-      <div className="flex gap-4 justify-end w-full pt-2">
+      <div className="flex w-full justify-end gap-4 pt-2">
         <button
           onClick={() => onConfirm(false)}
-          className="bg-gray-300 text-gray-800 px-4 py-1 rounded hover:bg-gray-400"
+          className="rounded bg-gray-300 px-4 py-1 text-gray-800 hover:bg-gray-400"
         >
           Cancel
         </button>
         <button
           onClick={() => onConfirm(true)}
-          className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          className="rounded bg-blue-600 px-4 py-1 text-white hover:bg-blue-700"
         >
           OK
         </button>
@@ -31,7 +31,7 @@ const FlashActions: React.FC<FlashActionsProps> = ({ type, action, onClose, onCo
     );
   }
   return (
-    <div className="flex justify-between items-center w-full pt-2">
+    <div className="flex w-full items-center justify-between pt-2">
       {action && (
         <button
           onClick={action.onClick}
@@ -42,7 +42,7 @@ const FlashActions: React.FC<FlashActionsProps> = ({ type, action, onClose, onCo
       )}
       <button
         onClick={onClose}
-        className="ml-2 text-white hover:text-gray-300 text-lg leading-none"
+        className="ml-2 text-lg leading-none text-white hover:text-gray-300"
         aria-label="Dismiss"
         title="Dismiss"
       >

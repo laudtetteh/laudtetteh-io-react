@@ -11,20 +11,25 @@ export interface BlogImageUploaderProps {
   disabled: boolean;
 }
 
-const BlogImageUploader: React.FC<BlogImageUploaderProps> = ({ uploading, onImageChange, onUpload, disabled }) => (
-  <div className="flex gap-4 items-center">
+const BlogImageUploader: React.FC<BlogImageUploaderProps> = ({
+  uploading,
+  onImageChange,
+  onUpload,
+  disabled,
+}) => (
+  <div className="flex items-center gap-4">
     <input
       type="file"
       accept="image/*"
-      onChange={e => onImageChange(e.target.files?.[0] || null)}
+      onChange={(e) => onImageChange(e.target.files?.[0] || null)}
     />
     <button
       type="button"
       onClick={onUpload}
       disabled={uploading || disabled}
-      className="px-4 py-2 bg-blue-500 text-white rounded"
+      className="rounded bg-blue-500 px-4 py-2 text-white"
     >
-      {uploading ? "Uploading..." : "Upload Image"}
+      {uploading ? 'Uploading...' : 'Upload Image'}
     </button>
   </div>
 );

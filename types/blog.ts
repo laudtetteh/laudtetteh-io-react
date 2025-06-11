@@ -2,7 +2,7 @@ export interface PostData {
   title: string;
   slug: string;
   summary: string;
-  content: string;
+  content: { html: string };
   categories: string[];
   status: 'draft' | 'published';
   featured: boolean;
@@ -14,6 +14,6 @@ export interface BlogPostFormData {
   title: string;
   slug: string;
   summary: string;
-  content: string;
+  content: { html: string };
   date?: string;
-} 
+}

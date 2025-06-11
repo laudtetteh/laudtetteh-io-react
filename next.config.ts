@@ -1,5 +1,6 @@
-import path from "path";
-import type { NextConfig } from "next";
+import path from 'path';
+
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -18,10 +19,16 @@ const nextConfig: NextConfig = {
 
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      "@": path.resolve(__dirname),
+      '@': path.resolve(__dirname),
     };
 
     return config;
+  },
+  images: {
+    domains: [
+      'laudtetteh-io.s3.us-east-2.amazonaws.com',
+      // Add any other remote image domains here
+    ],
   },
 };
 

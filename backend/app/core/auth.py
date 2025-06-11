@@ -5,12 +5,14 @@ Handles token creation and verification using a shared secret.
 Provides OAuth2 bearer token dependency and validates user identity.
 """
 
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
+import logging
 import os
+from datetime import datetime, timedelta
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from pydantic import BaseModel
 
 # Configuration from environment
 SECRET_KEY = os.getenv("JWT_SECRET", "supersecretkey")
@@ -24,17 +26,22 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "password123")
 
+logger = logging.getLogger(__name__)
+
 # ------------------------
 # Pydantic Token Schema
 # ------------------------
+
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 # ------------------------
 # Token Utility Functions
 # ------------------------
+
 
 def create_access_token(data: dict) -> str:
     """
@@ -46,8 +53,9 @@ def create_access_token(data: dict) -> str:
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_token(token: str = Depends(oauth2_scheme)):
-    print("🔐 Verifying token...")
+
+def verify_token(token: str = Depends(oauth2_scheme)) -> None:
+    logger.info("Verifying token...")
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -56,11 +64,13 @@ def verify_token(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print("✅ JWT payload:", payload)
+        logger.info("JWT payload: %s", payload)
         username = payload.get("sub")
         if username != ADMIN_USERNAME:
-            print(f"❌ Token 'sub' does not match admin. Got {username}, expected {ADMIN_USERNAME}")
+            logger.error(
+                "Token 'sub' does not match admin. Got %s, expected %s", username, ADMIN_USERNAME
+            )
             raise credentials_exception
     except JWTError as e:
-        print(f"❌ JWTError: {str(e)}")
-        raise credentials_exception
+        logger.error("JWTError: %s", str(e))
+        raise credentials_exception from e

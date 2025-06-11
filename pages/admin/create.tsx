@@ -2,8 +2,11 @@
 
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
+import type { PostData } from '@/types/blog';
+import { createPost } from '@/lib/api';
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -14,31 +17,18 @@ export default function CreatePostPage() {
     if (!token) router.push('/admin/login');
   }, [router]);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: PostData) => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      pushMessage('Post created successfully!', 'top-center', 'success');
-      router.push('/admin');
-    } else {
-      const error = await res.json();
-      pushMessage(`Failed to create post: ${error.detail || 'Unknown error'}`, 'top-center', 'error');
-    }
+    await createPost(data, token);
+    pushMessage('Post created successfully!', 'top-center', 'success');
+    router.push('/admin');
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6">➕ Create New Post</h1>
+    <div className="mx-auto max-w-4xl px-4 py-12">
+      <h1 className="mb-6 text-3xl font-bold">➕ Create New Post</h1>
       <AdminPostForm onSubmit={handleCreate} />
     </div>
   );

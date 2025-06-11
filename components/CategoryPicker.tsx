@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
+
 import { useFlashMessage } from '@/lib/useFlashMessage';
 import { getCategories } from '@/lib/api';
 import type { Category } from '@/types/category';
@@ -33,11 +34,12 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
       }
     };
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const flatCategories = useMemo(
     () => Object.values(groupedCategories).flat(),
-    [groupedCategories]
+    [groupedCategories],
   );
 
   const selectedOptions = useMemo(() => {
@@ -66,8 +68,11 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
 
   return (
     <div>
-      <label className="font-semibold">Categories</label>
+      <label className="font-semibold" htmlFor="category-picker">
+        Categories
+      </label>
       <CreatableSelect
+        inputId="category-picker"
         isMulti
         value={selectedOptions}
         onChange={(selectedOptions) => {

@@ -1,4 +1,6 @@
 import os
+from typing import ClassVar
+
 
 class Settings:
     AWS_ACCESS_KEY: str = os.getenv("AWS_ACCESS_KEY_ID", "")
@@ -9,5 +11,7 @@ class Settings:
     MAILGUN_API_KEY: str = os.getenv("MAILGUN_API_KEY", "")
     MAILGUN_FROM: str = os.getenv("MAILGUN_FROM", "")
     MAILGUN_TO: str = os.getenv("MAILGUN_TO", "")
+    allowed_origins: ClassVar[list[str]] = ["http://localhost:3000"]
+
 
 settings = Settings()

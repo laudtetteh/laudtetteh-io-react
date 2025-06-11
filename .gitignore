@@ -47,3 +47,6 @@ __pycache__/
 
 # Workspace
 *.code-workspace
+
+# Added .venv/ to .gitignore
++.venv/

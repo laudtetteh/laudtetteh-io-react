@@ -2,36 +2,30 @@
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
-import dynamic from 'next/dynamic';
-
-interface BlogPost {
-  title: string;
-  slug: string;
-  summary: string;
-  content: string;
-  categories: string[];
-  status: 'draft' | 'published';
-  featured: boolean;
-  featuredImage?: string;
-  weight?: number;
-}
+import type { PostData } from '@/types/blog';
 
 export default function EditPostPage() {
   const router = useRouter();
   const { slug } = router.query;
   const { redirectWithMessage, pushMessage } = useFlashMessage();
 
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState<PostData | null>(null);
 
   useEffect(() => {
     if (!slug || typeof slug !== 'string') return;
 
     const token = localStorage.getItem('token');
     if (!token) {
-      redirectWithMessage('/admin/login', "You are not authenticated. Please log in again.", "top-center", "push", "error");
+      redirectWithMessage(
+        '/admin/login',
+        'You are not authenticated. Please log in again.',
+        'top-center',
+        'push',
+        'error',
+      );
       return;
     }
 
@@ -44,27 +38,36 @@ export default function EditPostPage() {
         if (!res.ok) throw new Error('Failed to fetch post');
         const data = await res.json();
         setPost(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
-        pushMessage(`Error loading post: ${err.message}`, 'top-center', 'error');
-      } finally {
-        setLoading(false);
+        pushMessage(
+          `Error loading post: ${err instanceof Error ? err.message : 'Unknown error'}`,
+          'top-center',
+          'error',
+        );
       }
     };
 
     fetchPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
-    const handleUpdate = async (updated: BlogPost) => {
+  const handleUpdate = async (updated: PostData) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      redirectWithMessage('/admin/login', "You are not authenticated. Please log in again.", "top-center", "push", "error");
+      redirectWithMessage(
+        '/admin/login',
+        'You are not authenticated. Please log in again.',
+        'top-center',
+        'push',
+        'error',
+      );
       return;
     }
 
     const cleaned = Object.fromEntries(
-      Object.entries(updated).filter(([_, value]) => value !== undefined)
+      Object.entries(updated).filter(([, value]) => value !== undefined),
     );
 
     try {
@@ -78,25 +81,45 @@ export default function EditPostPage() {
       });
 
       if (res.ok) {
-        redirectWithMessage('/admin', "Post updated successfully!", "top-center", "push", "success");
+        redirectWithMessage(
+          '/admin',
+          'Post updated successfully!',
+          'top-center',
+          'push',
+          'success',
+        );
       } else {
         if (res.status === 401) {
-          redirectWithMessage('/admin/login', "Your session has expired. Please log in again.", "top-center", "push", "info");
+          redirectWithMessage(
+            '/admin/login',
+            'Your session has expired. Please log in again.',
+            'top-center',
+            'push',
+            'info',
+          );
           return;
         }
 
         const error = await res.json();
-        pushMessage(`Failed to update post: ${error.detail || 'Unknown error'}`, 'top-center', 'error');
+        pushMessage(
+          `Failed to update post: ${error.detail || 'Unknown error'}`,
+          'top-center',
+          'error',
+        );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Update failed:', err);
-      pushMessage(`Network error: ${err.message}`, 'top-center', 'error');
+      pushMessage(
+        `Network error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+        'top-center',
+        'error',
+      );
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6">✏️ Edit Post</h1>
+    <div className="mx-auto max-w-4xl px-4 py-12">
+      <h1 className="mb-6 text-3xl font-bold">✏️ Edit Post</h1>
       {post ? (
         <AdminPostForm initialData={post} onSubmit={handleUpdate} isEdit />
       ) : (

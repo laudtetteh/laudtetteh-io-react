@@ -9,8 +9,12 @@ Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 """
 
 import asyncio
+import logging
 from datetime import datetime
+
 from db import connect_to_mongo, get_db
+
+logger = logging.getLogger(__name__)
 
 # Sample blog posts
 posts = [
@@ -30,7 +34,7 @@ posts = [
         "title": "Blog Post 2",
         "slug": "second-post",
         "summary": "Another brief summary.",
-        "content": "<p>This is the second post’s content. Lots of interesting insights go here.</p>",
+        "content": "<p>This is the second post's content. Lots of interesting insights go here.</p>",
         "date": datetime(2024, 2, 1),
         "status": "draft",
         "categories": ["Infra:DevOps", "Infra:MongoDB"],
@@ -49,7 +53,7 @@ posts = [
         "featuredImage": "https://via.placeholder.com/800x400.png?text=Third+Post",
         "featured": False,
         "weight": 0,
-    }
+    },
 ]
 
 # Grouped categories
@@ -60,24 +64,31 @@ categories = [
     {"name": "MongoDB", "slug": "mongodb", "group": "Infra", "createdAt": datetime.utcnow()},
     {"name": "React", "slug": "react", "group": "Frontend", "createdAt": datetime.utcnow()},
     {"name": "CMS", "slug": "cms", "group": "Frontend", "createdAt": datetime.utcnow()},
-    {"name": "Uncategorized", "slug": "uncategorized", "group": "General", "createdAt": datetime.utcnow()}
+    {
+        "name": "Uncategorized",
+        "slug": "uncategorized",
+        "group": "General",
+        "createdAt": datetime.utcnow(),
+    },
 ]
 
-async def seed():
+
+async def seed_db() -> None:
     await connect_to_mongo()
     db = get_db()
 
-    print("🔄 Clearing existing data...")
+    logger.info("Clearing existing data...")
     await db.posts.delete_many({})
     await db.categories.delete_many({})
 
-    print("🌱 Inserting categories...")
+    logger.info("Inserting categories...")
     await db.categories.insert_many(categories)
 
-    print("📝 Inserting blog posts...")
+    logger.info("Inserting blog posts...")
     await db.posts.insert_many(posts)
 
-    print("✅ Blog posts and categories seeded successfully.")
+    logger.info("Blog posts and categories seeded successfully.")
+
 
 if __name__ == "__main__":
-    asyncio.run(seed())
+    asyncio.run(seed_db())

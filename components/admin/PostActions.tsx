@@ -8,7 +8,7 @@ const PostActions: React.FC<PostActionsProps> = ({ isEdit }) => (
   <div className="flex justify-end">
     <button
       type="submit"
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
     >
       {isEdit ? 'Update Post' : 'Create Post'}
     </button>

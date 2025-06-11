@@ -8,7 +8,7 @@ services:
         NEXT_PUBLIC_AWS_S3_BUCKET: ${NEXT_PUBLIC_AWS_S3_BUCKET}
     container_name: nextjs-app
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - ${ENV_FILE:-.env.local}
     depends_on:
@@ -20,13 +20,13 @@ services:
       context: ./backend
     container_name: fastapi-app
     ports:
-      - "8000:8000"
+      - '8000:8000'
     volumes:
       - ./backend/app:/app
     env_file:
       - ${ENV_FILE:-.env.local}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/posts"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/api/posts']
       interval: 10s
       timeout: 5s
       retries: 5

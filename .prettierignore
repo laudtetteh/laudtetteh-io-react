@@ -1,0 +1,8 @@
+# Ignore cache, build, and data files
+.mypy_cache/
+node_modules/
+dist/
+build/
+*.data.json
+*.meta.json
+@plugins_snapshot.json 

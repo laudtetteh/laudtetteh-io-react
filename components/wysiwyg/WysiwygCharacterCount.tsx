@@ -10,7 +10,7 @@ export interface WysiwygCharacterCountProps {
 }
 
 const WysiwygCharacterCount: React.FC<WysiwygCharacterCountProps> = ({ current, limit }) => (
-  <div className="text-sm text-right text-gray-500 px-4 pb-2">
+  <div className="px-4 pb-2 text-right text-sm text-gray-500">
     {current} / {limit} characters
   </div>
 );

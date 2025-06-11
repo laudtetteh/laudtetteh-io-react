@@ -1,4 +1,4 @@
 /* Admin-specific component styles go here */
 .admin-section {
   @apply bg-gray-50 border p-6 rounded-lg mb-8;
-} 
+}

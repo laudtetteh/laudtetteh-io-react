@@ -1,7 +1,6 @@
 import { API_BASE_URL } from '@/utils/api';
 import type { PostData, BlogPostFormData } from '@/types/blog';
 import type { Category } from '@/types/category';
-import type { ApiResponse, ErrorResponse } from '@/types/api';
 
 // Blog Posts
 export async function getPosts(): Promise<PostData[]> {
@@ -26,7 +25,11 @@ export async function createPost(data: BlogPostFormData, token: string): Promise
   return res.json();
 }
 
-export async function updatePost(slug: string, data: BlogPostFormData, token: string): Promise<PostData> {
+export async function updatePost(
+  slug: string,
+  data: BlogPostFormData,
+  token: string,
+): Promise<PostData> {
   const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -57,7 +60,11 @@ export async function uploadImage(file: File, token: string): Promise<string> {
 }
 
 // Contact
-export async function sendContact(form: { name: string; email: string; message: string }): Promise<{ message: string }> {
+export async function sendContact(form: {
+  name: string;
+  email: string;
+  message: string;
+}): Promise<{ message: string }> {
   const res = await fetch(`${API_BASE_URL}/api/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -65,4 +72,4 @@ export async function sendContact(form: { name: string; email: string; message: 
   });
   if (!res.ok) throw new Error('Failed to send contact form');
   return res.json();
-} 
+}

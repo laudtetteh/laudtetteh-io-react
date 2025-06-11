@@ -12,9 +12,9 @@ export interface WysiwygHtmlEditorProps {
 
 const WysiwygHtmlEditor: React.FC<WysiwygHtmlEditorProps> = ({ value, onChange, className }) => (
   <textarea
-    className={className || 'w-full h-[400px] px-4 py-3 font-mono border-t focus:outline-none'}
+    className={className || 'h-[400px] w-full border-t px-4 py-3 font-mono focus:outline-none'}
     value={value}
-    onChange={e => onChange(e.target.value)}
+    onChange={(e) => onChange(e.target.value)}
   />
 );
 

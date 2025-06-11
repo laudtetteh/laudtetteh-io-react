@@ -1,3 +1,6 @@
+# GitHub Actions workflow for deploying to DigitalOcean
+# This workflow lints, formats, and type-checks both frontend and backend before deploying
+
 name: Deploy to DigitalOcean
 
 on:
@@ -5,27 +8,65 @@ on:
     branches: [main]
 
 jobs:
+  # Linting and formatting job for both frontend (JS/TS) and backend (Python)
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js for frontend linting/formatting
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # Set up Python for backend linting/formatting
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Install Node.js dependencies (frontend)
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      # Install Python dependencies (backend)
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black mypy
+
+      # Run all linters, formatters, and type checkers
+      - name: Run all linters and formatters
+        run: npm run lint:all
+
+  # Deploy job (runs only if linting passes)
   deploy:
+    needs: lint
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Generate .env.production from GitHub secret
       - name: Generate .env.production from secret
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
+      # Copy app files to DigitalOcean server using SCP
       - name: Copy app files to DigitalOcean
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: "./"
-          target: "~/app"
+          source: './'
+          target: '~/app'
           strip_components: 0
 
+      # SSH into the server and deploy using Docker Compose
       - name: SSH and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:

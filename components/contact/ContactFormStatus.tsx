@@ -11,12 +11,8 @@ export interface ContactFormStatusProps {
 
 const ContactFormStatus: React.FC<ContactFormStatusProps> = ({ status, errorMsg }) => (
   <>
-    {status === 'success' && (
-      <p className="text-green-600">✅ Message sent successfully!</p>
-    )}
-    {status === 'error' && (
-      <p className="text-red-600">❌ {errorMsg || 'Something went wrong.'}</p>
-    )}
+    {status === 'success' && <p className="text-green-600">✅ Message sent successfully!</p>}
+    {status === 'error' && <p className="text-red-600">❌ {errorMsg || 'Something went wrong.'}</p>}
   </>
 );
 

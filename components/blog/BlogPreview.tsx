@@ -7,17 +7,14 @@ import React from 'react';
 export interface BlogPreviewProps {
   title: string;
   summary: string;
-  content: string;
+  content: { html: string };
 }
 
 const BlogPreview: React.FC<BlogPreviewProps> = ({ title, summary, content }) => (
-  <div className="border p-4 bg-white">
-    <h3 className="text-xl font-bold mb-2">{title}</h3>
+  <div className="border bg-white p-4">
+    <h3 className="mb-2 text-xl font-bold">{title}</h3>
     <p className="text-sm text-gray-500">{summary}</p>
-    <div
-      className="mt-4 prose max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
+    <div className="prose mt-4 max-w-none" dangerouslySetInnerHTML={{ __html: content.html }} />
   </div>
 );
 

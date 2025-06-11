@@ -12,15 +12,11 @@ export interface BlogActionsProps {
 
 const BlogActions: React.FC<BlogActionsProps> = ({ isEditing, preview, onPreviewToggle }) => (
   <div className="flex gap-4">
-    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">
-      {isEditing ? "Update Post" : "Publish Post"}
+    <button type="submit" className="rounded bg-green-600 px-4 py-2 text-white">
+      {isEditing ? 'Update Post' : 'Publish Post'}
     </button>
-    <button
-      type="button"
-      onClick={onPreviewToggle}
-      className="px-4 py-2 bg-gray-300 rounded"
-    >
-      {preview ? "Edit Mode" : "Preview"}
+    <button type="button" onClick={onPreviewToggle} className="rounded bg-gray-300 px-4 py-2">
+      {preview ? 'Edit Mode' : 'Preview'}
     </button>
   </div>
 );

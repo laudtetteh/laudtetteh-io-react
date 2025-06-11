@@ -4,16 +4,18 @@
  */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import CharacterCount from '@tiptap/extension-character-count';
-import Underline from '@tiptap/extension-underline';
+import { StarterKit } from '@tiptap/starter-kit';
+import { Image } from '@tiptap/extension-image';
+import { Link } from '@tiptap/extension-link';
+import { Placeholder } from '@tiptap/extension-placeholder';
+import { CharacterCount } from '@tiptap/extension-character-count';
+import { Underline } from '@tiptap/extension-underline';
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
+import { generateJSON } from '@tiptap/html';
+
 import WysiwygToolbar from './WysiwygToolbar';
 import WysiwygVisualEditor from './WysiwygVisualEditor';
 import WysiwygHtmlEditor from './WysiwygHtmlEditor';
@@ -23,7 +25,7 @@ import WysiwygCharacterCount from './WysiwygCharacterCount';
  * Props for WysiwygEditor
  */
 export interface WysiwygEditorProps {
-  content: string;
+  content: string | { html: string };
   onChange: (html: string) => void;
   limit?: number;
 }
@@ -31,14 +33,33 @@ export interface WysiwygEditorProps {
 export default function WysiwygEditor({ content, onChange, limit = 5000 }: WysiwygEditorProps) {
   const [mode, setMode] = useState<'visual' | 'html'>('visual');
   const [isClient, setIsClient] = useState(false);
-  const [localContent, setLocalContent] = useState(content);
+  const [localContent, setLocalContent] = useState('');
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // Helper: get Tiptap-compatible content (JSON or HTML)
+  const getTiptapContent = useCallback(
+    (rawContent: string | { html: string }) => {
+      if (typeof rawContent === 'object' && rawContent !== null && 'html' in rawContent) {
+        // Convert HTML to Tiptap JSON
+        return generateJSON(rawContent.html, [
+          StarterKit,
+          Underline,
+          Image.configure({ inline: true, allowBase64: true }),
+          Link.configure({ openOnClick: false }),
+          Placeholder.configure({ placeholder: 'Write your post content here...' }),
+          CharacterCount.configure({ limit }),
+        ]);
+      }
+      return rawContent || '';
+    },
+    [limit],
+  );
+
   const editor = useEditor({
-    content,
+    content: getTiptapContent(content),
     editable: true,
     extensions: [
       StarterKit.configure(),
@@ -55,7 +76,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
               props: {
                 handlePaste(view, event) {
                   const items = event.clipboardData?.items || [];
-                  for (let item of items) {
+                  for (const item of items) {
                     if (item.type.indexOf('image') === 0) {
                       const file = item.getAsFile();
                       if (file) {
@@ -68,7 +89,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
                 },
                 handleDrop(view, event) {
                   const files = event.dataTransfer?.files || [];
-                  for (let file of files) {
+                  for (const file of files) {
                     if (file.type.startsWith('image/')) {
                       uploadAndInsert(file);
                       return true;
@@ -114,20 +135,20 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
   // Hydrate initial content only once
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content || '');
+      editor.commands.setContent(getTiptapContent(content));
     }
-  }, [editor, content]);
+  }, [editor, content, getTiptapContent]);
 
   // Push localContent upstream only when user submits form
   useEffect(() => {
     onChange(localContent);
-  }, [localContent]); // only if you want a sync
+  }, [localContent, onChange]);
 
   if (!editor || !isClient) return null;
 
   return (
-    <div className="border rounded overflow-hidden bg-white">
-      <div className="flex justify-between items-center px-4 py-2 border-b bg-gray-100">
+    <div className="overflow-hidden rounded border bg-white">
+      <div className="flex items-center justify-between border-b bg-gray-100 px-4 py-2">
         <WysiwygToolbar
           editor={editor}
           htmlMode={mode === 'html'}
@@ -145,10 +166,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
           }}
         />
       )}
-      <WysiwygCharacterCount
-        current={editor.storage.characterCount.characters()}
-        limit={limit}
-      />
+      <WysiwygCharacterCount current={editor.storage.characterCount.characters()} limit={limit} />
     </div>
   );
 }

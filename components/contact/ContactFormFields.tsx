@@ -18,7 +18,7 @@ const ContactFormFields: React.FC<ContactFormFieldsProps> = ({ form, onChange })
       required
       value={form.name}
       onChange={onChange}
-      className="w-full border px-4 py-2 rounded"
+      className="w-full rounded border px-4 py-2"
     />
     <input
       type="email"
@@ -27,7 +27,7 @@ const ContactFormFields: React.FC<ContactFormFieldsProps> = ({ form, onChange })
       required
       value={form.email}
       onChange={onChange}
-      className="w-full border px-4 py-2 rounded"
+      className="w-full rounded border px-4 py-2"
     />
     <textarea
       name="message"
@@ -36,7 +36,7 @@ const ContactFormFields: React.FC<ContactFormFieldsProps> = ({ form, onChange })
       rows={5}
       value={form.message}
       onChange={onChange}
-      className="w-full border px-4 py-2 rounded"
+      className="w-full rounded border px-4 py-2"
     />
   </>
 );

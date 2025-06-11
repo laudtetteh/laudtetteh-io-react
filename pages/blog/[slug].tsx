@@ -2,8 +2,10 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
+import { API_BASE_URL } from '@/utils/api';
 
 interface BlogPost {
   title: string;
@@ -18,6 +20,15 @@ interface BlogPost {
 
 interface PostPageProps {
   post: BlogPost;
+}
+
+function hasHtmlField(content: unknown): content is { html: string } {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'html' in content &&
+    typeof (content as { html: unknown }).html === 'string'
+  );
 }
 
 export default function BlogPostPage({ post }: PostPageProps) {
@@ -40,18 +51,18 @@ export default function BlogPostPage({ post }: PostPageProps) {
         <meta name="description" content={post.summary ?? ''} />
       </Head>
 
-      <main className="max-w-3xl mx-auto px-4 py-16 space-y-6 featured-image-1">
-        {post.featuredImage && (
-          <img
-            src={post.featuredImage}
-            alt={`Featured image for ${post.title}`}
-            className="w-full h-64 object-cover rounded"
-          />
-        )}
+      <main className="featured-image-1 mx-auto max-w-3xl space-y-6 px-4 py-16">
+        <Image
+          src={
+            post.featuredImage && post.featuredImage.trim() ? post.featuredImage : '/fallback.png'
+          }
+          alt={`Featured for ${post.title}`}
+          width={500}
+          height={200}
+          className="h-64 w-full rounded object-cover"
+        />
 
-        {post.status && (
-          <p className="text-sm text-gray-500">Status: {post.status}</p>
-        )}
+        {post.status && <p className="text-sm text-gray-500">Status: {post.status}</p>}
 
         <h1 className="text-3xl font-bold">{post.title}</h1>
 
@@ -62,20 +73,24 @@ export default function BlogPostPage({ post }: PostPageProps) {
         )}
 
         {(post.categories ?? []).length > 0 && (
-          <p className="text-sm text-gray-500">
-            Categories: {(post.categories ?? []).join(", ")}
-          </p>
+          <p className="text-sm text-gray-500">Categories: {(post.categories ?? []).join(', ')}</p>
         )}
 
         <article
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{
+            __html: hasHtmlField(post.content) ? post.content.html : post.content,
+          }}
         />
 
-        <div className="pt-6 text-sm space-x-4">
-          <a href={`/blog/${post.slug}`} className="text-blue-600 underline">🔗 View Post</a>
+        <div className="space-x-4 pt-6 text-sm">
+          <a href={`/blog/${post.slug}`} className="text-blue-600 underline">
+            🔗 View Post
+          </a>
           {loggedIn && (
-            <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
+            <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">
+              ✏️ Edit
+            </Link>
           )}
         </div>
       </main>
@@ -94,7 +109,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return { paths, fallback: true };
   } catch (err) {
-    console.error("[getStaticPaths] ❌ Failed to fetch posts:", err);
+    console.error('[getStaticPaths] ❌ Failed to fetch posts:', err);
     return { paths: [], fallback: true };
   }
 };
@@ -104,7 +119,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
-    if (!res.ok) throw new Error("Post not found");
+    if (!res.ok) throw new Error('Post not found');
 
     const post: BlogPost = await res.json();
     return { props: { post }, revalidate: 10 };

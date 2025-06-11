@@ -11,7 +11,7 @@ export interface ContactFormActionsProps {
 const ContactFormActions: React.FC<ContactFormActionsProps> = ({ status }) => (
   <button
     type="submit"
-    className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+    className="w-full rounded bg-black py-2 text-white hover:bg-gray-800"
     disabled={status === 'loading'}
   >
     {status === 'loading' ? 'Sending…' : 'Send Message'}

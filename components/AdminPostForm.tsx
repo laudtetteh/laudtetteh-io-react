@@ -1,30 +1,34 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useFlashMessage } from '@/lib/useFlashMessage';
-import CategoryPicker from './CategoryPicker';
-import ImageUploader from './shared/ImageUploader';
-import {
-  useEditor,
-  EditorContent,
-  Editor,
-} from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import CharacterCount from '@tiptap/extension-character-count';
+import { useEffect, useState, useRef } from 'react';
+import { useEditor } from '@tiptap/react';
+import { StarterKit } from '@tiptap/starter-kit';
+import { Placeholder } from '@tiptap/extension-placeholder';
+import { CharacterCount } from '@tiptap/extension-character-count';
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
-import { uploadImage, getPost } from '@/lib/api';
-import type { PostData } from '@/types/blog';
+import { Underline } from '@tiptap/extension-underline';
+import { Image } from '@tiptap/extension-image';
+import { Link } from '@tiptap/extension-link';
+
 import PostMetaFields from './admin/PostMetaFields';
 import PostContentEditor from './admin/PostContentEditor';
 import PostOptions from './admin/PostOptions';
 import PostImageUploader from './admin/PostImageUploader';
 import PostActions from './admin/PostActions';
+
+import type { PostData } from '@/types/blog';
+import { uploadImage, getPost } from '@/lib/api';
+import { useFlashMessage } from '@/lib/useFlashMessage';
+
+function hasHtmlField(content: unknown): content is { html: string } {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'html' in content &&
+    typeof (content as { html: unknown }).html === 'string'
+  );
+}
 
 export default function AdminPostForm({
   initialData,
@@ -35,57 +39,63 @@ export default function AdminPostForm({
   onSubmit: (data: PostData) => void;
   isEdit?: boolean;
 }) {
-  const router = useRouter();
   const { pushMessage } = useFlashMessage();
 
-  const [formData, setFormData] = useState<PostData | null>(null);
+  const [formData, setFormData] = useState<PostData>({
+    title: initialData?.title || '',
+    slug: initialData?.slug || '',
+    summary: initialData?.summary || '',
+    content:
+      typeof initialData?.content === 'object' &&
+      initialData?.content !== null &&
+      'html' in initialData.content
+        ? initialData.content
+        : { html: initialData?.content || '' },
+    categories: initialData?.categories || [],
+    status: initialData?.status || 'draft',
+    featured: initialData?.featured || false,
+    featuredImage: initialData?.featuredImage || '',
+    weight: initialData?.weight ?? 0,
+  });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [htmlMode, setHtmlMode] = useState(false);
-  const [editorContent, setEditorContent] = useState('');
+  const didMount = useRef(false);
 
   useEffect(() => {
-    if (initialData) {
-      const fullData: PostData = {
+    if (!didMount.current && initialData) {
+      setFormData({
         title: initialData.title || '',
         slug: initialData.slug || '',
         summary: initialData.summary || '',
-        content: initialData.content || '',
+        content:
+          typeof initialData.content === 'object' &&
+          initialData.content !== null &&
+          'html' in initialData.content
+            ? initialData.content
+            : { html: initialData.content || '' },
         categories: initialData.categories || [],
         status: initialData.status || 'draft',
         featured: initialData.featured || false,
         featuredImage: initialData.featuredImage || '',
         weight: initialData.weight ?? 0,
-      };
-      setFormData(fullData);
-      setEditorContent(fullData.content);
-    } else {
-      setFormData({
-        title: '',
-        slug: '',
-        summary: '',
-        content: '',
-        categories: [],
-        status: 'draft',
-        featured: false,
-        featuredImage: '',
-        weight: 0,
       });
-      setEditorContent('');
+      didMount.current = true;
     }
   }, [initialData]);
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!formData?.title.trim()) errs.title = 'Title is required';
-    if (!formData?.slug.trim()) errs.slug = 'Slug is required';
-    if (!/^[a-z0-9-]+$/.test(formData?.slug || '')) errs.slug = 'Slug must be lowercase letters, numbers, or hyphens only';
-    if (!formData?.summary.trim()) errs.summary = 'Summary is required';
-    if (!editorContent.trim()) errs.content = 'Content is required';
+    if (!formData.title.trim()) errs.title = 'Title is required';
+    if (!formData.slug.trim()) errs.slug = 'Slug is required';
+    if (!/^[a-z0-9-]+$/.test(formData.slug))
+      errs.slug = 'Slug must be lowercase letters, numbers, or hyphens only';
+    if (!formData.summary.trim()) errs.summary = 'Summary is required';
+    if (!formData.content.html.trim()) errs.content = 'Content is required';
     return errs;
   };
 
   const editor = useEditor({
-    content: editorContent,
+    content: hasHtmlField(formData.content) ? formData.content.html : formData.content,
     extensions: [
       StarterKit.configure(),
       Underline,
@@ -101,7 +111,7 @@ export default function AdminPostForm({
               props: {
                 handlePaste(view, event) {
                   const items = event.clipboardData?.items || [];
-                  for (let item of items) {
+                  for (const item of items) {
                     if (item.type.indexOf('image') === 0) {
                       const file = item.getAsFile();
                       if (file) {
@@ -114,7 +124,7 @@ export default function AdminPostForm({
                 },
                 handleDrop(view, event) {
                   const files = event.dataTransfer?.files || [];
-                  for (let file of files) {
+                  for (const file of files) {
                     if (file.type.startsWith('image/')) {
                       uploadAndInsert(file);
                       return true;
@@ -130,15 +140,9 @@ export default function AdminPostForm({
     ],
     onUpdate({ editor }) {
       const html = editor.getHTML();
-      setEditorContent(html);
+      setFormData((prev) => ({ ...prev, content: { html } }));
     },
   });
-
-  useEffect(() => {
-    if (editor && formData) {
-      editor.commands.setContent(formData.content || '');
-    }
-  }, [editor, formData]);
 
   async function uploadAndInsert(file: File) {
     const token = localStorage.getItem('token');
@@ -152,7 +156,6 @@ export default function AdminPostForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData) return;
 
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -160,9 +163,17 @@ export default function AdminPostForm({
       return;
     }
 
+    // Normalize content to always be an object { html: string }
+    const normalizedContent =
+      typeof formData.content === 'string'
+        ? { html: formData.content }
+        : hasHtmlField(formData.content)
+          ? formData.content
+          : { html: '' };
+
     const updated = {
       ...formData,
-      content: editorContent,
+      content: normalizedContent,
       categories: formData.categories.length > 0 ? formData.categories : ['uncategorized'],
     };
 
@@ -179,27 +190,25 @@ export default function AdminPostForm({
     onSubmit(updated);
   };
 
-  if (!formData) return <p className="text-center py-10">Loading form...</p>;
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto py-10">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-6 py-10">
       {/* Title, Slug, Summary */}
       <PostMetaFields
         title={formData.title}
         slug={formData.slug}
         summary={formData.summary}
         errors={errors}
-        onChange={(field, value) => setFormData({ ...formData, [field]: value })}
-        />
+        onChange={(field, value) => setFormData((prev) => ({ ...prev, [field]: value }))}
+      />
 
       {/* Content Editor */}
       <PostContentEditor
         editor={editor}
-        editorContent={editorContent}
+        editorContent={formData.content}
         htmlMode={htmlMode}
         setHtmlMode={setHtmlMode}
         errors={errors}
-        setEditorContent={setEditorContent}
+        setEditorContent={(content) => setFormData((prev) => ({ ...prev, content }))}
       />
 
       {/* Categories, Status, Featured, Weight */}
@@ -207,15 +216,17 @@ export default function AdminPostForm({
         categories={formData.categories}
         status={formData.status}
         featured={formData.featured}
-        weight={formData.weight || 0}
-        onChange={(field, value) => setFormData({ ...formData, [field]: value })}
-          />
-
-      <PostImageUploader
-        imageUrl={formData.featuredImage || ''}
-        onChange={(url) => setFormData({ ...formData, featuredImage: url })}
+        weight={formData.weight ?? 0}
+        onChange={(field, value) => setFormData((prev) => ({ ...prev, [field]: value }))}
       />
 
+      {/* Featured Image */}
+      <PostImageUploader
+        imageUrl={formData.featuredImage || ''}
+        onChange={(url: string) => setFormData((prev) => ({ ...prev, featuredImage: url }))}
+      />
+
+      {/* Submit Button */}
       <PostActions isEdit={isEdit} />
     </form>
   );

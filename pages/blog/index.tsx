@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type BlogPost = {
   title: string;
@@ -19,45 +20,69 @@ const BlogIndex: React.FC = () => {
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (Array.isArray(data)) setPosts(data);
-        else console.error("❌ Unexpected blog response:", data);
+        else console.error('❌ Unexpected blog response:', data);
       });
 
     const token = typeof window !== 'undefined' && localStorage.getItem('token');
     setLoggedIn(Boolean(token));
   }, []);
 
-  const featured = posts.filter(p => p.status === "published" && p.featured === true);
+  const featured = posts.filter((p) => p.status === 'published' && p.featured === true);
   const regular = posts
-    .filter(p => p.status === "published" && !p.featured)
+    .filter((p) => p.status === 'published' && !p.featured)
     .sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0));
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8">Blog</h1>
+    <div className="mx-auto max-w-4xl px-4 py-12">
+      <h1 className="mb-8 text-3xl font-bold">Blog</h1>
 
       {featured.length > 0 && (
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">🌟 Featured</h2>
+          <h2 className="mb-4 text-2xl font-bold">🌟 Featured</h2>
           <div className="grid gap-8 md:grid-cols-2">
-            {featured.map(post => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="block border rounded-lg overflow-hidden shadow-sm bg-white dark:bg-gray-900 hover:shadow-md transition">
+            {featured.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block overflow-hidden rounded-lg border bg-white shadow-sm transition hover:shadow-md dark:bg-gray-900"
+              >
                 <div>
-                  <img src={post.featuredImage} alt={post.title} className="w-full h-48 object-cover" />
+                  <Image
+                    src={
+                      post.featuredImage && post.featuredImage.trim()
+                        ? post.featuredImage
+                        : '/fallback.png'
+                    }
+                    alt={post.title}
+                    width={500}
+                    height={200}
+                    className="h-32 w-full object-cover"
+                  />
                   <div className="p-4">
-                    <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                    <p className="text-gray-500 text-sm mb-2">{post.date}</p>
+                    <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+                    <p className="mb-2 text-sm text-gray-500">{post.date}</p>
                     <div className="mb-2">
-                      {post.categories?.map(cat => (
-                        <span key={cat} className="inline-block bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded mr-2">{cat}</span>
+                      {post.categories?.map((cat) => (
+                        <span
+                          key={cat}
+                          className="mr-2 inline-block rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700"
+                        >
+                          {cat}
+                        </span>
                       ))}
                     </div>
                     <p className="text-gray-700 dark:text-gray-300">{post.summary}</p>
                     {loggedIn && (
                       <div className="mt-4">
-                        <Link href={`/admin/edit/${post.slug}`} className="text-blue-500 text-sm underline">Edit</Link>
+                        <Link
+                          href={`/admin/edit/${post.slug}`}
+                          className="text-sm text-blue-500 underline"
+                        >
+                          Edit
+                        </Link>
                       </div>
                     )}
                   </div>
@@ -68,24 +93,48 @@ const BlogIndex: React.FC = () => {
         </div>
       )}
 
-      <h2 className="text-2xl font-bold mb-4">All Posts</h2>
+      <h2 className="mb-4 text-2xl font-bold">All Posts</h2>
       <div className="grid gap-8 md:grid-cols-2">
-        {regular.map(post => (
-          <Link key={post.slug} href={`/blog/${post.slug}`} className="block border rounded-lg overflow-hidden shadow-sm bg-white dark:bg-gray-900 hover:shadow-md transition">
+        {regular.map((post) => (
+          <Link
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            className="block overflow-hidden rounded-lg border bg-white shadow-sm transition hover:shadow-md dark:bg-gray-900"
+          >
             <div>
-              <img src={post.featuredImage} alt={post.title} className="w-full h-48 object-cover" />
+              <Image
+                src={
+                  post.featuredImage && post.featuredImage.trim()
+                    ? post.featuredImage
+                    : '/fallback.png'
+                }
+                alt={post.title}
+                width={500}
+                height={200}
+                className="h-32 w-full object-cover"
+              />
               <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                <p className="text-gray-500 text-sm mb-2">{post.date}</p>
+                <h2 className="mb-2 text-xl font-semibold">{post.title}</h2>
+                <p className="mb-2 text-sm text-gray-500">{post.date}</p>
                 <div className="mb-2">
-                  {post.categories?.map(cat => (
-                    <span key={cat} className="inline-block bg-gray-200 dark:bg-gray-700 text-xs px-2 py-1 rounded mr-2">{cat}</span>
+                  {post.categories?.map((cat) => (
+                    <span
+                      key={cat}
+                      className="mr-2 inline-block rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700"
+                    >
+                      {cat}
+                    </span>
                   ))}
                 </div>
                 <p className="text-gray-700 dark:text-gray-300">{post.summary}</p>
                 {loggedIn && (
                   <div className="mt-4">
-                    <Link href={`/admin/edit/${post.slug}`} className="text-blue-500 text-sm underline">Edit</Link>
+                    <Link
+                      href={`/admin/edit/${post.slug}`}
+                      className="text-sm text-blue-500 underline"
+                    >
+                      Edit
+                    </Link>
                   </div>
                 )}
               </div>
