@@ -53,6 +53,5 @@ jobs:
 
             echo "Container status:"
             docker ps
-
-      - name: Print FastAPI logs
-        run: docker logs fastapi-app || true
+            echo "FastAPI logs:"
+            docker logs fastapi-app || true
