@@ -46,8 +46,13 @@ jobs:
 
             docker compose -f docker-compose.yml down --volumes --remove-orphans || true
 
+            docker system prune -af --volumes
+
             echo "Rebuilding and starting containers..."
             docker compose -f docker-compose.yml up -d --build
 
             echo "Container status:"
             docker ps
+
+      - name: Print FastAPI logs
+        run: docker logs fastapi-app || true
