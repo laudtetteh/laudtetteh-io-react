@@ -11,6 +11,7 @@ import { Underline } from '@tiptap/extension-underline';
 import { Image } from '@tiptap/extension-image';
 import { Link } from '@tiptap/extension-link';
 
+// admin imports
 import PostMetaFields from './admin/PostMetaFields';
 import PostContentEditor from './admin/PostContentEditor';
 import PostOptions from './admin/PostOptions';
