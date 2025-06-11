@@ -28,4 +28,4 @@ repos:
     hooks:
       - id: mypy
         files: "\\.py$"
-        args: ["--config-file=mypy.ini"]
+        args: ['--config-file=mypy.ini']
