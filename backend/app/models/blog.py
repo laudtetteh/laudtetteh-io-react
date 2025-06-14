@@ -16,7 +16,7 @@ class BlogPost(BaseModel):
     title: str = Field(..., example="Understanding FastAPI")
     slug: str = Field(..., example="understanding-fastapi")
     summary: str = Field(..., example="Intro to FastAPI with examples.")
-    content: str = Field(..., example="<p>This is the full article...</p>")
+    content: dict[str, str] = Field(..., example={"html": "<p>This is the full article...</p>"})
     status: Literal["draft", "published"] = Field(default="draft")
     categories: List[str] = Field(default=[], example=["Python", "Backend"])
     date: datetime = Field(default_factory=datetime.utcnow)
@@ -29,7 +29,7 @@ class BlogPostIn(BaseModel):
     title: str
     slug: str
     summary: str
-    content: str
+    content: dict[str, str]
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
     featuredImage: Optional[str] = ""
@@ -41,7 +41,7 @@ class BlogPostOut(BaseModel):
     title: str
     slug: str
     summary: str
-    content: str
+    content: dict[str, str]
     date: datetime
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
