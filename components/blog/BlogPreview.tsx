@@ -7,7 +7,7 @@ import React from 'react';
 export interface BlogPreviewProps {
   title: string;
   summary: string;
-  content: string;
+  content: { html: string };
 }
 
 const BlogPreview: React.FC<BlogPreviewProps> = ({ title, summary, content }) => (
@@ -16,7 +16,7 @@ const BlogPreview: React.FC<BlogPreviewProps> = ({ title, summary, content }) =>
     <p className="text-sm text-gray-500">{summary}</p>
     <div
       className="mt-4 prose max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: content.html }}
     />
   </div>
 );

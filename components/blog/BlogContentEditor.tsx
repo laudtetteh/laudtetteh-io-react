@@ -5,8 +5,8 @@
 import React from 'react';
 
 export interface BlogContentEditorProps {
-  content: string;
-  onChange: (value: string) => void;
+  content: { html: string };
+  onChange: (value: { html: string }) => void;
 }
 
 const BlogContentEditor: React.FC<BlogContentEditorProps> = ({ content, onChange }) => (
@@ -15,8 +15,8 @@ const BlogContentEditor: React.FC<BlogContentEditorProps> = ({ content, onChange
     name="content"
     placeholder="HTML Content"
     rows={10}
-    value={content}
-    onChange={e => onChange(e.target.value)}
+    value={content.html}
+    onChange={e => onChange({ html: e.target.value })}
   />
 );
 

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
+import Layout from '@/components/Layout';
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -37,9 +38,11 @@ export default function CreatePostPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6">➕ Create New Post</h1>
-      <AdminPostForm onSubmit={handleCreate} />
-    </div>
+    <Layout title="Create Post | Laud Tetteh" description="Create a new blog post as an admin.">
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <h1 className="text-3xl font-bold mb-6">➕ Create New Post</h1>
+        <AdminPostForm onSubmit={handleCreate} />
+      </div>
+    </Layout>
   );
 }

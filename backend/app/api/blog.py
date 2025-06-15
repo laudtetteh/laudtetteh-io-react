@@ -52,7 +52,7 @@ async def create_post(post_in: BlogPostIn):
         raise HTTPException(status_code=400, detail="Slug already exists")
 
     post = post_in.dict()
-    post["content"] = sanitize_html(post["content"])
+    post["content"]["html"] = sanitize_html(post["content"]["html"])
     post["date"] = datetime.utcnow()
     await posts_collection.insert_one(post)
     return post
@@ -61,7 +61,7 @@ async def create_post(post_in: BlogPostIn):
 async def update_post(slug: str, updated: BlogPostIn):
     updated_post = updated.dict()
     updated_post["date"] = datetime.utcnow()
-    updated_post["content"] = sanitize_html(updated_post["content"])
+    updated_post["content"]["html"] = sanitize_html(updated_post["content"]["html"])
     result = await posts_collection.find_one_and_update(
         {"slug": slug},
         {"$set": updated_post},

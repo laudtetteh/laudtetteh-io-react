@@ -3,11 +3,11 @@ import { Editor, EditorContent } from '@tiptap/react';
 
 interface PostContentEditorProps {
   editor: Editor | null;
-  editorContent: string;
+  editorContent: { html: string };
   htmlMode: boolean;
   setHtmlMode: (mode: boolean) => void;
   errors: { [key: string]: string };
-  setEditorContent: (content: string) => void;
+  setEditorContent: (content: { html: string }) => void;
 }
 
 const PostContentEditor: React.FC<PostContentEditorProps> = ({
@@ -39,10 +39,10 @@ const PostContentEditor: React.FC<PostContentEditorProps> = ({
       {htmlMode ? (
         <textarea
           className="block w-full h-[400px] px-4 py-3 font-mono resize-y focus:outline-none focus:ring-2 focus:ring-blue-300"
-          value={editorContent}
+          value={editorContent.html}
           onChange={(e) => {
             const val = e.target.value;
-            setEditorContent(val);
+            setEditorContent({ html: val });
             editor?.commands.setContent(val);
           }}
           rows={20}

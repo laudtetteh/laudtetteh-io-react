@@ -19,7 +19,7 @@ export default function BlogForm({ initialData, isEditing = false }: BlogFormPro
       title: "",
       slug: "",
       summary: "",
-      content: "",
+      content: { html: "" },
     }
   );
 
@@ -43,7 +43,10 @@ export default function BlogForm({ initialData, isEditing = false }: BlogFormPro
       const imageUrl = await uploadImage(image, token);
       setFormData((prev) => ({
         ...prev,
-        content: prev.content + `\n\n<img src="${imageUrl}" alt="uploaded image" />`,
+        content: {
+          ...prev.content,
+          html: prev.content.html + `\n\n<img src="${imageUrl}" alt="uploaded image" />`,
+        },
       }));
     } catch (e) {
       alert('Image upload failed');

@@ -9,14 +9,18 @@ Includes:
 
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
+from typing_extensions import TypedDict
 from datetime import datetime
+
+class Content(TypedDict):
+    html: str
 
 class BlogPost(BaseModel):
     """Full representation of a blog post, including internal metadata."""
     title: str = Field(..., example="Understanding FastAPI")
     slug: str = Field(..., example="understanding-fastapi")
     summary: str = Field(..., example="Intro to FastAPI with examples.")
-    content: dict[str, str] = Field(..., example={"html": "<p>This is the full article...</p>"})
+    content: Content = Field(..., example={"html": "<p>This is the full article...</p>"})
     status: Literal["draft", "published"] = Field(default="draft")
     categories: List[str] = Field(default=[], example=["Python", "Backend"])
     date: datetime = Field(default_factory=datetime.utcnow)
@@ -29,7 +33,7 @@ class BlogPostIn(BaseModel):
     title: str
     slug: str
     summary: str
-    content: dict[str, str]
+    content: Content
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
     featuredImage: Optional[str] = ""
@@ -41,7 +45,7 @@ class BlogPostOut(BaseModel):
     title: str
     slug: str
     summary: str
-    content: dict[str, str]
+    content: Content
     date: datetime
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])

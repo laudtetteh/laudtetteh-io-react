@@ -23,22 +23,22 @@ import WysiwygCharacterCount from './WysiwygCharacterCount';
  * Props for WysiwygEditor
  */
 export interface WysiwygEditorProps {
-  content: string;
-  onChange: (html: string) => void;
+  content: { html: string };
+  onChange: (content: { html: string }) => void;
   limit?: number;
 }
 
 export default function WysiwygEditor({ content, onChange, limit = 5000 }: WysiwygEditorProps) {
   const [mode, setMode] = useState<'visual' | 'html'>('visual');
   const [isClient, setIsClient] = useState(false);
-  const [localContent, setLocalContent] = useState(content);
+  const [localContent, setLocalContent] = useState<{ html: string }>({ html: content.html });
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const editor = useEditor({
-    content,
+    content: content.html,
     editable: true,
     extensions: [
       StarterKit.configure(),
@@ -84,7 +84,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
     ],
     onUpdate({ editor }) {
       const html = editor.getHTML();
-      setLocalContent(html); // only local update
+      setLocalContent({ html }); // only local update
     },
   });
 
@@ -113,8 +113,8 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
 
   // Hydrate initial content only once
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content || '');
+    if (editor && content.html !== editor.getHTML()) {
+      editor.commands.setContent(content.html || '');
     }
   }, [editor, content]);
 
@@ -141,7 +141,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
           value={localContent}
           onChange={(val) => {
             setLocalContent(val);
-            editor?.commands.setContent(val);
+            editor?.commands.setContent(val.html);
           }}
         />
       )}

@@ -1,57 +1,65 @@
+# GitHub Actions workflow for deploying the app to DigitalOcean
 name: Deploy to DigitalOcean
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Trigger deployment only on pushes to main branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Fetch the latest code from the repo
 
       - name: Generate .env.production from secret
+        # Create the .env.production file from a GitHub secret
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
       - name: Copy app files to DigitalOcean
+        # Securely copy all app files to the target DigitalOcean droplet
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          source: "./"
-          target: "~/app"
-          strip_components: 0
+          host: ${{ secrets.DO_HOST }}  # DigitalOcean droplet IP/hostname
+          username: ${{ secrets.DO_USER }}  # SSH username
+          key: ${{ secrets.DO_SSH_KEY }}  # SSH private key (stored as secret)
+          source: "./"  # Copy everything in the repo
+          target: "~/app"  # Destination directory on the droplet
+          strip_components: 0  # Preserve directory structure
 
       - name: SSH and deploy
+        # SSH into the droplet and run deployment commands
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            cd ~/app
+            cd ~/app  # Move to the app directory
 
             echo "Writing env file..."
+            # Write the environment variables to .env.production
             cat <<EOF > .env.production
             ${{ secrets.ENV_PRODUCTION }}
             EOF
 
             echo "Restarting containers..."
-            # Load env vars early so Docker Compose doesn't complain
+            # Export env vars so Docker Compose can use them
             export $(grep -v '^#' .env.production | xargs)
 
+            # Stop and remove existing containers, volumes, and orphans
             docker compose -f docker-compose.yml down --volumes --remove-orphans || true
 
+            # Clean up unused Docker resources to free space
             docker system prune -af --volumes
 
             echo "Rebuilding and starting containers..."
+            # Build and start containers in detached mode
             docker compose -f docker-compose.yml up -d --build
 
             echo "Container status:"
-            docker ps
+            docker ps  # Show running containers
             echo "FastAPI logs:"
-            docker logs fastapi-app || true
+            docker logs fastapi-app || true  # Show FastAPI logs for debugging

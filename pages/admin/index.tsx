@@ -16,6 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
+import Layout from '@/components/Layout';
 
 interface BlogPost {
   title: string;
@@ -224,71 +225,73 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">🛠️ Admin Dashboard</h1>
-        <button
-          onClick={() => router.push("/admin/create")}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-        >
-          ➕ New Post
-        </button>
-      </div>
+    <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
+      <div className="max-w-4xl mx-auto py-12 px-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">🛠️ Admin Dashboard</h1>
+          <button
+            onClick={() => router.push("/admin/create")}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            ➕ New Post
+          </button>
+        </div>
 
-      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <input
-          type="text"
-          placeholder="🔍 Search title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-2"
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="border rounded px-3 py-2"
-        >
-          <option value="">All Statuses</option>
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-        </select>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border rounded px-3 py-2"
-        >
-          <option value="">All Categories</option>
-          {allCategories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-        <input
-          type="date"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          className="border rounded px-3 py-2"
-        />
-      </div>
-
-      {error && <p className="text-red-600">{error}</p>}
-
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={filtered.map(p => p.slug)} strategy={verticalListSortingStrategy}>
-          <ul className="space-y-6">
-            {filtered.map((post) => (
-              <SortablePost
-                key={post.slug}
-                post={post}
-                onEdit={() => router.push(`/admin/edit/${post.slug}`)}
-                onView={() => router.push(`/blog/${post.slug}`)}
-                onDelete={() => handleDelete(post.slug)}
-              />
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <input
+            type="text"
+            placeholder="🔍 Search title..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded px-3 py-2"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border rounded px-3 py-2"
+          >
+            <option value="">All Statuses</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="border rounded px-3 py-2"
+          >
+            <option value="">All Categories</option>
+            {allCategories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
-          </ul>
-        </SortableContext>
-      </DndContext>
-    </div>
+          </select>
+          <input
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="border rounded px-3 py-2"
+          />
+        </div>
+
+        {error && <p className="text-red-600">{error}</p>}
+
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={filtered.map(p => p.slug)} strategy={verticalListSortingStrategy}>
+            <ul className="space-y-6">
+              {filtered.map((post) => (
+                <SortablePost
+                  key={post.slug}
+                  post={post}
+                  onEdit={() => router.push(`/admin/edit/${post.slug}`)}
+                  onView={() => router.push(`/blog/${post.slug}`)}
+                  onDelete={() => handleDelete(post.slug)}
+                />
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
+      </div>
+    </Layout>
   );
 }

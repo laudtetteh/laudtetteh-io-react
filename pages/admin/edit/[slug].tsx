@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
 import dynamic from 'next/dynamic';
+import Layout from '@/components/Layout';
 
 interface BlogPost {
   title: string;
   slug: string;
   summary: string;
-  content: string;
+  content: { html: string };
   categories: string[];
   status: 'draft' | 'published';
   featured: boolean;
@@ -95,13 +96,15 @@ export default function EditPostPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-6">✏️ Edit Post</h1>
-      {post ? (
-        <AdminPostForm initialData={post} onSubmit={handleUpdate} isEdit />
-      ) : (
-        <p className="text-gray-500">Loading post data…</p>
-      )}
-    </div>
+    <Layout title={post ? `Edit: ${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh` : 'Edit Post | Laud Tetteh'} description={post ? `Edit the post '${Array.isArray(post.title) ? post.title.join(' ') : post.title}' as an admin.` : 'Edit a blog post as an admin.'}>
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <h1 className="text-3xl font-bold mb-6">✏️ Edit Post</h1>
+        {post ? (
+          <AdminPostForm initialData={post} onSubmit={handleUpdate} isEdit />
+        ) : (
+          <p className="text-gray-500">Loading post data…</p>
+        )}
+      </div>
+    </Layout>
   );
 }

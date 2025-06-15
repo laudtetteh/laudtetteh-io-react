@@ -41,7 +41,7 @@ export default function AdminPostForm({
   const [formData, setFormData] = useState<PostData | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [htmlMode, setHtmlMode] = useState(false);
-  const [editorContent, setEditorContent] = useState('');
+  const [editorContent, setEditorContent] = useState<{ html: string }>({ html: '' });
 
   useEffect(() => {
     if (initialData) {
@@ -49,7 +49,7 @@ export default function AdminPostForm({
         title: initialData.title || '',
         slug: initialData.slug || '',
         summary: initialData.summary || '',
-        content: initialData.content || '',
+        content: initialData.content || { html: '' },
         categories: initialData.categories || [],
         status: initialData.status || 'draft',
         featured: initialData.featured || false,
@@ -57,20 +57,20 @@ export default function AdminPostForm({
         weight: initialData.weight ?? 0,
       };
       setFormData(fullData);
-      setEditorContent(fullData.content);
+      setEditorContent(fullData.content || { html: '' });
     } else {
       setFormData({
         title: '',
         slug: '',
         summary: '',
-        content: '',
+        content: { html: '' },
         categories: [],
         status: 'draft',
         featured: false,
         featuredImage: '',
         weight: 0,
       });
-      setEditorContent('');
+      setEditorContent({ html: '' });
     }
   }, [initialData]);
 
@@ -80,12 +80,12 @@ export default function AdminPostForm({
     if (!formData?.slug.trim()) errs.slug = 'Slug is required';
     if (!/^[a-z0-9-]+$/.test(formData?.slug || '')) errs.slug = 'Slug must be lowercase letters, numbers, or hyphens only';
     if (!formData?.summary.trim()) errs.summary = 'Summary is required';
-    if (!editorContent.trim()) errs.content = 'Content is required';
+    if (!editorContent.html.trim()) errs.content = 'Content is required';
     return errs;
   };
 
   const editor = useEditor({
-    content: editorContent,
+    content: editorContent.html,
     extensions: [
       StarterKit.configure(),
       Underline,
@@ -130,13 +130,13 @@ export default function AdminPostForm({
     ],
     onUpdate({ editor }) {
       const html = editor.getHTML();
-      setEditorContent(html);
+      setEditorContent({ html });
     },
   });
 
   useEffect(() => {
     if (editor && formData) {
-      editor.commands.setContent(formData.content || '');
+      editor.commands.setContent(formData.content.html || '');
     }
   }, [editor, formData]);
 
@@ -162,7 +162,7 @@ export default function AdminPostForm({
 
     const updated = {
       ...formData,
-      content: editorContent,
+      content: { html: editorContent.html },
       categories: formData.categories.length > 0 ? formData.categories : ['uncategorized'],
     };
 

@@ -4,11 +4,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
+import Layout from '@/components/Layout';
 
 interface BlogPost {
   title: string;
   slug: string;
-  content: string;
+  content: { html: string };
   summary?: string;
   date?: string;
   status?: string;
@@ -34,12 +35,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
   }
 
   return (
-    <>
-      <Head>
-        <title>{post.title} | Laud Tetteh</title>
-        <meta name="description" content={post.summary ?? ''} />
-      </Head>
-
+    <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
       <main className="max-w-3xl mx-auto px-4 py-16 space-y-6 featured-image-1">
         {post.featuredImage && (
           <img
@@ -69,7 +65,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
 
         <article
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: post.content.html }}
         />
 
         <div className="pt-6 text-sm space-x-4">
@@ -79,7 +75,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
           )}
         </div>
       </main>
-    </>
+    </Layout>
   );
 }
 
@@ -115,7 +111,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         post: {
           title: 'Post not found',
           slug,
-          content: '<p>This post could not be loaded.</p>',
+          content: { html: '<p>This post could not be loaded.</p>' },
         },
       },
     };
