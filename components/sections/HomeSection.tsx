@@ -33,13 +33,9 @@ const AnimatedText: React.FC = () => {
 };
 
 const HomeSection: React.FC = () => (
-  <section id="home" className="flex flex-col items-center justify-center text-center py-10 sm:py-16 w-full" aria-labelledby="home-heading">
-    <img src="/avatar-placeholder.png" alt="Laud Tetteh avatar" className="w-20 h-20 sm:w-28 sm:h-28 rounded-full mb-4 sm:mb-6 shadow-lg" />
-    <h1 id="home-heading" className="text-2xl sm:text-4xl font-extrabold mb-2">Laud Tetteh</h1>
+  <section id="home" className="flex flex-col items-center justify-center text-center py-32 w-full min-h-[60vh]">
+    <h1 id="home-heading" className="text-4xl sm:text-5xl md:text-6xl font-extrabold uppercase tracking-widest font-syne mb-4">Laud Tetteh</h1>
     <AnimatedText />
-    <p className="text-gray-700 dark:text-gray-400 max-w-xl mx-auto mt-3 sm:mt-4 text-sm sm:text-base">
-      Welcome! I build modern web applications and digital experiences. Passionate about code, design, and solving real-world problems with technology.
-    </p>
   </section>
 );
 
