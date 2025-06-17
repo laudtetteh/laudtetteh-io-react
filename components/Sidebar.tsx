@@ -83,58 +83,56 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
       {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black bg-opacity-40 flex md:hidden">
-          <aside className="bg-white w-64 min-h-full flex flex-col items-center py-10 border-r border-gray-200 shadow-lg relative" role="complementary" aria-label="Sidebar">
-            <button
-              className="absolute top-4 right-4 text-gray-500 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close navigation menu"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="mb-8">
-              <img src={avatarUrl} alt={`${name} avatar`} className="w-20 h-20 rounded-full mx-auto shadow-lg" />
-              <h2 className="mt-4 text-xl font-extrabold text-center tracking-wide uppercase font-syne">{name}</h2>
-            </div>
-            <nav className="flex-1 w-full" aria-label="Main navigation">
-              <ul className="space-y-4">
-                {sectionKeys.map((section) => (
-                  <li key={section}>
-                    <button
-                      className={`block w-full text-left px-6 py-3 rounded transition-colors tracking-widest uppercase font-semibold text-base font-syne focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${activeSection === section ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100 text-gray-700'}`}
-                      onClick={() => {
-                        setMobileOpen(false);
-                        onSectionChange(section);
-                      }}
-                      aria-current={activeSection === section ? 'page' : undefined}
-                    >
-                      {section}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <div className="mt-8 flex space-x-5 font-mont">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.url}
-                  aria-label={link.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-transform duration-200 hover:scale-125 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                >
-                  <i className={link.iconClass}></i>
-                </a>
+      <div className={`fixed inset-0 z-40 bg-black bg-opacity-40 flex md:hidden${mobileOpen ? '' : ' hidden'}`}>
+        <aside className="bg-white w-64 min-h-full flex flex-col items-center py-10 border-r border-gray-200 shadow-lg relative" role="complementary" aria-label="Sidebar">
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation menu"
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="mb-8">
+            <img src={avatarUrl} alt={`${name} avatar`} className="w-20 h-20 rounded-full mx-auto shadow-lg" />
+            <h2 className="mt-4 text-xl font-extrabold text-center tracking-wide uppercase font-syne">{name}</h2>
+          </div>
+          <nav className="flex-1 w-full" aria-label="Main navigation">
+            <ul className="space-y-4">
+              {sectionKeys.map((section) => (
+                <li key={section}>
+                  <button
+                    className={`block w-full text-left px-6 py-3 rounded transition-colors tracking-widest uppercase font-semibold text-base font-syne focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${activeSection === section ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100 text-gray-700'}`}
+                    onClick={() => {
+                      setMobileOpen(false);
+                      onSectionChange(section);
+                    }}
+                    aria-current={activeSection === section ? 'page' : undefined}
+                  >
+                    {section}
+                  </button>
+                </li>
               ))}
-            </div>
-            <div className="mt-8 text-xs text-gray-400 text-center tracking-wide font-mont">&copy; {new Date().getFullYear()} {name}</div>
-          </aside>
-        </div>
-      )}
+            </ul>
+          </nav>
+          <div className="mt-8 flex space-x-5 font-mont">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.url}
+                aria-label={link.label}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-transform duration-200 hover:scale-125 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                <i className={link.iconClass}></i>
+              </a>
+            ))}
+          </div>
+          <div className="mt-8 text-xs text-gray-400 text-center tracking-wide font-mont">&copy; {new Date().getFullYear()} {name}</div>
+        </aside>
+      </div>
     </>
   );
 };

@@ -106,12 +106,12 @@ function arlo_tm_trigger_menu(){
 	
 	"use strict";
 
-	var hamburger 		= jQuery('.arlo_tm_topbar .trigger .hamburger');
-	var mobileMenu		= jQuery('.arlo_tm_mobile_menu');
-	var mobileMenuList	= jQuery('.arlo_tm_mobile_menu ul li a');
+	var hamburger = jQuery('.arlo_tm_topbar .trigger .hamburger');
+	var mobileMenu = jQuery('.arlo_tm_mobile_menu');
+	var mobileMenuList = jQuery('.arlo_tm_mobile_menu ul li a');
 
 	hamburger.on('click',function(){
-		var element 	= jQuery(this);
+		var element = jQuery(this);
 
 		if(element.hasClass('is-active')){
 			element.removeClass('is-active');
@@ -204,17 +204,13 @@ function arlo_tm_preloader(){
 	var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ? true : false;
 	var preloader = $('#preloader');
 	
-	if (!isMobile) {
-		setTimeout(function() {
-			preloader.addClass('preloaded');
-		}, 800);
-		setTimeout(function() {
-			preloader.remove();
-		}, 2000);
-
-	} else {
-		preloader.remove();
-	}
+	// Only add class, never remove the preloader div (let React handle it)
+	setTimeout(function() {
+		preloader.addClass('preloaded');
+	}, 800);
+	// setTimeout(function() {
+	// 	preloader.remove();
+	// }, 2000);
 }
 
 // -----------------------------------------------------
@@ -324,13 +320,13 @@ function arlo_tm_data_images(){
 // ----------------   TEXTETION  -------------------
 // -------------------------------------------------
 
- $('.animateText').textition({
-	speed: 1.2,
-	animation: 'ease-out',
-	map: {x: 200, y: 100, z: 0},
-	autoplay: true,
-	interval: 4
-});
+// $('.animateText').textition({
+// 	speed: 1.2,
+// 	animation: 'ease-out',
+// 	map: {x: 200, y: 100, z: 0},
+// 	autoplay: true,
+// 	interval: 4
+// });
 
 // -----------------------------------------------------
 // -------------   PAGE TRANSITION    ------------------

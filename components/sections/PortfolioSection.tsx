@@ -1,50 +1,121 @@
 import React from 'react';
 
-const projects = [
-  {
-    image: '/portfolio-1.jpg',
-    title: 'Modern Web App',
-    category: 'Web Development',
-  },
-  {
-    image: '/portfolio-2.jpg',
-    title: 'Brand Identity',
-    category: 'Design',
-  },
-  {
-    image: '/portfolio-3.jpg',
-    title: 'Mobile App',
-    category: 'Mobile',
-  },
-  {
-    image: '/portfolio-4.jpg',
-    title: 'SEO Campaign',
-    category: 'SEO',
-  },
-];
-
-const SectionHeading: React.FC<{ children: React.ReactNode; id?: string }> = ({ children, id }) => (
-  <div className="mb-6 sm:mb-8">
-    <h2 id={id} className="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-center font-syne">{children}</h2>
-    <div className="mx-auto mt-2 w-12 sm:w-16 h-1 bg-blue-600 rounded-full"></div>
-  </div>
-);
-
 const PortfolioSection: React.FC = () => (
-  <section id="portfolio" className="max-w-4xl mx-auto py-8 sm:py-12 px-2" aria-labelledby="portfolio-heading">
-    <SectionHeading id="portfolio-heading">Creative Portfolio</SectionHeading>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8" aria-label="Portfolio projects">
-      {projects.map((project) => (
-        <div key={project.title} className="bg-white rounded-2xl shadow-xl p-3 sm:p-4 flex flex-col items-center border border-gray-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl group">
-          <div className="w-full h-32 sm:h-48 bg-gray-200 rounded mb-3 sm:mb-4 overflow-hidden flex items-center justify-center">
-            <img src={project.image} alt={`${project.title} preview`} className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg" />
+  <>
+    <div className="arlo_tm_portfolio_titles"></div>
+    <div id="portfolio" className="arlo_tm_section">
+      <div className="section_inner">
+        <div className="arlo_tm_portfolio">
+          <div className="portfolio_list">
+            <div className="arlo_tm_title"><h3>Creative Portfolio</h3></div>
+            <div className="portfolio_filter">
+              <ul>
+                <li><a href="#" className="current" data-filter="*">All</a></li>
+                <li><a href="#" data-filter=".vimeo">Vimeo</a></li>
+                <li><a href="#" data-filter=".youtube">Youtube</a></li>
+                <li><a href="#" data-filter=".soundcloud">Soundcloud</a></li>
+                <li><a href="#" data-filter=".modalbox">Modalbox</a></li>
+              </ul>
+            </div>
+            <ul className="portfolio_item gallery_zoom">
+              <li className="vimeo">
+                <div className="inner">
+                  <div className="entry arlo_tm_portfolio_animation_wrap" data-title="Web Design" data-category="Vimeo">
+                    <a className="popup-vimeo" href="https://vimeo.com/337293658">
+                      <img src="/img/thumbs/1-1.jpg" alt="" />
+                      <div className="abs_image" data-img-url="/img/portfolio/1.jpg"></div>
+                    </a>
+                  </div>
+                </div>
+              </li>
+              <li className="youtube">
+                <div className="inner">
+                  <div className="entry arlo_tm_portfolio_animation_wrap" data-title="Mobile Application" data-category="Youtube">
+                    <a className="popup-youtube" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                      <img src="/img/thumbs/1-1.jpg" alt="" />
+                      <div className="abs_image" data-img-url="/img/portfolio/2.jpg"></div>
+                    </a>
+                  </div>
+                </div>
+              </li>
+              <li className="soundcloud">
+                <div className="inner">
+                  <div className="entry arlo_tm_portfolio_animation_wrap" data-title="Graphic Design" data-category="Soundcloud">
+                    <a className="soundcloude_link mfp-iframe audio" href="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/471954807&amp;color=%23ff5500&amp;auto_play=true&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true">
+                      <img src="/img/thumbs/1-1.jpg" alt="" />
+                      <div className="abs_image" data-img-url="/img/portfolio/3.jpg"></div>
+                    </a>
+                  </div>
+                </div>
+              </li>
+              <li className="modalbox">
+                <div className="inner">
+                  <div className="entry arlo_tm_portfolio_animation_wrap" data-title="Mobile Mockup" data-category="Modalbox">
+                    <a className="popup_info portfolio_popup" href="#">
+                      <img src="/img/thumbs/1-1.jpg" alt="" />
+                      <div className="abs_image" data-img-url="/img/portfolio/4.jpg"></div>
+                    </a>
+                  </div>
+                  <div className="hidden_content_portfolio">
+                    <div className="popup_details">
+                      <div className="main_details">
+                        <div className="textbox">
+                          <p>Web designing is the process of planning, conceptualizing, and implementing the plan for designing a website in a way that is functional and offers a good user experience. User experience is central to the web designing process. Websites have an array of elements presented in ways that make them easy to navigate.</p>
+                          <p>Web designing essentially involves working on every attribute of the website that people interact with, so that the website is simple and efficient, allows users to quickly find the information they need, and looks visually pleasing. All these factors, when combined, decide how well the website is designed.</p>
+                        </div>
+                        <div className="detailbox">
+                          <ul>
+                            <li><span className="first">Client</span><span>David Parker</span></li>
+                            <li><span className="first">Category</span><span><a href="#">Modalbox</a></span></li>
+                            <li><span className="first">Date</span><span>November 22, 2024</span></li>
+                            <li><span className="first">Share</span>
+                              <ul className="share">
+                                <li><a href="#"><img className="svg" src="/img/svg/social/facebook.svg" alt="" /></a></li>
+                                <li><a href="#"><img className="svg" src="/img/svg/social/twitter.svg" alt="" /></a></li>
+                                <li><a href="#"><img className="svg" src="/img/svg/social/instagram.svg" alt="" /></a></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="additional_images">
+                        <ul>
+                          <li>
+                            <div className="list_inner">
+                              <div className="my_image">
+                                <img src="/img/thumbs/4-2.jpg" alt="" />
+                                <div className="main" data-img-url="/img/portfolio/5.jpg"></div>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <div className="list_inner">
+                              <div className="my_image">
+                                <img src="/img/thumbs/4-2.jpg" alt="" />
+                                <div className="main" data-img-url="/img/portfolio/6.jpg"></div>
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <div className="list_inner">
+                              <div className="my_image">
+                                <img src="/img/thumbs/4-2.jpg" alt="" />
+                                <div className="main" data-img-url="/img/portfolio/7.jpg"></div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
-          <h3 className="text-base sm:text-lg font-semibold mb-1 font-syne">{project.title}</h3>
-          <span className="text-xs sm:text-sm text-gray-500 font-mont">{project.category}</span>
         </div>
-      ))}
+      </div>
     </div>
-  </section>
+  </>
 );
 
 export default PortfolioSection; 

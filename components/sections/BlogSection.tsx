@@ -1,48 +1,116 @@
 import React from 'react';
 
-const posts = [
-  {
-    image: '/blog-1.jpg',
-    title: 'How to Create a Modern Portfolio',
-    date: 'Jun 10, 2025',
-    author: 'Laud Tetteh',
-    excerpt: 'Learn how to build a modern, responsive portfolio site using React and Next.js.'
-  },
-  {
-    image: '/blog-2.jpg',
-    title: 'Tips for Better UI/UX',
-    date: 'May 28, 2025',
-    author: 'Laud Tetteh',
-    excerpt: "Simple tips to improve your website's user experience and design."
-  },
-];
-
-const SectionHeading: React.FC<{ children: React.ReactNode; id?: string }> = ({ children, id }) => (
-  <div className="mb-6 sm:mb-8">
-    <h2 id={id} className="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-center font-syne">{children}</h2>
-    <div className="mx-auto mt-2 w-12 sm:w-16 h-1 bg-blue-600 rounded-full"></div>
-  </div>
-);
-
 const BlogSection: React.FC = () => (
-  <section id="blog" className="max-w-3xl mx-auto py-8 sm:py-12 px-2" aria-labelledby="blog-heading">
-    <SectionHeading id="blog-heading">Recent Posts</SectionHeading>
-    <div className="space-y-5 sm:space-y-8" aria-label="Blog posts">
-      {posts.map((post) => (
-        <div key={post.title} className="bg-white rounded-2xl shadow-xl p-3 sm:p-4 flex flex-col md:flex-row items-center border border-gray-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl group">
-          <div className="w-full md:w-40 h-28 sm:md:w-48 sm:h-32 bg-gray-200 rounded mb-3 sm:mb-0 md:mr-6 overflow-hidden flex items-center justify-center">
-            <img src={post.image} alt={`Preview for ${post.title}`} className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg" />
-          </div>
-          <div className="flex-1 text-left mt-2 md:mt-0">
-            <div className="text-xs sm:text-sm text-gray-500 mb-1 font-mont">{post.date} &middot; By {post.author}</div>
-            <h3 className="text-base sm:text-lg font-semibold mb-2 font-syne">{post.title}</h3>
-            <p className="text-gray-600 mb-2 font-mont text-sm sm:text-base">{post.excerpt}</p>
-            <button className="bg-blue-600 text-white rounded-full px-5 py-2 font-semibold text-xs sm:text-sm shadow hover:bg-blue-700 transition-colors duration-200">Read More</button>
-          </div>
+  <div id="blog" className="arlo_tm_section">
+    <div className="section_inner">
+      <div className="arlo_tm_news">
+        <div className="news_list">
+          <div className="arlo_tm_title"><h3>Recent Posts</h3></div>
+          <ul>
+            <li>
+              <div className="list_inner">
+                <div className="image">
+                  <img src="/img/thumbs/4-3.jpg" alt="" />
+                  <div className="main" data-img-url="/img/news/1.jpg"></div>
+                  <a className="arlo_tm_full_link" href="#"></a>
+                  <div className="date"><span>Dec 25, 2024</span></div>
+                </div>
+                <div className="desc">
+                  <div className="meta">
+                    <span>By <a className="line_effect" href="#">Aigars Silcans</a></span><span>In <a className="line_effect" href="#">Lifestyle</a></span>
+                  </div>
+                  <div className="title">
+                    <h3><a className="text_hover_effect" href="#">How to Create WordPress Website Using Elementor</a></h3>
+                  </div>
+                  <div className="arlo_tm_button">
+                    <a href="#">
+                      <span className="back">Read More</span>
+                      <span className="front">Read More</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="news_hidden_details">
+                  <div className="news_popup_informations">
+                    <div className="text">
+                      <p>Arlo is a leading web design agency with an award-winning design team that creates innovative, effective websites that capture your brand, improve your conversion rates, and maximize your revenue to help grow your business and achieve your goals.</p>
+                      <p>In today's digital world, your website is the first interaction consumers have with your business. That's why almost 95 percent of a user's first impression relates to web design. It's also why web design services can have an immense impact on your company's bottom line.</p>
+                      <p>That's why more companies are not only reevaluating their website's design but also partnering with Erling, the web design agency that's driven more than $2.4 billion in revenue for its clients. With over 50 web design awards under our belt, we're confident we can design a custom website that drives sales for your unique business.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="list_inner">
+                <div className="image">
+                  <img src="/img/thumbs/4-3.jpg" alt="" />
+                  <div className="main" data-img-url="/img/news/2.jpg"></div>
+                  <a className="arlo_tm_full_link" href="#"></a>
+                  <div className="date"><span>Dec 22, 2024</span></div>
+                </div>
+                <div className="desc">
+                  <div className="meta">
+                    <span>By <a className="line_effect" href="#">Jessica Parker</a></span><span>In <a className="line_effect" href="#">Design</a></span>
+                  </div>
+                  <div className="title">
+                    <h3><a className="text_hover_effect" href="#">Build Interactive Parallax Effects with  Tweenmax GSAP</a></h3>
+                  </div>
+                  <div className="arlo_tm_button">
+                    <a href="#">
+                      <span className="back">Read More</span>
+                      <span className="front">Read More</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="news_hidden_details">
+                  <div className="news_popup_informations">
+                    <div className="text">
+                      <p>Arlo is a leading web design agency with an award-winning design team that creates innovative, effective websites that capture your brand, improve your conversion rates, and maximize your revenue to help grow your business and achieve your goals.</p>
+                      <p>In today's digital world, your website is the first interaction consumers have with your business. That's why almost 95 percent of a user's first impression relates to web design. It's also why web design services can have an immense impact on your company's bottom line.</p>
+                      <p>That's why more companies are not only reevaluating their website's design but also partnering with Erling, the web design agency that's driven more than $2.4 billion in revenue for its clients. With over 50 web design awards under our belt, we're confident we can design a custom website that drives sales for your unique business.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="list_inner">
+                <div className="image">
+                  <img src="/img/thumbs/4-3.jpg" alt="" />
+                  <div className="main" data-img-url="/img/news/3.jpg"></div>
+                  <a className="arlo_tm_full_link" href="#"></a>
+                  <div className="date"><span>Dec 20, 2024</span></div>
+                </div>
+                <div className="desc">
+                  <div className="meta">
+                    <span>By <a className="line_effect" href="#">Keita Smith</a></span><span>In <a className="line_effect" href="#">Social</a></span>
+                  </div>
+                  <div className="title">
+                    <h3><a className="text_hover_effect" href="#">Learn Unique Website Development with W3Schools</a></h3>
+                  </div>
+                  <div className="arlo_tm_button">
+                    <a href="#">
+                      <span className="back">Read More</span>
+                      <span className="front">Read More</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="news_hidden_details">
+                  <div className="news_popup_informations">
+                    <div className="text">
+                      <p>Arlo is a leading web design agency with an award-winning design team that creates innovative, effective websites that capture your brand, improve your conversion rates, and maximize your revenue to help grow your business and achieve your goals.</p>
+                      <p>In today's digital world, your website is the first interaction consumers have with your business. That's why almost 95 percent of a user's first impression relates to web design. It's also why web design services can have an immense impact on your company's bottom line.</p>
+                      <p>That's why more companies are not only reevaluating their website's design but also partnering with Erling, the web design agency that's driven more than $2.4 billion in revenue for its clients. With over 50 web design awards under our belt, we're confident we can design a custom website that drives sales for your unique business.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
-      ))}
+      </div>
     </div>
-  </section>
+  </div>
 );
 
 export default BlogSection; 

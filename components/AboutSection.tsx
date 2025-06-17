@@ -1,78 +1,124 @@
 import React from 'react';
 
-const skills = [
-  { name: 'JavaScript', value: 90 },
-  { name: 'TypeScript', value: 85 },
-  { name: 'React', value: 92 },
-  { name: 'Python', value: 80 },
-  { name: 'FastAPI', value: 75 },
-];
-
-const workTimeline = [
-  { role: 'Web Developer', org: 'Freelance', years: '2022–Present' },
-  { role: 'Software Engineer', org: 'Tech Startup', years: '2020–2022' },
-];
-
-const educationTimeline = [
-  { degree: 'BSc Computer Science', org: 'University of Example', years: '2016–2020' },
-];
-
-const SectionHeading: React.FC<{ children: React.ReactNode; id?: string }> = ({ children, id }) => (
-  <div className="mb-6 sm:mb-8">
-    <h2 id={id} className="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-center font-syne">{children}</h2>
-    <div className="mx-auto mt-2 w-12 sm:w-16 h-1 bg-blue-600 rounded-full"></div>
-  </div>
-);
-
 const AboutSection: React.FC = () => (
-  <section id="about" className="max-w-3xl mx-auto text-center space-y-8 sm:space-y-10 py-8 sm:py-12 px-2" aria-labelledby="about-heading">
-    <SectionHeading id="about-heading">About Me</SectionHeading>
-    <div>
-      <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-mont text-sm sm:text-base">
-        Hi! I'm Laud Tetteh, a passionate web developer and technologist. I love building modern web applications and digital experiences, blending code and creativity to solve real-world problems. My expertise spans frontend and backend development, with a focus on React, TypeScript, and Python.
-      </p>
-    </div>
-    <div>
-      <h3 id="about-skills" className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 font-syne">Skills</h3>
-      <div className="space-y-3 sm:space-y-4" aria-labelledby="about-skills">
-        {skills.map(skill => (
-          <div key={skill.name} className="text-left">
-            <div className="flex justify-between mb-1">
-              <span className="font-medium text-gray-800 dark:text-gray-200 font-mont text-sm sm:text-base">{skill.name}</span>
-              <span className="text-gray-500 dark:text-gray-400 font-mont text-xs sm:text-sm">{skill.value}%</span>
+  <div id="about" className="arlo_tm_section">
+    <div className="section_inner">
+      <div className="arlo_tm_about">
+        <div className="biography">
+          <div className="arlo_tm_title">
+            <h3>About Me</h3>
+          </div>
+          <div className="text">
+            <p>My name is David Parker and I am a Web Designer, and I'm very passionate and dedicated to my work. With 3 years experience as a professional Web Designer, I have acquired the skills and knowledge necessary to make your project a success. I enjoy every step of the design process, from discussion and collaboration. Thanks a lot for your attention and your trust!</p>
+          </div>
+          <div className="details">
+            <ul>
+              <li><span>Name:</span><span>David Parker</span></li>
+              <li><span>Age:</span><span>25</span></li>
+              <li><span>City:</span><span>New York, USA</span></li>
+              <li><span>Job:</span><span>Web Designer</span></li>
+              <li><span>Phone:</span><span><a className="line_effect" href="#">+77 022 155 05 05</a></span></li>
+              <li><span>Email:</span><span><a className="line_effect" href="#">example@gmail.com</a></span></li>
+              <li><span>Website:</span><span><a className="line_effect" href="#">www.yourdomain.com</a></span></li>
+              <li><span>Freelance:</span><span>Available</span></li>
+            </ul>
+          </div>
+          <div className="arlo_tm_button">
+            <a href="/img/cv/1.jpg" download>
+              <span className="back">Download CV</span>
+              <span className="front">Download CV</span>
+            </a>
+          </div>
+        </div>
+        <div className="skillbox">
+          <div className="arlo_tm_title">
+            <h3>Knowledge</h3>
+          </div>
+          <div className="wrapper">
+            <div className="left">
+              <div className="skills_title"><h3>Programming Skills</h3></div>
+              <div className="arlo_progress">
+                <div className="progress_inner" data-value="85" data-color="#999">
+                  <span><span className="label">WordPress</span><span className="number">85%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+                <div className="progress_inner" data-value="95" data-color="#999">
+                  <span><span className="label">Laravel</span><span className="number">95%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+                <div className="progress_inner" data-value="75" data-color="#999">
+                  <span><span className="label">Angular</span><span className="number">75%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+              </div>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${skill.value}%` }}></div>
+            <div className="right">
+              <div className="skills_title"><h3>Language Skills</h3></div>
+              <div className="arlo_progress">
+                <div className="progress_inner" data-value="100" data-color="#999">
+                  <span><span className="label">English</span><span className="number">100%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+                <div className="progress_inner" data-value="90" data-color="#999">
+                  <span><span className="label">Arabic</span><span className="number">90%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+                <div className="progress_inner" data-value="80" data-color="#999">
+                  <span><span className="label">Japanese</span><span className="number">80%</span></span>
+                  <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
+                </div>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+        <div className="experience">
+          <div className="arlo_tm_title"><h3>Timeline</h3></div>
+          <div className="wrapper">
+            <div className="left">
+              <div className="experience_title"><h3>Working Experience</h3></div>
+              <div className="arlo_tm_experience_list">
+                <ul>
+                  <li><div className="list_inner"><div className="subject"><h3>Envato Market</h3><span>Web Designer</span></div><div className="date"><span>2020-now</span></div></div></li>
+                  <li><div className="list_inner"><div className="subject"><h3>Behance</h3><span>SEO Optimizer</span></div><div className="date"><span>2018-2020</span></div></div></li>
+                  <li><div className="list_inner"><div className="subject"><h3>Colorlib</h3><span>Theme Reviewer</span></div><div className="date"><span>2016-2018</span></div></div></li>
+                </ul>
+              </div>
+            </div>
+            <div className="right">
+              <div className="experience_title"><h3>Educational Experience</h3></div>
+              <div className="arlo_tm_experience_list">
+                <ul>
+                  <li><div className="list_inner"><div className="subject"><h3>Univercity of Texas</h3><span>Master of Design</span></div><div className="date"><span>2020-2017</span></div></div></li>
+                  <li><div className="list_inner"><div className="subject"><h3>Webster College</h3><span>UI/UX Design</span></div><div className="date"><span>2017-2015</span></div></div></li>
+                  <li><div className="list_inner"><div className="subject"><h3>Github Club</h3><span>Web Sertification</span></div><div className="date"><span>2015-2013</span></div></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="arlo_tm_testimonials">
+          <div className="arlo_tm_title"><h3>Testimonials</h3></div>
+          <div className="testimonials_inner">
+            <div className="quote"><img className="svg" src="/img/svg/quote.svg" alt="" /></div>
+            <div className="wrapper owl-carousel">
+              <div className="item">
+                <div className="text"><p>I rarely like to write reviews, but the Marketify team truly deserve a standing ovation for their customer support, customisation and most importantly is professionalism. Many thanks once again for everything and hope that I get to deal with you again in the near future!</p></div>
+                <div className="details"><div className="avatar"><div className="image" data-img-url="/img/testimonials/1.jpg"></div></div><div className="info"><h3 className="author"><span>Albert Kennedy</span></h3><h3 className="job"><span>Architector</span></h3></div></div>
+              </div>
+              <div className="item">
+                <div className="text"><p>Minimal design, incredibly well documented, and an absolute pleasure to use! The customer support is one of the absolute best I've ever had the pleasure of interacting with. Quick, courteous, and extremely helpful! Thanks a lot for your hard work!</p></div>
+                <div className="details"><div className="avatar"><div className="image" data-img-url="/img/testimonials/2.jpg"></div></div><div className="info"><h3 className="author"><span>Mark Scotland</span></h3><h3 className="job"><span>Photographer</span></h3></div></div>
+              </div>
+              <div className="item">
+                <div className="text"><p>Loved the template design, documentation, customizability and the customer support from Marketify team! I am a noob in programming with very little knowledge about coding but the Marketify team helped me to launch my resume website successfully.</p></div>
+                <div className="details"><div className="avatar"><div className="image" data-img-url="/img/testimonials/3.jpg"></div></div><div className="info"><h3 className="author"><span>Ave Smith</span></h3><h3 className="job"><span>Designer</span></h3></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-left">
-      <div>
-        <h4 id="about-work" className="text-base sm:text-lg font-semibold mb-2 font-syne">Work Experience</h4>
-        <ul className="space-y-2" aria-labelledby="about-work">
-          {workTimeline.map((item, idx) => (
-            <li key={idx} className="border-l-4 border-blue-600 pl-4">
-              <div className="font-medium font-mont text-sm sm:text-base">{item.role}</div>
-              <div className="text-xs sm:text-sm text-gray-500 font-mont">{item.org} &middot; {item.years}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h4 id="about-edu" className="text-base sm:text-lg font-semibold mb-2 font-syne">Education</h4>
-        <ul className="space-y-2" aria-labelledby="about-edu">
-          {educationTimeline.map((item, idx) => (
-            <li key={idx} className="border-l-4 border-green-600 pl-4">
-              <div className="font-medium font-mont text-sm sm:text-base">{item.degree}</div>
-              <div className="text-xs sm:text-sm text-gray-500 font-mont">{item.org} &middot; {item.years}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </section>
+  </div>
 );
 
 export default AboutSection;

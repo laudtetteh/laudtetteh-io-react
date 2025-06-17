@@ -1,42 +1,78 @@
 import React from 'react';
 
-const SectionHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-6 sm:mb-8">
-    <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase tracking-widest text-center font-syne">{children}</h2>
-    <div className="mx-auto mt-2 w-12 sm:w-16 h-1 bg-blue-600 rounded-full"></div>
-  </div>
-);
-
 const ContactSection: React.FC = () => (
-  <section id="contact" className="max-w-2xl mx-auto py-8 sm:py-12 px-2" aria-labelledby="contact-heading">
-    <SectionHeading>Get in Touch</SectionHeading>
-    <div className="mb-6 sm:mb-8 w-full h-40 sm:h-56 bg-gray-200 rounded flex items-center justify-center text-gray-500">
-      {/* Placeholder for map */}
-      <span>Map Placeholder</span>
+  <div id="contact" className="arlo_tm_section">
+    <div className="section_inner">
+      <div className="arlo_tm_contact">
+        <div className="contact_inner">
+          <div className="arlo_tm_title"><h3>Get in Touch</h3></div>
+          <div className="my_map">
+            <div className="mapouter">
+              <div className="gmap_canvas">
+                <iframe
+                  width="100%"
+                  height="350"
+                  id="gmap_canvas"
+                  src="https://maps.google.com/maps?q=Broadway,%20New%20York&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  frameBorder="0"
+                  scrolling="no"
+                  marginHeight={0}
+                  marginWidth={0}
+                ></iframe>
+              </div>
+            </div>
+          </div>
+          <div className="form_wrapper">
+            <form id="contactForm">
+              <div className="error_box" id="empty-form"><p>Please Fill Required Fields</p></div>
+              <div className="error_box" id="subject-alert"><p>Please Select Subject</p></div>
+              <div className="error_box" id="security-alert"><p>Security code does not match !</p></div>
+              <div className="error_box" id="email-invalid"><p>Please enter a valid email address. Exp. example@gmail.com</p></div>
+              <div className="error_box" id="phone-invalid"><p>Please enter a valid phone number.Exp. +998994425557</p></div>
+              <div className="error_box" id="error_mail"><p></p></div>
+              <div className="success_box" id="success_mail"><p>Your message has been sent. We will contact you as soon as possible.</p></div>
+              <ul>
+                <li>
+                  <input type="text" placeholder="Name" name="contact_name" className="cf-form-control" />
+                  <span></span>
+                </li>
+                <li>
+                  <input type="text" placeholder="Email" name="contact_email" className="cf-form-control" />
+                  <span></span>
+                </li>
+                <li>
+                  <input type="text" placeholder="Phone" name="contact_phone" className="cf-form-control" />
+                  <span></span>
+                </li>
+                <li>
+                  <select name="contact_subject" className="cf-form-control colored">
+                    <option value="Choose Services">Choose Service</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Mobile Application">Mobile Application</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                  </select>
+                </li>
+                <li id="text-area-w">
+                  <textarea placeholder="Message" name="contact_message" className="cf-form-control"></textarea>
+                </li>
+                <li id="enter_code">
+                  <span id="txtCaptchaSpan"></span>
+                  <input type="text" className="cf-form-control" name="contact_question" id="txtInput" autoComplete="off" placeholder="Please Enter Code *" />
+                  <input type="hidden" id="txtCaptcha" />
+                </li>
+              </ul>
+              <div className="arlo_tm_button">
+                <a href="#" id="send_message">
+                  <span className="back">Send Message</span>
+                  <span className="front">Send Message</span>
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <form className="space-y-5 sm:space-y-6 font-mont" aria-label="Contact form">
-      <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
-        <div className="flex-1 flex flex-col">
-          <label htmlFor="contact-name" className="text-xs font-semibold mb-1 text-left">Name</label>
-          <input id="contact-name" name="name" type="text" placeholder="Name" className="px-4 py-2 border rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-sm sm:text-base" aria-describedby="contact-name-desc" />
-          <span id="contact-name-desc" className="sr-only">Enter your full name</span>
-        </div>
-        <div className="flex-1 flex flex-col">
-          <label htmlFor="contact-email" className="text-xs font-semibold mb-1 text-left">Email</label>
-          <input id="contact-email" name="email" type="email" placeholder="Email" className="px-4 py-2 border rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-sm sm:text-base" aria-describedby="contact-email-desc" />
-          <span id="contact-email-desc" className="sr-only">Enter your email address</span>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <label htmlFor="contact-message" className="text-xs font-semibold mb-1 text-left">Message</label>
-        <textarea id="contact-message" name="message" placeholder="Message" rows={4} className="w-full px-4 py-2 border rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 text-sm sm:text-base" aria-describedby="contact-message-desc" />
-        <span id="contact-message-desc" className="sr-only">Enter your message</span>
-      </div>
-      <button type="submit" className="bg-blue-600 text-white rounded-full px-6 py-2 font-semibold shadow hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-        Send Message
-      </button>
-    </form>
-  </section>
+  </div>
 );
 
 export default ContactSection; 
