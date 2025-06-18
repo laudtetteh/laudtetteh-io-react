@@ -27,7 +27,7 @@ jQuery(document).ready(function(){
 	arlo_tm_borders();
 	arlo_tm_canvas_effect();
 	
-	jQuery(window).load('body', function(){
+	jQuery(window).on('load', function(){
 		arlo_tm_my_load();
 	});
 	
