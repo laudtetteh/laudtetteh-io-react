@@ -40,13 +40,16 @@ export default function App({ Component, pageProps }: AppProps) {
         const contentDiv = document.querySelector('.arlo_tm_home .content');
         if (contentDiv && (window as any).jQuery) {
           // Only inject if not already present
-          if (!contentDiv.querySelector('.animateText')) {
+          if (!contentDiv.querySelector('Databases.animateText')) {
             const animateTextDiv = document.createElement('div');
             animateTextDiv.className = 'animateText';
             animateTextDiv.innerHTML = `
-              <span>Web Developer</span>
-              <span>UI/UX Designer</span>
-              <span>SEO Optimizer</span>
+              <span>Full-Stack Web Developer</span>
+              <span>10+ Years Experience</span>
+              <span>PHP | Laravel | Drupal | WordPress</span>
+              <span>ReactJS | TailwindCSS | SASS | Webpack</span>
+              <span>Databases | APIs</span>
+              <span>Dev Ops | Git | Testing | CI/CD</span>
             `;
             // Insert after the h3
             const h3 = contentDiv.querySelector('h3');
