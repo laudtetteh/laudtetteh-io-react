@@ -108,7 +108,7 @@ function arlo_tm_trigger_menu(){
 
 	var hamburger = jQuery('.arlo_tm_topbar .trigger .hamburger');
 	var mobileMenu = jQuery('.arlo_tm_mobile_menu');
-	var mobileMenuList = jQuery('.arlo_tm_mobile_menu ul li a');
+	var mobileMenuList = jQuery('.arlo_tm_mobile_menu ul li a, .arlo_tm_mobile_menu .logo_link');
 
 	hamburger.on('click',function(){
 		var element = jQuery(this);

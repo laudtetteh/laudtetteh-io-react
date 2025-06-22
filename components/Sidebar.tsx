@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const sectionKeys = ['Home', 'About', 'Services', 'Portfolio', 'Blog', 'Contact'] as const;
+const sectionKeys = ['Home', 'About', 'Services', 'Sandbox', 'Blog', 'Contact'] as const;
 type SectionKey = typeof sectionKeys[number];
 
 type SocialLink = { label: string; url: string; iconClass: string };

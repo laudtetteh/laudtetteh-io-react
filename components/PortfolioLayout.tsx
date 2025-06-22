@@ -5,12 +5,16 @@ import MobileMenu from './MobileMenu';
 import SidebarMenu from './SidebarMenu';
 import HomeSection from './sections/HomeSection';
 import AboutSection from '../components/AboutSection';
-import ServicesSection from './sections/ServicesSection';
-import PortfolioSection from './sections/PortfolioSection';
+import SandboxSection from './sections/SandboxSection';
 import BlogSection from './sections/BlogSection';
 import ContactSection from './sections/ContactSection';
+import { GithubRepo } from '../types/github';
 
-const PortfolioLayout: React.FC = () => {
+interface PortfolioLayoutProps {
+  repos: GithubRepo[];
+}
+
+const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ repos }) => {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -33,8 +37,7 @@ const PortfolioLayout: React.FC = () => {
           <div className="mainpart_inner">
             <HomeSection />
             <AboutSection />
-            <ServicesSection />
-            <PortfolioSection />
+            <SandboxSection repos={repos} />
             <BlogSection />
             <ContactSection />
           </div>

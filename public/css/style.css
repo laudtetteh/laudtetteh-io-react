@@ -1192,10 +1192,14 @@ h6 { font-size: 16px; }
 	overflow: hidden;
 	position: relative;
 }
+
+/*laud's mods
 .arlo_tm_portfolio .portfolio_item li .inner img{
 	opacity: 0;
 	min-width: 100%;
 }
+*/
+
 .arlo_tm_portfolio .portfolio_item li .inner .abs_image{
 	position: absolute;
 	top: 0px;
