@@ -93,7 +93,7 @@ const ContactSection: React.FC = () => {
             <div className="form_wrapper">
               <form id="contactForm" onSubmit={handleSubmit} autoComplete="off">
                 {errorMsg && <div className="error_box" style={{ display: 'block' }}><p>{errorMsg}</p></div>}
-                {status === 'success' && <div className="success_box" style={{ display: 'block' }}><p>Your message has been sent. We will contact you as soon as possible.</p></div>}
+                {status === 'success' && <div className="success_box" style={{ display: 'block' }}><p>Message sent. Thank you, and enjoy your day!</p></div>}
                 <ul>
                   <li>
                     <input type="text" placeholder="Name" name="contact_name" className="cf-form-control" value={form.contact_name} onChange={handleChange} />
