@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
-from services.email import send_email_via_mailgun
-import logging
+from services.email import send_contact_email
+from core.logging import setup_logging
 
 router = APIRouter()
-logger = logging.getLogger("contact-form")
+logger = setup_logging(name="contact-form")
 
 class ContactSubmission(BaseModel):
     name: str
@@ -13,12 +13,26 @@ class ContactSubmission(BaseModel):
 
 @router.post("/api/contact")
 async def submit_contact(data: ContactSubmission, request: Request):
-    logger.info(f"📨 Contact form received from {request.client.host}")
-    logger.info(f"Name: {data.name}, Email: {data.email}")
+    """
+    Handle contact form submission and send email notification.
+    """
+    logger.info(f"📨 Contact form submission received from {request.client.host}")
+    logger.debug(f"Contact form data: Name={data.name}, Email={data.email}")
 
-    success = send_email_via_mailgun(data.name, data.email, data.message)
-
-    if success:
-        return { "message": "✅ Message received and email sent. Thank you!" }
-    else:
-        raise HTTPException(status_code=500, detail="❌ Failed to send email via Mailgun.")
+    try:
+        success = send_contact_email(data.name, data.email, data.message)
+        if success:
+            logger.info(f"✅ Successfully sent contact email for {data.email}")
+            return {"message": "✅ Message received and email sent. Thank you!"}
+        else:
+            logger.error(f"❌ Failed to send contact email for {data.email}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send email"
+            )
+    except Exception as e:
+        logger.error(f"❌ Error processing contact form: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while processing your request"
+        )

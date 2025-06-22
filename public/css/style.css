@@ -694,7 +694,8 @@ h6 { font-size: 16px; }
 .arlo_tm_button{
 	width: 100%;
 }
-.arlo_tm_button a{
+.arlo_tm_button a,
+.arlo_tm_button button {
 	display: inline-block;
 	color: #000;
 	padding: 4px 30px;
@@ -706,12 +707,14 @@ h6 { font-size: 16px; }
 	     -o-transition: all .3s ease;
 	        transition: all .3s ease;
 }
-.arlo_tm_button a .back{
+.arlo_tm_button a .back,
+.arlo_tm_button button .back {
 	position: relative;
 	z-index: 1;
 	display: block;
 }
-.arlo_tm_button a .front{
+.arlo_tm_button a .front,
+.arlo_tm_button button .front {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -729,10 +732,12 @@ h6 { font-size: 16px; }
 	     -o-transition: all .3s ease;
 	        transition: all .3s ease;
 }
-.arlo_tm_button a:hover .front{
+.arlo_tm_button a:hover .front,
+.arlo_tm_button button:hover .front {
 	width: 100%;
 }
-.arlo_tm_button a:before{
+.arlo_tm_button a:before, 
+.arlo_tm_button button:before {
 	position: absolute;
 	content: "";
 	top: 0px;
@@ -747,7 +752,8 @@ h6 { font-size: 16px; }
 	     -o-transition: all .3s ease;
 	        transition: all .3s ease;
 }
-.arlo_tm_button a:hover:before{
+.arlo_tm_button a:hover:before,
+.arlo_tm_button button:hover:before {
 	width: 100%;
 }
 .arlo_tm_about .skillbox{

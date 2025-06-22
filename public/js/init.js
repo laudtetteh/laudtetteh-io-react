@@ -205,9 +205,9 @@ function arlo_tm_preloader(){
 	var preloader = $('#preloader');
 	
 	// Only add class, never remove the preloader div (let React handle it)
-	setTimeout(function() {
-		preloader.addClass('preloaded');
-	}, 800);
+		setTimeout(function() {
+			preloader.addClass('preloaded');
+		}, 800);
 	// setTimeout(function() {
 	// 	preloader.remove();
 	// }, 2000);

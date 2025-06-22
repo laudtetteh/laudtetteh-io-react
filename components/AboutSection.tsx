@@ -9,7 +9,7 @@ const AboutSection: React.FC = () => (
             <h3>About Me</h3>
           </div>
           <div className="text">
-            <p>I'm Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+ years of experience building, optimizing, and maintaining web applications for clients and employers across the US and Africa. I thrive on learning new technologies, collaborating with smart people, and solving real-world problems through code. My background spans backend, frontend, DevOps, and project management. Let's build something great together!</p>
+            <p>I'm Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+ years of experience building, optimizing, and maintaining web applications for clients and employers across the US and Africa. I thrive on learning new technologies, collaborating with smart people, and solving real-world problems through code. My background spans backend, frontend and DevOps. Let's build something great together!</p>
           </div>
           <div className="details">
             <ul>

@@ -19,15 +19,19 @@ from core.logging import setup_logging
 
 from api.blog import router as blog_router, set_posts_collection, set_categories_collection
 from api.s3 import router as upload_router
-from core.db import connect_to_mongo, get_db
 from api.contact import router as contact_router
-
-app = FastAPI()
+from core.db import connect_to_mongo, get_db
 
 # ----------------------
 # Logging Configuration
 # ----------------------
-logger = setup_logging()
+logger = setup_logging(name="fastapi", log_level=os.getenv("LOG_LEVEL", "INFO"))
+
+app = FastAPI(
+    title="Portfolio API",
+    description="Backend API for portfolio website",
+    version="1.0.0"
+)
 
 # ----------------------
 # CORS Setup
@@ -41,14 +45,33 @@ app.add_middleware(
 )
 
 # ----------------------
-# MongoDB Startup Hook
+# Startup Event
 # ----------------------
 @app.on_event("startup")
-async def init_db():
+async def startup_event():
+    logger.info("Starting up FastAPI application")
     await connect_to_mongo()
     db = get_db()
     set_posts_collection(db["posts"])
     set_categories_collection(db["categories"])
+    logger.info("Database connections established")
+
+# ----------------------
+# Shutdown Event
+# ----------------------
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("Shutting down FastAPI application")
+
+# ----------------------
+# Middleware for Request Logging
+# ----------------------
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    response = await call_next(request)
+    logger.info(f"Response: {response.status_code}")
+    return response
 
 # ----------------------
 # Blog + Upload + Contact Routers
@@ -65,8 +88,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Admin login. Issues JWT on correct credentials.
     """
+    logger.debug(f"Login attempt for user: {form_data.username}")
     if form_data.username != ADMIN_USERNAME or form_data.password != ADMIN_PASSWORD:
+        logger.warning(f"Failed login attempt for user: {form_data.username}")
         raise HTTPException(status_code=400, detail="Invalid username or password")
     
     access_token = create_access_token(data={"sub": form_data.username})
+    logger.info(f"Successful login for user: {form_data.username}")
     return { "access_token": access_token, "token_type": "bearer" }

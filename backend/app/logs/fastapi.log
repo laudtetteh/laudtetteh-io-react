@@ -1,0 +1,338 @@
+2025-06-22 01:29:41,852 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:29:41,881 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:29:51,960 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:29:51,997 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:02,121 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:02,154 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:12,245 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:12,287 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:22,352 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:22,397 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:32,509 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:32,571 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:42,664 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:42,712 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:30:52,796 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:30:52,845 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:03,007 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:03,066 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:13,173 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:13,356 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:23,434 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:23,471 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:33,539 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:33,588 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:43,704 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:43,749 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:31:53,824 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:31:53,870 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:03,950 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:03,996 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:14,062 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:14,101 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:24,183 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:24,224 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:34,313 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:34,353 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:44,430 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:44,480 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:32:54,566 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:32:54,603 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:04,663 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:04,705 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:14,789 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:14,822 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:24,945 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:25,016 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:35,109 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:35,145 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:45,252 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:45,293 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:33:55,438 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:33:55,474 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:05,588 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:06,029 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:18,087 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:18,195 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:28,590 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:28,644 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:38,851 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:38,904 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:49,103 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:49,152 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:34:59,422 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:34:59,484 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:35:09,657 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:35:09,698 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:35:19,843 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:35:19,915 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:35:30,060 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:35:30,143 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:35:40,284 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:35:40,355 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:35:50,536 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:35:50,582 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:00,711 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:00,767 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:10,906 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:10,954 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:21,183 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:21,234 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:31,401 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:31,452 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:41,581 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:41,628 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:36:51,822 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:36:51,877 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:02,184 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:02,250 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:12,433 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:12,473 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:22,555 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:22,610 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:32,690 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:32,731 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:42,809 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:42,848 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:37:52,916 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:37:52,979 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:03,066 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:03,102 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:13,200 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:13,265 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:23,332 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:23,365 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:33,453 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:33,498 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:43,569 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:43,615 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:38:53,717 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:38:53,755 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:03,853 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:03,898 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:13,992 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:14,040 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:24,105 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:24,143 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:34,216 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:34,253 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:44,397 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:44,439 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:39:54,562 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:39:54,598 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:04,683 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:04,724 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:14,793 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:14,835 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:24,900 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:24,947 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:35,060 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:35,103 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:41,894 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:41,939 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:41,945 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:41,980 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:45,249 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:45,324 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:40:55,499 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:40:55,540 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:05,637 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:05,672 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:15,750 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:15,784 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:25,852 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:25,899 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:36,017 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:36,081 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:46,151 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:46,193 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:41:56,326 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:41:56,369 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:06,469 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:06,535 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:16,616 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:16,662 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:26,754 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:26,787 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:36,842 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:36,902 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:46,983 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:47,026 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:42:57,096 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:42:57,128 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:07,191 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:07,231 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:17,289 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:17,327 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:27,408 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:27,442 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:37,517 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:37,573 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:47,664 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:47,735 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:43:57,802 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:43:57,843 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:07,911 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:07,955 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:18,029 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:18,077 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:28,170 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:28,212 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:38,279 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:38,316 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:48,392 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:48,427 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:44:58,508 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:44:58,543 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:45:08,599 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:45:08,631 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:45:18,734 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:45:18,773 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:45:28,700 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-22 01:45:32,811 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-22 01:45:32,848 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-22 01:45:32,858 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:45:34,142 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:45:44,224 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:45:44,270 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:45:54,352 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:45:54,403 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:04,495 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:04,530 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:14,646 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:14,703 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:24,770 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:24,819 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:34,897 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:34,955 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:45,014 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:45,052 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:46:55,120 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:46:55,160 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:05,294 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:05,338 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:15,427 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:15,467 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:25,542 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:25,579 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:35,641 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:35,675 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:45,760 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:45,804 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:47:55,902 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:47:55,943 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:06,039 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:06,083 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:16,198 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:16,233 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:26,321 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:26,361 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:36,447 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:36,494 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:46,622 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:46,672 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:48:56,783 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:48:56,829 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:06,894 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:06,940 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:17,028 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:17,083 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:27,166 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:27,205 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:37,298 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:37,455 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:47,558 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:47,596 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:57,672 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:49:57,778 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:49:59,370 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-22 01:50:01,212 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-22 01:50:01,225 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-22 01:50:07,860 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:08,720 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:50:18,786 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:18,827 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:50:28,903 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:28,942 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:50:39,000 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:39,035 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:50:49,109 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:49,154 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:50:59,215 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:50:59,257 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:51:09,323 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:51:09,364 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:51:19,444 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:51:19,634 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:51:29,705 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:51:29,744 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:51:39,834 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:51:39,872 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:51:49,924 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:51:49,959 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:00,026 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:00,074 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:10,139 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:10,184 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:20,260 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:20,300 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:30,361 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:30,398 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:40,517 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:40,553 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:52:50,635 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:52:50,705 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:00,791 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:00,840 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:10,936 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:10,975 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:21,075 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:21,110 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:31,173 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:31,212 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:41,334 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:41,381 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:53:51,458 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:53:51,497 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:01,561 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:01,598 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:11,679 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:11,716 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:21,851 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:21,887 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:32,062 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:32,110 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:42,219 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:42,267 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:54:52,402 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:54:52,448 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:02,554 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:02,592 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:12,658 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:12,699 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:22,765 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:22,809 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:32,877 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:32,926 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:43,007 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:43,050 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:55:53,108 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:55:53,143 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:03,214 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:03,257 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:13,379 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:13,421 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:23,513 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:23,557 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:33,628 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:33,664 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:43,725 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:43,772 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:56:53,829 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:56:53,865 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:57:03,994 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:57:04,078 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:57:14,174 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:57:14,220 - fastapi - INFO - main.py:73 - Response: 200
+2025-06-22 01:57:24,296 - fastapi - INFO - main.py:71 - Request: GET http://localhost:8000/api/posts
+2025-06-22 01:57:24,335 - fastapi - INFO - main.py:73 - Response: 200

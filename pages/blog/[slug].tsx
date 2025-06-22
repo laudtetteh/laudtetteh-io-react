@@ -102,10 +102,10 @@ export default function BlogPostPage({ post }: PostPageProps) {
                 <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
               </div>
               {loggedIn && (
-                <div className="pt-6 text-sm space-x-4">
-                  <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
+        <div className="pt-6 text-sm space-x-4">
+            <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
                 </div>
-              )}
+          )}
             </div>
           </div>
         </div>

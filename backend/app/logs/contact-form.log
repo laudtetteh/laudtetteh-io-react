@@ -1,0 +1,6 @@
+2025-06-22 01:21:39,140 - contact-form - INFO - contact.py:19 - 📨 Contact form submission received from 192.168.65.1
+2025-06-22 01:21:39,653 - contact-form - INFO - email.py:42 - ✅ Email sent successfully to hello@laudtetteh.io via Resend. Message ID: 7f852f70-83c1-4450-b5ad-545bfc7e22e9
+2025-06-22 01:21:39,654 - contact-form - INFO - contact.py:25 - ✅ Successfully sent contact email for laudtetteh@gmail.com
+2025-06-22 01:28:13,344 - contact-form - INFO - contact.py:19 - 📨 Contact form submission received from 192.168.65.1
+2025-06-22 01:28:14,078 - contact-form - INFO - email.py:42 - ✅ Email sent successfully to hello@laudtetteh.io via Resend. Message ID: 9bbc9a44-59d4-454b-a21e-66b0592b3454
+2025-06-22 01:28:14,080 - contact-form - INFO - contact.py:25 - ✅ Successfully sent contact email for laud@studiotenfour.com
