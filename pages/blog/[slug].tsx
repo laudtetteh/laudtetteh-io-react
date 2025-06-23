@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
+import BlogHeader from '@/components/BlogHeader';
 
 interface BlogPost {
   title: string;
@@ -68,7 +69,12 @@ export default function BlogPostPage({ post }: PostPageProps) {
   const formattedDate = formatDate(displayDate);
 
   return (
-    <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
+    <>
+      <Head>
+        <title>{`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`}</title>
+        <meta name="description" content={post.summary ?? ''} />
+      </Head>
+      <BlogHeader />
       <main className="arlo_tm_modalbox_page_wrap" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
         <div className="arlo_tm_modalbox_page" style={{
           position: 'relative',
@@ -104,10 +110,10 @@ export default function BlogPostPage({ post }: PostPageProps) {
                 <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
               </div>
               {loggedIn && (
-        <div className="pt-6 text-sm space-x-4">
-            <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
+                <div className="pt-6 text-sm space-x-4">
+                  <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
                 </div>
-          )}
+              )}
             </div>
           </div>
         </div>
@@ -160,7 +166,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
           }
         `}</style>
       </main>
-    </Layout>
+    </>
   );
 }
 
