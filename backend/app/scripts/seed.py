@@ -10,7 +10,7 @@ Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 
 import asyncio
 from datetime import datetime
-from db import connect_to_mongo, get_db
+from core.db import connect_to_mongo, get_db
 
 # Sample blog posts
 posts = [
@@ -18,7 +18,7 @@ posts = [
         "title": "Blog Post 1",
         "slug": "first-post",
         "summary": "This is a short summary of the first post.",
-        "content": "<p>This is the full content of the first blog post. You can use HTML here.</p>",
+        "content": {"html": "<p>This is the full content of the first blog post. You can use HTML here.</p>"},
         "date": datetime(2024, 1, 1),
         "status": "published",
         "categories": ["Tech:FastAPI", "Tech:Backend"],
@@ -30,7 +30,7 @@ posts = [
         "title": "Blog Post 2",
         "slug": "second-post",
         "summary": "Another brief summary.",
-        "content": "<p>This is the second post’s content. Lots of interesting insights go here.</p>",
+        "content": {"html": "<p>This is the second post's content. Lots of interesting insights go here.</p>"},
         "date": datetime(2024, 2, 1),
         "status": "draft",
         "categories": ["Infra:DevOps", "Infra:MongoDB"],
@@ -42,7 +42,7 @@ posts = [
         "title": "Blog Post 3",
         "slug": "third-post",
         "summary": "A summary of the third post.",
-        "content": "<p>This is the content of blog post number three.</p>",
+        "content": {"html": "<p>This is the content of blog post number three.</p>"},
         "date": datetime(2024, 3, 1),
         "status": "published",
         "categories": ["Frontend:React", "Frontend:CMS"],
@@ -54,13 +54,10 @@ posts = [
 
 # Grouped categories
 categories = [
-    {"name": "FastAPI", "slug": "fastapi", "group": "Tech", "createdAt": datetime.utcnow()},
-    {"name": "Backend", "slug": "backend", "group": "Tech", "createdAt": datetime.utcnow()},
-    {"name": "DevOps", "slug": "devops", "group": "Infra", "createdAt": datetime.utcnow()},
-    {"name": "MongoDB", "slug": "mongodb", "group": "Infra", "createdAt": datetime.utcnow()},
-    {"name": "React", "slug": "react", "group": "Frontend", "createdAt": datetime.utcnow()},
-    {"name": "CMS", "slug": "cms", "group": "Frontend", "createdAt": datetime.utcnow()},
-    {"name": "Uncategorized", "slug": "uncategorized", "group": "General", "createdAt": datetime.utcnow()}
+    {"name": "My Journey", "slug": "my-journey", "group": "My Journey", "createdAt": datetime.utcnow()},
+    {"name": "Tech & Projects", "slug": "tech-projects", "group": "Tech & Projects", "createdAt": datetime.utcnow()},
+    {"name": "Career & Mindset", "slug": "career-mindset", "group": "Career & Mindset", "createdAt": datetime.utcnow()},
+    {"name": "Life & Balance", "slug": "life-balance", "group": "Life & Balance", "createdAt": datetime.utcnow()},
 ]
 
 async def seed():

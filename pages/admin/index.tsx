@@ -118,40 +118,60 @@ export default function AdminDashboard() {
 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [bulkCategory, setBulkCategory] = useState("");
+  const [bulkStatus, setBulkStatus] = useState("");
+  const postsPerPage = 9;
   const router = useRouter();
   const sensors = useSensors(useSensor(PointerSensor));
   const { redirectWithMessage } = useFlashMessage();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin/login");
-      return;
-    }
+    const loadPosts = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/admin/login");
+        return;
+      }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Unauthorized");
-        return res.json();
-      })
-      .then((fetchedPosts) => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) {
+            // Token is invalid, redirect to login
+            localStorage.removeItem("token");
+            router.push("/admin/login");
+            return;
+          }
+          throw new Error("Failed to load posts");
+        }
+
+        const fetchedPosts = await res.json();
         const withWeights = fetchedPosts.map((p: BlogPost, i: number) => ({
           ...p,
           weight: p.weight ?? i,
         }));
         setPosts(withWeights);
-      })
-      .catch((err) => {
+        setLoading(false);
+      } catch (err) {
         console.error(err);
-        setError("Unauthorized or failed to load posts.");
-        router.push("/admin/login");
-      });
+        setError("Failed to load posts. Please try again.");
+        setLoading(false);
+      }
+    };
+
+    // Small delay to ensure auth check completes
+    const timer = setTimeout(loadPosts, 100);
+    return () => clearTimeout(timer);
   }, [router]);
 
   const allCategories = useMemo(() => {
@@ -174,6 +194,101 @@ export default function AdminDashboard() {
         return bDate - aDate;
       })
   ), [posts, search, statusFilter, categoryFilter, dateFilter]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filtered.length / postsPerPage);
+  const paginatedPosts = filtered.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
+
+  // Bulk selection logic
+  const allVisibleSlugs = paginatedPosts.map((p) => p.slug);
+  const allSelected = allVisibleSlugs.every((slug) => selected.includes(slug)) && allVisibleSlugs.length > 0;
+  const someSelected = allVisibleSlugs.some((slug) => selected.includes(slug));
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelected(selected.filter((slug) => !allVisibleSlugs.includes(slug)));
+    } else {
+      setSelected([...new Set([...selected, ...allVisibleSlugs])]);
+    }
+  };
+
+  const toggleSelect = (slug: string) => {
+    setSelected((prev) => prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]);
+  };
+
+  // Bulk delete handler
+  const handleBulkDelete = async () => {
+    if (!window.confirm(`Delete ${selected.length} posts? This cannot be undone.`)) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    let successCount = 0;
+    for (const slug of selected) {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts/${slug}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        successCount++;
+      }
+    }
+    setPosts(posts.filter((p) => !selected.includes(p.slug)));
+    setSelected([]);
+    redirectWithMessage('/admin', `${successCount} post(s) deleted`, 'top-center', 'push', 'success');
+  };
+
+  // Bulk category/status change handlers (now implemented)
+  const handleBulkCategory = async () => {
+    if (!bulkCategory) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    let successCount = 0;
+    for (const slug of selected) {
+      const post = posts.find((p) => p.slug === slug);
+      if (!post) continue;
+      const updatedCategories = Array.from(new Set([...post.categories, bulkCategory]));
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts/${slug}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...post, categories: updatedCategories }),
+      });
+      if (res.ok) {
+        successCount++;
+      }
+    }
+    setPosts(posts.map((p) => selected.includes(p.slug) ? { ...p, categories: Array.from(new Set([...p.categories, bulkCategory])) } : p));
+    setSelected([]);
+    setBulkCategory("");
+    redirectWithMessage('/admin', `${successCount} post(s) updated with category`, 'top-center', 'push', 'success');
+  };
+
+  const handleBulkStatus = async () => {
+    if (!bulkStatus) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    let successCount = 0;
+    for (const slug of selected) {
+      const post = posts.find((p) => p.slug === slug);
+      if (!post) continue;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts/${slug}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...post, status: bulkStatus }),
+      });
+      if (res.ok) {
+        successCount++;
+      }
+    }
+    setPosts(posts.map((p) => selected.includes(p.slug) ? { ...p, status: bulkStatus } : p));
+    setSelected([]);
+    setBulkStatus("");
+    redirectWithMessage('/admin', `${successCount} post(s) updated with status`, 'top-center', 'push', 'success');
+  };
 
   const handleDelete = async (slug: string) => {
     const token = localStorage.getItem("token");
@@ -233,7 +348,7 @@ export default function AdminDashboard() {
 
   return (
     <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
-      <div className="max-w-4xl mx-auto py-12 px-6">
+      <div className="max-w-6xl mx-auto py-12 px-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">🛠️ Admin Dashboard</h1>
           <button
@@ -242,6 +357,39 @@ export default function AdminDashboard() {
           >
             ➕ New Post
           </button>
+        </div>
+
+        {/* Bulk Actions Bar */}
+        {selected.length > 0 && (
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded flex flex-wrap items-center gap-4">
+            <span className="font-semibold">{selected.length} selected</span>
+            <button onClick={handleBulkDelete} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Delete</button>
+            <select value={bulkCategory} onChange={e => setBulkCategory(e.target.value)} className="border rounded px-2 py-1">
+              <option value="">Change Category</option>
+              {allCategories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            <button onClick={handleBulkCategory} className="bg-gray-200 px-2 py-1 rounded">Apply</button>
+            <select value={bulkStatus} onChange={e => setBulkStatus(e.target.value)} className="border rounded px-2 py-1">
+              <option value="">Change Status</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+            <button onClick={handleBulkStatus} className="bg-gray-200 px-2 py-1 rounded">Apply</button>
+            <button onClick={() => setSelected([])} className="ml-auto text-blue-600 underline">Clear</button>
+          </div>
+        )}
+
+        <div className="mb-6 flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            ref={el => { if (el) el.indeterminate = !allSelected && someSelected; }}
+            onChange={toggleSelectAll}
+            className="mr-2"
+          />
+          <span className="text-sm">Select All</span>
         </div>
 
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -283,21 +431,63 @@ export default function AdminDashboard() {
 
         {error && <p className="text-red-600">{error}</p>}
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={filtered.map(p => p.slug)} strategy={verticalListSortingStrategy}>
-            <ul className="space-y-6">
-              {filtered.map((post) => (
-                <SortablePost
-                  key={post.slug}
-                  post={post}
-                  onEdit={() => router.push(`/admin/edit/${post.slug}`)}
-                  onView={() => router.push(`/blog/${post.slug}`)}
-                  onDelete={() => handleDelete(post.slug)}
-                />
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading posts...</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {paginatedPosts.map((post) => (
+                <div key={post.slug} className="relative">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(post.slug)}
+                    onChange={() => toggleSelect(post.slug)}
+                    className="absolute top-2 left-2 z-10 h-5 w-5"
+                  />
+                  <SortablePost
+                    post={post}
+                    onEdit={() => router.push(`/admin/edit/${post.slug}`)}
+                    onView={() => router.push(`/blog/${post.slug}`)}
+                    onDelete={() => handleDelete(post.slug)}
+                  />
+                </div>
               ))}
-            </ul>
-          </SortableContext>
-        </DndContext>
+            </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-8">
+                <button
+                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`px-3 py-1 rounded border ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-white'}`}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </Layout>
   );

@@ -22,13 +22,23 @@ export default function AdminLogin() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
+    // Validate token by making a test request
     fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        if (res.ok) router.push(redirectTo);
+        if (res.ok) {
+          router.push(redirectTo);
+        } else if (res.status === 401) {
+          // Token is invalid, remove it
+          localStorage.removeItem("token");
+        }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error("Token validation error:", err);
+        // On network error, remove token to be safe
+        localStorage.removeItem("token");
+      });
   }, [router, redirectTo]);
 
   async function handleLogin(e: React.FormEvent) {
@@ -52,7 +62,21 @@ export default function AdminLogin() {
       }
 
       const data = await res.json();
+      
+      // Store token and ensure it's persisted
       localStorage.setItem("token", data.access_token);
+      
+      // Small delay to ensure localStorage is updated before redirect
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Verify token is stored before redirecting
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) {
+        setError("Failed to store authentication token");
+        setLoading(false);
+        return;
+      }
+      
       redirectWithMessage(redirectTo, "Logged in successfully", "top-center", "push", "success");
     } catch (err) {
       console.error("Login error:", err);
