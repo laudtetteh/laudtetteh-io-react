@@ -6,7 +6,7 @@ const BlogHeader: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-black text-white shadow-md sticky top-0 z-30">
+    <header className="fixed top-0 left-0 w-full text-white shadow-md z-30" style={{ background: '#999999' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
         {/* Centered Brand/Logo */}
         <div className="flex-1 flex justify-center">

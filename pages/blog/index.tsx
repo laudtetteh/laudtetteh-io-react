@@ -100,42 +100,56 @@ const BlogIndex: React.FC = () => {
           </div>
         </div>
 
-        {/* Posts Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
-          {paginatedPosts.map(post => {
+        {/* Posts List */}
+        <div className="mb-12 bg-white border border-gray-200" style={{ borderRadius: 0, padding: '0 2rem' }}>
+          {paginatedPosts.map((post, idx) => {
             const displayDate = post.date_published || post.date;
             const formattedDate = formatDate(displayDate);
-            
             return (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
-                <article className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <div key={post.slug}>
+                <div className="flex flex-col md:flex-row items-center py-10" style={{ minHeight: 192, borderBottom: '1px solid #d9d9d9'}}>
                   {/* Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img 
-                      src={post.featuredImage} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  <div className="w-full md:w-1/3 h-48 overflow-hidden bg-gray-100 flex items-center justify-center" style={{ borderRadius: 0 }}>
+                    <img
+                      src={post.featuredImage}
+                      alt={post.title}
+                      className="w-full h-full object-cover" style={{ borderRadius: 0, objectFit: 'cover', objectPosition: 'center' }}
                     />
                   </div>
-                  
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="w-full md:w-2/3 flex flex-col justify-center h-full md:pl-10 mt-6 md:mt-0">
                     {/* Date */}
-                    <p className="text-sm text-gray-500 mb-3">{formattedDate}</p>
-                    
-                    {/* Title */}
-                    <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                      {post.title}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-500 font-medium">{formattedDate}</span>
+                    </div>
+                    {/* Categories */}
+                    {post.categories && post.categories.length > 0 && (
+                      <div className="mb-2 flex flex-wrap gap-2">
+                        {post.categories.map((cat) => (
+                          <span key={cat} className="bg-gray-100 text-gray-800 text-xs px-2 py-1" style={{ borderRadius: 0, fontWeight: 500, letterSpacing: 0.5 }}>{cat}</span>
+                        ))}
+                      </div>
+                    )}
+                    {/* Title as Link */}
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2" style={{ letterSpacing: 0 }}>
+                      <Link href={`/blog/${post.slug}`} className="hover:text-blue-600 transition-colors">
+                        {post.title}
+                      </Link>
                     </h2>
-                    
                     {/* Summary */}
-                    <p className="text-gray-600 text-sm line-clamp-3">{post.summary}</p>
-                    
+                    <p className="text-gray-600 text-base mb-4">{post.summary}</p>
+                    {/* Read More Button */}
+                    <div className="arlo_tm_button" style={{ width: 'auto', display: 'inline-block' }}>
+                      <a href={`/blog/${post.slug}`} style={{ textTransform: 'uppercase', fontWeight: 700, fontSize: 14, borderRadius: 0, letterSpacing: 1 }}>
+                        <span className="back">Read More</span>
+                        <span className="front">Read More</span>
+                      </a>
+                    </div>
                     {/* Admin Edit Link */}
                     {loggedIn && (
                       <div className="mt-4 pt-4 border-t border-gray-100">
-                        <Link 
-                          href={`/admin/edit/${post.slug}`} 
+                        <Link
+                          href={`/admin/edit/${post.slug}`}
                           className="text-blue-500 text-sm underline hover:text-blue-700"
                           onClick={(e) => e.stopPropagation()}
                         >
@@ -144,8 +158,12 @@ const BlogIndex: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </article>
-              </Link>
+                </div>
+                {/* Divider except after last post */}
+                {idx !== paginatedPosts.length - 1 && (
+                  <div className="border-t border-gray-200 w-full" />
+                )}
+              </div>
             );
           })}
         </div>
@@ -174,9 +192,10 @@ const BlogIndex: React.FC = () => {
                   onClick={() => setCurrentPage(pageNumber)}
                   className={`w-10 h-10 rounded ${
                     currentPage === pageNumber
-                      ? 'bg-black text-white'
+                      ? ''
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
+                  style={currentPage === pageNumber ? { background: '#999999', color: '#fff' } : {}}
                 >
                   {pageNumber}
                 </button>
