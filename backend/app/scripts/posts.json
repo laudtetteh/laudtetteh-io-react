@@ -1,0 +1,133 @@
+[
+  {
+    "title": "From Accra to Seattle (with a Few Detours)",
+    "slug": "from-accra-to-seattle",
+    "summary": "My journey from running a small print shop in Ghana to building software at Salesforce.",
+    "content": {
+      "html": "\n<p>My tech journey didn\u2019t start in a classroom or with a Silicon Valley internship. It started in a small print shop in Accra, Ghana, where I managed everything from customer service to toner refills. I didn\u2019t know I was learning valuable lessons about user experience, systems, and troubleshooting \u2014 but I was.</p>\n<p>After moving to the U.S., I chased opportunity wherever I could find it. Contract jobs, freelance gigs, night classes, YouTube tutorials \u2014 all part of the grind. I taught myself PHP, fell in love with Laravel, and eventually picked up modern JavaScript, Docker, and Python. Every new tool was a survival skill \u2014 something I needed to deliver, improve, and grow.</p>\n<p>Fast forward to today: I\u2019m a Software Engineer at Salesforce, working with an amazing team on the Tableau Marketing Engineering squad. I\u2019ve built and shipped real tools that solve real problems, and I\u2019ve done it while raising a family, balancing faith and ambition, and still managing to debug code at 2am (occasionally).</p>\n<p>This blog is one way I get to share what I\u2019ve learned and celebrate how far I\u2019ve come. Whether you\u2019re just starting out or already deep in the stack, I hope it helps you on your journey too.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "My Journey"
+    ],
+    "date": "2024-06-09T00:00:00Z",
+    "featuredImage": "",
+    "featured": true,
+    "weight": 0
+  },
+  {
+    "title": "The Time I Almost Quit Tech (And Why I\u2019m Glad I Didn\u2019t)",
+    "slug": "almost-quit-tech",
+    "summary": "A low point in my career that nearly made me give up. Here's what pulled me back.",
+    "content": {
+      "html": "\n<p>Every developer hits a wall. Mine came early \u2014 I was underpaid, overwhelmed, and seriously wondering if tech was for me. Impostor syndrome was real, and the learning curve felt like Everest.</p>\n<p>One night, I was debugging a Laravel app for a freelance client who ghosted me after I delivered. I hadn\u2019t slept. My code wasn\u2019t working. And I was broke. I opened my laptop, stared at the screen, and thought, \u201cMaybe I should just go do something else.\u201d</p>\n<p>But something clicked. I remembered how far I\u2019d come \u2014 from Ghana to this very moment. I thought of my kids watching me. I realized I didn\u2019t want to quit. I wanted to grow.</p>\n<p>So I kept going. I took a break, restructured my learning, and found mentors. I invested in my skills and, slowly, everything changed. Better jobs came. Confidence came. And now? I help others who feel like I once did.</p>\n<p>So if you're at that breaking point \u2014 breathe. Step back. You're not alone. And yes, it's worth it.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "My Journey",
+      "Career & Mindset"
+    ],
+    "date": "2024-06-11T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 1
+  },
+  {
+    "title": "How I Built MethodistCRM: Laravel, Trials & Triumphs",
+    "slug": "building-methodistcrm",
+    "summary": "Breaking down the real-world Laravel project that taught me to think like an architect.",
+    "content": {
+      "html": "\n<p>MethodistCRM was born out of a need. A local church wanted to manage events, donations, and member engagement \u2014 but everything was on spreadsheets and hope. I saw an opportunity to help and learn.</p>\n<p>I scoped out the project, designed a basic schema in MySQL, and started building with Laravel. It was my first time working with service containers, authentication, and relationships at scale. I learned to balance technical decisions with user needs. And yes, I made a few classic mistakes along the way \u2014 like shipping code at 3am that took down the live app. Oops.</p>\n<p>But through it all, I gained confidence. I learned how to structure code, think in terms of features, and plan for real users. MethodistCRM wasn\u2019t just a portfolio piece \u2014 it was my classroom.</p>\n<p>Today, it still runs. And every time I revisit it, I see just how far I\u2019ve come. Laravel gave me a path into serious development. This project helped me walk it.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Tech:Laravel",
+      "Tech & Projects"
+    ],
+    "date": "2024-06-13T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 2
+  },
+  {
+    "title": "My Local Dev Setup: How I Stopped Fighting Docker and Made Peace",
+    "slug": "my-local-dev-setup",
+    "summary": "Lessons from setting up a local environment I don\u2019t hate. Docker, Valet, and compromise.",
+    "content": {
+      "html": "\n<p>At first, Docker felt like black magic. It broke things. It clashed with Laravel Valet. And it made my Mac fan sound like a jet engine. But over time, I stopped trying to make it behave like my old setup \u2014 and started letting it be what it is: isolated, portable, predictable.</p>\n<p>Now my dev setup runs Docker containers for Laravel, MySQL, Vue.js, and even WordPress \u2014 all networked together. I use Valet for legacy projects and Docker Compose for modern ones. My .env files are clean, my volumes are persistent, and my mental state is peaceful. Mostly.</p>\n<p>If you\u2019re struggling with Docker, my advice: stop fighting it. Lean in. Learn its logic. It might just become your favorite tool.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Tech:Docker",
+      "Tech & Projects"
+    ],
+    "date": "2024-06-15T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 3
+  },
+  {
+    "title": "The 3 Rules I Follow in Code Reviews (and Life)",
+    "slug": "code-review-rules",
+    "summary": "My personal philosophy on giving and receiving code reviews \u2014 and how it applies beyond code.",
+    "content": {
+      "html": "\n<p>Code reviews aren't just about code. They\u2019re about communication, trust, and growth. Over time, I\u2019ve developed three simple rules that guide how I review others\u2019 work \u2014 and how I accept feedback, too.</p>\n<ol>\n<li><strong>Assume good intent:</strong> Start from a place of trust. Most people want to do good work \u2014 sometimes they just need a nudge or a second pair of eyes.</li>\n<li><strong>Be kind, but clear:</strong> You can be direct without being a jerk. Say what\u2019s wrong, but say it like a teammate \u2014 not a gatekeeper.</li>\n<li><strong>Ask before suggesting:</strong> \u201cWould it make sense to...\u201d goes a long way. You invite discussion instead of shutting it down.</li>\n</ol>\n<p>These rules don\u2019t just work in GitHub \u2014 they work in retros, DMs, and family group chats (seriously). Feedback is an art. And when done well, it makes everyone better.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Career & Mindset"
+    ],
+    "date": "2024-06-17T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 4
+  },
+  {
+    "title": "What Working at Salesforce Taught Me About Scaling Myself",
+    "slug": "salesforce-scaling-myself",
+    "summary": "How working on big platforms helped me rethink my approach to time, tools, and teamwork.",
+    "content": {
+      "html": "\n<p>When I joined Salesforce, I was comfortable shipping Laravel apps and standing up Docker environments. But working on Tableau\u2019s marketing platform meant scaling in every way: codebases, systems, meetings, expectations, and even patience.</p>\n<p>I had to learn to prioritize ruthlessly, communicate clearly, and trust others to own their piece of the puzzle. I leaned into CI/CD workflows, documentation habits, and cross-team collaboration. Suddenly, code was just one part of my job \u2014 and that was okay.</p>\n<p>\u201cScaling myself\u201d meant learning to say no, delegate when possible, and zoom out to see the bigger picture. The best engineers here weren\u2019t just great coders \u2014 they were force multipliers. That\u2019s who I strive to be now, too.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Career & Mindset"
+    ],
+    "date": "2024-06-19T00:00:00Z",
+    "featuredImage": "",
+    "featured": true,
+    "weight": 5
+  },
+  {
+    "title": "Debugging, Parenting, and Other High-Stakes Fire Drills",
+    "slug": "debugging-and-parenting",
+    "summary": "What raising kids and fixing bugs taught me about staying calm under pressure.",
+    "content": {
+      "html": "\n<p>Debugging production issues at 10pm while your kid is melting down over the wrong kind of cereal? Been there. Turns out, being a parent and a software engineer require the same skill: composure under chaos.</p>\n<p>When I debug, I start with a hypothesis, test small changes, and try to keep my cool. When I parent, it\u2019s\u2026 basically the same. Take a breath, get more context, and don\u2019t assume it\u2019s someone else\u2019s fault (even when it probably is).</p>\n<p>I\u2019ve learned to accept that things will break \u2014 code, schedules, sleep. What matters is how you respond. So whether you\u2019re fixing a failing test or diffusing a twin tantrum, stay calm. Roll back. Reboot. And maybe grab a snack.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Life & Balance"
+    ],
+    "date": "2024-06-21T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 6
+  },
+  {
+    "title": "My Favorite Tech Snacks, Ranked by Debugging Productivity",
+    "slug": "tech-snacks-for-developers",
+    "summary": "Because the right fuel matters. And no, it\u2019s not always coffee.",
+    "content": {
+      "html": "\n<p>You can tell how serious a bug is by what snack I reach for. Some bugs need almonds. Others demand gummy bears. Here\u2019s my ranking of dev snacks, based purely on their impact on my debugging success rate (highly scientific, of course):</p>\n<ol>\n<li><strong>Dark chocolate:</strong> The GOAT. Keeps the mind sharp, doesn't crash the system.</li>\n<li><strong>Ginger tea:</strong> Technically not a snack, but it calms the logs and the soul.</li>\n<li><strong>Almonds:</strong> Clean, no crumbs, and surprisingly effective for async problems.</li>\n<li><strong>Fruit snacks:</strong> For when things get wild. I once solved a complex Docker bug mid-fruit-snack-chew. Coincidence?</li>\n<li><strong>Coffee:</strong> Honorable mention. More ritual than solution.</li>\n</ol>\n<p>So the next time your code breaks, before you rage-refresh Stack Overflow \u2014 grab a snack. It just might help.</p>\n"
+    },
+    "status": "published",
+    "categories": [
+      "Life & Balance"
+    ],
+    "date": "2024-06-23T00:00:00Z",
+    "featuredImage": "",
+    "featured": false,
+    "weight": 7
+  }
+] 

@@ -427,3 +427,27 @@
 2025-06-23 22:14:21,320 - fastapi - INFO - main.py:75 - Response: 200
 2025-06-23 22:14:21,323 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
 2025-06-23 22:14:21,350 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:02:12,261 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-23 23:02:52,200 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-23 23:02:52,592 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-23 23:07:11,785 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-23 23:07:11,839 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-23 23:07:17,104 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:07:17,156 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:07:24,032 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-23 23:07:24,068 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-23 23:07:24,132 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:07:24,188 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:09:54,130 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/admin/posts
+2025-06-23 23:09:54,146 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:09:54,216 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
+2025-06-23 23:09:54,291 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts
+2025-06-23 23:09:54,391 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:09:54,551 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-23 23:11:15,082 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts/almost-quit-tech
+2025-06-23 23:11:15,216 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:11:28,114 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts
+2025-06-23 23:11:28,179 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-23 23:19:38,592 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-23 23:20:01,802 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-23 23:20:01,999 - fastapi - INFO - main.py:57 - Database connections established

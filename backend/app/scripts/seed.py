@@ -11,6 +11,8 @@ Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 import asyncio
 from datetime import datetime
 from core.db import connect_to_mongo, get_db
+import json
+from pathlib import Path
 
 # Sample blog posts
 posts = [
@@ -71,8 +73,15 @@ async def seed():
     print("🌱 Inserting categories...")
     await db.categories.insert_many(categories)
 
-    print("📝 Inserting blog posts...")
-    await db.posts.insert_many(posts)
+    # Load posts from posts.json if it exists
+    posts_path = Path(__file__).parent / "posts.json"
+    if posts_path.exists():
+        print("📝 Inserting blog posts from posts.json...")
+        with open(posts_path, "r", encoding="utf-8") as f:
+            posts = json.load(f)
+        await db.posts.insert_many(posts)
+    else:
+        print("⚠️ posts.json not found. No blog posts inserted.")
 
     print("✅ Blog posts and categories seeded successfully.")
 
