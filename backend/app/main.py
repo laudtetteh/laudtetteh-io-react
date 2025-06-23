@@ -77,7 +77,7 @@ async def log_requests(request: Request, call_next):
 # Blog + Upload + Contact Routers
 # ----------------------
 app.include_router(blog_router)
-app.include_router(upload_router)
+app.include_router(upload_router, prefix="/api")
 app.include_router(contact_router)
 
 # ----------------------

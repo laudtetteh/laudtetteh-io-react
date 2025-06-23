@@ -74,7 +74,7 @@ const BlogIndex: React.FC = () => {
         <meta name="description" content="Read the latest posts from Laud Tetteh on software, tech, and more." />
       </Head>
       <BlogHeader />
-      <div className="max-w-6xl mx-auto py-12 px-4">
+      <div className="max-w-6xl mx-auto py-24 px-4">
         {/* Header */}
         <h1 className="text-4xl font-bold mb-12">Blog</h1>
 

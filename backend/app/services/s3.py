@@ -32,3 +32,23 @@ def generate_presigned_upload_url(filename: str, content_type: str):
         return url, full_url
     except Exception as e:
         raise RuntimeError(f"Error generating presigned URL: {str(e)}")
+
+# New: List all images in uploads/ directory
+
+def list_uploaded_images():
+    try:
+        response = s3_client.list_objects_v2(Bucket=S3_BUCKET, Prefix=UPLOAD_PREFIX)
+        images = []
+        for obj in response.get('Contents', []):
+            key = obj['Key']
+            if key.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg')):
+                url = f"https://{S3_BUCKET}.s3.{AWS_REGION}.amazonaws.com/{key}"
+                images.append({
+                    'key': key,
+                    'url': url,
+                    'size': obj['Size'],
+                    'last_modified': obj['LastModified'].isoformat() if 'LastModified' in obj else None
+                })
+        return images
+    except Exception as e:
+        raise RuntimeError(f"Error listing images: {str(e)}")
