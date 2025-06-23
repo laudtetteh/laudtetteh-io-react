@@ -2,12 +2,17 @@ import React from 'react';
 import PortfolioLayout from '../components/PortfolioLayout';
 import { GetStaticProps } from 'next';
 import { GithubRepo } from '../types/github';
+import Layout from '../components/Layout';
 
 interface HomePageProps {
   repos: GithubRepo[];
 }
 
-const HomePage: React.FC<HomePageProps> = ({ repos }) => <PortfolioLayout repos={repos} />;
+const HomePage: React.FC<HomePageProps> = ({ repos }) => (
+  <Layout title="Laud Tetteh | Portfolio" description="Personal site and portfolio of Laud Tetteh.">
+    <PortfolioLayout repos={repos} />
+  </Layout>
+);
 
 export const getStaticProps: GetStaticProps = async () => {
   try {

@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import Link from 'next/link';
 import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
@@ -69,11 +68,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
   const formattedDate = formatDate(displayDate);
 
   return (
-    <>
-      <Head>
-        <title>{`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`}</title>
-        <meta name="description" content={post.summary ?? ''} />
-      </Head>
+    <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
       <BlogHeader />
       <main className="arlo_tm_modalbox_page_wrap" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
         <div className="arlo_tm_modalbox_page" style={{
@@ -166,7 +161,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
           }
         `}</style>
       </main>
-    </>
+    </Layout>
   );
 }
 

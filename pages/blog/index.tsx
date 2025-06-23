@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Head from 'next/head';
 import BlogHeader from '@/components/BlogHeader';
+import Layout from '@/components/Layout';
 
 type BlogPost = {
   title: string;
@@ -68,11 +68,7 @@ const BlogIndex: React.FC = () => {
   const paginatedPosts = sortedPosts.slice(startIndex, startIndex + postsPerPage);
 
   return (
-    <>
-      <Head>
-        <title>Blog | Laud Tetteh</title>
-        <meta name="description" content="Read the latest posts from Laud Tetteh on software, tech, and more." />
-      </Head>
+    <Layout title="Blog | Laud Tetteh" description="Read the latest posts from Laud Tetteh on software, tech, and more.">
       <BlogHeader />
       <div className="max-w-6xl mx-auto py-24 px-4">
         {/* Header */}
@@ -229,7 +225,7 @@ const BlogIndex: React.FC = () => {
           </div>
         )}
       </div>
-    </>
+    </Layout>
   );
 };
 
