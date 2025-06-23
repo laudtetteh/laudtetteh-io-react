@@ -6,9 +6,11 @@ interface PostMetaFieldsProps {
   summary: string;
   errors: { [key: string]: string };
   onChange: (field: string, value: string) => void;
+  slugReadOnly?: boolean;
+  onSlugEditClick?: () => void;
 }
 
-const PostMetaFields: React.FC<PostMetaFieldsProps> = ({ title, slug, summary, errors, onChange }) => (
+const PostMetaFields: React.FC<PostMetaFieldsProps> = ({ title, slug, summary, errors, onChange, slugReadOnly = false, onSlugEditClick }) => (
   <>
     <div>
       <label className="font-semibold">Title</label>
@@ -22,12 +24,20 @@ const PostMetaFields: React.FC<PostMetaFieldsProps> = ({ title, slug, summary, e
     </div>
     <div>
       <label className="font-semibold">Slug</label>
-      <input
-        type="text"
-        className="w-full border rounded px-3 py-2 lowercase"
-        value={slug}
-        onChange={(e) => onChange('slug', e.target.value.toLowerCase())}
-      />
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          className="w-full border rounded px-3 py-2 lowercase"
+          value={slug}
+          onChange={(e) => onChange('slug', e.target.value.toLowerCase())}
+          readOnly={slugReadOnly}
+        />
+        {slugReadOnly && (
+          <button type="button" className="text-xs px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200" onClick={onSlugEditClick}>
+            Edit
+          </button>
+        )}
+      </div>
       {errors.slug && <p className="text-red-600 text-sm">{errors.slug}</p>}
     </div>
     <div>

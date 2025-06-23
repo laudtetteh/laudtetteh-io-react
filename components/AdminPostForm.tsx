@@ -26,6 +26,16 @@ import PostOptions from './admin/PostOptions';
 import PostImageUploader from './admin/PostImageUploader';
 import PostActions from './admin/PostActions';
 
+function slugify(text: string) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
 export default function AdminPostForm({
   initialData,
   onSubmit,
@@ -42,6 +52,8 @@ export default function AdminPostForm({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [htmlMode, setHtmlMode] = useState(false);
   const [editorContent, setEditorContent] = useState<{ html: string }>({ html: '' });
+  const [slugReadOnly, setSlugReadOnly] = useState(true);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -74,7 +86,17 @@ export default function AdminPostForm({
       });
       setEditorContent({ html: '' });
     }
+    setSlugReadOnly(true);
+    setSlugManuallyEdited(false);
   }, [initialData]);
+
+  // Auto-generate slug from title unless manually edited
+  useEffect(() => {
+    if (!formData) return;
+    if (!slugManuallyEdited) {
+      setFormData(f => f ? { ...f, slug: slugify(f.title) } : f);
+    }
+  }, [formData?.title]);
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
@@ -152,6 +174,16 @@ export default function AdminPostForm({
     }
   }
 
+  const handleMetaChange = (field: string, value: string) => {
+    if (!formData) return;
+    if (field === 'slug') {
+      setSlugManuallyEdited(true);
+      setFormData({ ...formData, slug: slugify(value) });
+    } else {
+      setFormData({ ...formData, [field]: value });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData) return;
@@ -162,15 +194,11 @@ export default function AdminPostForm({
       return;
     }
 
-    const updated = {
-      ...formData,
-      content: { html: editorContent.html },
-      categories: formData.categories.length > 0 ? formData.categories : ['uncategorized'],
-    };
-
+    // Uniqueness check for slug
     if (!isEdit) {
       try {
-        await getPost(updated.slug);
+        await getPost(formData.slug);
+        setErrors({ ...validationErrors, slug: 'Slug already exists. Please choose a unique one.' });
         pushMessage('Slug already exists. Please choose a unique one.', 'top-center', 'error');
         return;
       } catch (e) {
@@ -178,6 +206,11 @@ export default function AdminPostForm({
       }
     }
 
+    const updated = {
+      ...formData,
+      content: { html: editorContent.html },
+      categories: formData.categories.length > 0 ? formData.categories : ['uncategorized'],
+    };
     onSubmit(updated);
   };
 
@@ -191,8 +224,10 @@ export default function AdminPostForm({
         slug={formData.slug}
         summary={formData.summary}
         errors={errors}
-        onChange={(field, value) => setFormData({ ...formData, [field]: value })}
-        />
+        onChange={handleMetaChange}
+        slugReadOnly={slugReadOnly}
+        onSlugEditClick={() => setSlugReadOnly(false)}
+      />
 
       {/* Content Editor */}
       <PostContentEditor

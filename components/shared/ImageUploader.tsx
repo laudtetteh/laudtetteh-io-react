@@ -16,7 +16,7 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
 
   // Media library modal state
   const [showLibrary, setShowLibrary] = useState(false);
-  const [libraryImages, setLibraryImages] = useState<{ url: string; key: string }[]>([]);
+  const [libraryImages, setLibraryImages] = useState<{ url: string; key: string; last_modified?: string; size?: number }[]>([]);
   const [search, setSearch] = useState('');
   const [loadingLibrary, setLoadingLibrary] = useState(false);
 
@@ -133,7 +133,12 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
               <p>Loading images…</p>
             ) : (
               <div className="grid grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                {libraryImages
+                {[...libraryImages]
+                  .sort((a, b) => {
+                    const aDate = a.last_modified ? new Date(a.last_modified).getTime() : 0;
+                    const bDate = b.last_modified ? new Date(b.last_modified).getTime() : 0;
+                    return bDate - aDate;
+                  })
                   .filter(img => img.key.toLowerCase().includes(search.toLowerCase()))
                   .map(img => (
                     <button
