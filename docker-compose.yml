@@ -26,7 +26,7 @@ services:
     env_file:
       - ${ENV_FILE:-.env.local}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/posts"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
       interval: 10s
       timeout: 5s
       retries: 5

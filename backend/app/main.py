@@ -68,6 +68,8 @@ async def shutdown_event():
 # ----------------------
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
+    if request.url.path == "/healthz":
+        return await call_next(request)
     logger.info(f"Request: {request.method} {request.url}")
     response = await call_next(request)
     logger.info(f"Response: {response.status_code}")
@@ -96,3 +98,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = create_access_token(data={"sub": form_data.username})
     logger.info(f"Successful login for user: {form_data.username}")
     return { "access_token": access_token, "token_type": "bearer" }
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
