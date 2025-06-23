@@ -159,10 +159,12 @@ export default function AdminPostForm({
   });
 
   useEffect(() => {
-    if (editor && formData) {
-      editor.commands.setContent(formData.content.html || '');
+    if (editor && initialData) {
+      const html = initialData.content?.html || '';
+      editor.commands.setContent(html);
+      setEditorContent({ html });
     }
-  }, [editor, formData]);
+  }, [editor, initialData]);
 
   async function uploadAndInsert(file: File) {
     const token = localStorage.getItem('token');

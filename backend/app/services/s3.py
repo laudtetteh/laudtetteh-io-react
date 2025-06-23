@@ -17,7 +17,14 @@ s3_client = boto3.client(
 UPLOAD_PREFIX = "uploads/"
 
 def generate_presigned_upload_url(filename: str, content_type: str):
-    key = f"{UPLOAD_PREFIX}{uuid4()}_{filename}"
+    # Split filename into name and extension
+    if '.' in filename:
+        name, ext = filename.rsplit('.', 1)
+        ext = '.' + ext
+    else:
+        name, ext = filename, ''
+    short_id = str(uuid4())[:6]
+    key = f"{UPLOAD_PREFIX}{name}_{short_id}{ext}"
     try:
         url = s3_client.generate_presigned_url(
             ClientMethod="put_object",
