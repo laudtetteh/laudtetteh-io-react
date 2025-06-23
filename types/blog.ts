@@ -8,6 +8,9 @@ export interface PostData {
   featured: boolean;
   featuredImage?: string;
   weight?: number;
+  date_created?: string;
+  date_published?: string;
+  date_updated?: string;
 }
 
 export interface BlogPostFormData {
@@ -16,4 +19,5 @@ export interface BlogPostFormData {
   summary: string;
   content: { html: string };
   date?: string;
+  date_published?: string;
 }

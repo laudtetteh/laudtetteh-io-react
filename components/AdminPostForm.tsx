@@ -55,6 +55,7 @@ export default function AdminPostForm({
         featured: initialData.featured || false,
         featuredImage: initialData.featuredImage || '',
         weight: initialData.weight ?? 0,
+        date_published: initialData.date_published,
       };
       setFormData(fullData);
       setEditorContent(fullData.content || { html: '' });
@@ -69,6 +70,7 @@ export default function AdminPostForm({
         featured: false,
         featuredImage: '',
         weight: 0,
+        date_published: new Date().toISOString(),
       });
       setEditorContent({ html: '' });
     }
@@ -208,6 +210,7 @@ export default function AdminPostForm({
         status={formData.status}
         featured={formData.featured}
         weight={formData.weight || 0}
+        date_published={formData.date_published}
         onChange={(field, value) => setFormData({ ...formData, [field]: value })}
           />
 

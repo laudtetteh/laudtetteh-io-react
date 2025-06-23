@@ -17,12 +17,15 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 import Layout from '@/components/Layout';
+import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 interface BlogPost {
   title: string;
   slug: string;
   summary: string;
   date: string;
+  date_published?: string;
   status: string;
   categories: string[];
   featuredImage?: string;
@@ -82,9 +85,9 @@ function SortablePost({
         </div>
 
         <p className="text-sm text-gray-500">
-          {post.date
-            ? `Created: ${new Date(post.date).toLocaleDateString()}`
-            : "No publish date"}
+          {post.date_published
+            ? `Published: ${format(toZonedTime(new Date(post.date_published), 'America/Los_Angeles'), 'MM/dd/yyyy')}`
+            : "Not published"}
         </p>
 
         {post.categories?.length > 0 && (
@@ -165,7 +168,11 @@ export default function AdminDashboard() {
         !dateFilter ||
         new Date(p.date).toDateString() === new Date(dateFilter).toDateString()
       )
-      .sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0))
+      .sort((a, b) => {
+        const aDate = a.date_published ? new Date(a.date_published).getTime() : 0;
+        const bDate = b.date_published ? new Date(b.date_published).getTime() : 0;
+        return bDate - aDate;
+      })
   ), [posts, search, statusFilter, categoryFilter, dateFilter]);
 
   const handleDelete = async (slug: string) => {

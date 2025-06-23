@@ -7,5 +7,8 @@ python-jose[cryptography]
 boto3
 python-multipart
 python-dotenv
+pytz
+pydantic[email]
 bleach
 resend
+Authlib

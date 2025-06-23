@@ -18,12 +18,15 @@ from models.category import Category
 from core.auth import verify_token
 from pydantic import BaseModel
 from utils.sanitize import sanitize_html
+import pytz
 
 router = APIRouter()
 
 # Connect to DB collections
 posts_collection = None
 categories_collection = None
+
+PT = pytz.timezone('America/Los_Angeles')
 
 def set_posts_collection(collection):
     global posts_collection
@@ -35,7 +38,12 @@ def set_categories_collection(collection):
 
 @router.get("/api/posts", response_model=List[BlogPost])
 async def get_all_posts():
-    posts = await posts_collection.find().sort("date", -1).to_list(100)
+    # Sort by date_published (desc), falling back to date_created for older posts
+    posts = await posts_collection.find().sort([
+        ("date_published", -1),
+        ("date_created", -1),
+        ("date", -1)
+    ]).to_list(100)
     return posts
 
 @router.get("/api/posts/{slug}", response_model=BlogPost)
@@ -51,24 +59,55 @@ async def create_post(post_in: BlogPostIn):
     if existing:
         raise HTTPException(status_code=400, detail="Slug already exists")
 
-    post = post_in.dict()
+    post = post_in.dict(exclude_unset=True)
+    now = datetime.now(pytz.utc)
+    post["date_created"] = now
+    post["date_updated"] = now
+
+    if post_in.date_published:
+        # Date is already a datetime object from Pydantic
+        post["date_published"] = post_in.date_published.astimezone(pytz.utc)
+    elif post.get("status") == "published":
+        # If no date is provided and status is published, use current time
+        post["date_published"] = now
+
     post["content"]["html"] = sanitize_html(post["content"]["html"])
-    post["date"] = datetime.utcnow()
+    
     await posts_collection.insert_one(post)
     return post
 
 @router.put("/api/posts/{slug}", response_model=BlogPost, dependencies=[Depends(verify_token)])
 async def update_post(slug: str, updated: BlogPostIn):
-    updated_post = updated.dict()
-    updated_post["date"] = datetime.utcnow()
+    # Get the existing post to check status changes
+    existing_post = await posts_collection.find_one({"slug": slug})
+    if not existing_post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    
+    updated_post = updated.dict(exclude_unset=True)
+    now = datetime.now(pytz.utc)
+    updated_post["date_updated"] = now
     updated_post["content"]["html"] = sanitize_html(updated_post["content"]["html"])
+    
+    # Handle date_published when status changes to published
+    new_status = updated_post.get("status")
+    old_status = existing_post.get("status")
+    
+    if new_status == "published":
+        if updated.date_published:
+            # Date is already a datetime object from Pydantic
+            updated_post["date_published"] = updated.date_published.astimezone(pytz.utc)
+        elif not existing_post.get("date_published"):
+            # If publishing for the first time without a specific date, use current time
+            updated_post["date_published"] = now
+    elif new_status == "draft" and old_status == "published":
+        # Post is being unpublished, remove date_published
+        updated_post["date_published"] = None
+    
     result = await posts_collection.find_one_and_update(
         {"slug": slug},
         {"$set": updated_post},
         return_document=True
     )
-    if not result:
-        raise HTTPException(status_code=404, detail="Post not found")
     return result
 
 @router.delete("/api/posts/{slug}", dependencies=[Depends(verify_token)])
@@ -80,7 +119,12 @@ async def delete_post(slug: str):
 
 @router.get("/api/admin/posts", response_model=List[BlogPost], dependencies=[Depends(verify_token)])
 async def get_all_posts_admin():
-    posts = await posts_collection.find().sort("date", -1).to_list(100)
+    # Sort by date_published (desc), falling back to date_created for older posts
+    posts = await posts_collection.find().sort([
+        ("date_published", -1),
+        ("date_created", -1),
+        ("date", -1)
+    ]).to_list(100)
     return posts
 
 @router.get("/api/blog/{slug}", response_model=BlogPost)

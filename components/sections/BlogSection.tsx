@@ -4,6 +4,7 @@ type BlogPost = {
   title: string;
   summary: string;
   date: string;
+  date_published?: string;
   slug: string;
   featuredImage?: string;
   categories?: string[];
@@ -38,10 +39,14 @@ const BlogSection: React.FC = () => {
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) setPosts(data.filter(p => p.status === 'published'));
-        else setPosts([]);
+        if (Array.isArray(data)) {
+          setPosts(data.filter(post => post.status === 'published'));
+        }
       })
-      .catch(() => setPosts([]));
+      .catch(err => {
+        console.error('Failed to load blog posts:', err);
+        setPosts([]);
+      });
   }, []);
 
   // Minimal: just call arlo_tm_data_images after posts render
@@ -66,7 +71,8 @@ const BlogSection: React.FC = () => {
                 const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/img/news/1.jpg';
                 const author = 'Laud Tetteh';
                 const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
-                const formattedDate = formatDate(post.date);
+                const displayDate = post.date_published || post.date;
+                const formattedDate = formatDate(displayDate);
                 return (
                   <li key={post.slug}>
                     <div className="list_inner">
@@ -117,3 +123,4 @@ const BlogSection: React.FC = () => {
 };
 
 export default BlogSection;
+ 

@@ -31,8 +31,8 @@ async def submit_contact(data: ContactSubmission, request: Request):
                 detail="Failed to send email"
             )
     except Exception as e:
-        logger.error(f"❌ Error processing contact form: {str(e)}")
+        logger.error(f"An unexpected error occurred: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while processing your request"
+            detail="An unexpected error occurred"
         )

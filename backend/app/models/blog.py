@@ -24,6 +24,9 @@ class BlogPost(BaseModel):
     status: Literal["draft", "published"] = Field(default="draft")
     categories: List[str] = Field(default=[], example=["Python", "Backend"])
     date: datetime = Field(default_factory=datetime.utcnow)
+    date_created: Optional[datetime] = None
+    date_published: Optional[datetime] = None
+    date_updated: Optional[datetime] = None
     featuredImage: Optional[str] = Field(default="", example="https://example.com/image.jpg")
     featured: bool = Field(default=False)
     weight: int = Field(default=0)
@@ -36,6 +39,7 @@ class BlogPostIn(BaseModel):
     content: Content
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
+    date_published: Optional[datetime] = None
     featuredImage: Optional[str] = ""
     featured: bool = False
     weight: int = 0
@@ -47,6 +51,9 @@ class BlogPostOut(BaseModel):
     summary: str
     content: Content
     date: datetime
+    date_created: Optional[datetime] = None
+    date_published: Optional[datetime] = None
+    date_updated: Optional[datetime] = None
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
     featuredImage: Optional[str] = ""

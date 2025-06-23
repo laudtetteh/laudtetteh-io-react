@@ -12,6 +12,7 @@ interface BlogPost {
   content: { html: string };
   summary?: string;
   date?: string;
+  date_published?: string;
   status?: string;
   categories?: string[];
   featuredImage?: string;
@@ -63,7 +64,8 @@ export default function BlogPostPage({ post }: PostPageProps) {
   const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/img/news/1.jpg';
   const author = 'Laud Tetteh';
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
-  const formattedDate = formatDate(post.date);
+  const displayDate = post.date_published || post.date;
+  const formattedDate = formatDate(displayDate);
 
   return (
     <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>

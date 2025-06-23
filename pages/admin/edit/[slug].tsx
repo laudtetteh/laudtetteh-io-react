@@ -17,6 +17,7 @@ interface BlogPost {
   featured: boolean;
   featuredImage?: string;
   weight?: number;
+  date_published?: string;
 }
 
 export default function EditPostPage() {
