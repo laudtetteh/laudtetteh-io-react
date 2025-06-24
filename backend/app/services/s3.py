@@ -59,3 +59,10 @@ def list_uploaded_images():
         return images
     except Exception as e:
         raise RuntimeError(f"Error listing images: {str(e)}")
+
+def delete_image(key: str):
+    try:
+        s3_client.delete_object(Bucket=S3_BUCKET, Key=key)
+        return True
+    except Exception as e:
+        raise RuntimeError(f"Error deleting image: {str(e)}")

@@ -5,10 +5,11 @@ This endpoint returns a pre-signed PUT URL for uploading a file to S3.
 Access is protected using JWT admin authentication.
 """
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Path
 from pydantic import BaseModel
 from core.auth import verify_token
-from services.s3 import generate_presigned_upload_url, list_uploaded_images
+from services.s3 import generate_presigned_upload_url, list_uploaded_images, delete_image
+import urllib.parse
 
 router = APIRouter()
 
@@ -46,3 +47,18 @@ def get_uploaded_images(token: str = Depends(verify_token)):
     except Exception as e:
         print("❌ Failed to list images:", str(e))
         raise HTTPException(status_code=500, detail=f"Error listing images: {str(e)}")
+
+@router.delete("/images/{key:path}")
+def delete_uploaded_image(key: str = Path(...), token: str = Depends(verify_token)):
+    """
+    Delete an image from S3 uploads/ directory by key.
+    Requires valid JWT token.
+    """
+    try:
+        # S3 keys may be URL-encoded; decode if needed
+        decoded_key = urllib.parse.unquote(key)
+        delete_image(decoded_key)
+        return {"message": "Image deleted"}
+    except Exception as e:
+        print("❌ Failed to delete image:", str(e))
+        raise HTTPException(status_code=500, detail=f"Error deleting image: {str(e)}")

@@ -451,3 +451,332 @@
 2025-06-23 23:19:38,592 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
 2025-06-23 23:20:01,802 - fastapi - INFO - main.py:52 - Starting up FastAPI application
 2025-06-23 23:20:01,999 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-24 01:39:25,274 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-24 01:39:28,570 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-24 01:39:28,593 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-24 01:39:39,659 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-24 01:39:41,265 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-24 01:39:41,279 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-24 01:39:43,028 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-24 01:39:43,037 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-24 01:41:15,219 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/login
+2025-06-24 01:41:15,292 - fastapi - INFO - main.py:99 - Successful login for user: admin
+2025-06-24 01:41:15,295 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:41:17,126 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/admin/posts
+2025-06-24 01:41:17,155 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:41:17,199 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
+2025-06-24 01:41:18,906 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:41:37,349 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 01:41:37,351 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:41:37,355 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:41:37,921 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:41:37,925 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:41:38,115 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:42:06,901 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/01adac3f-2604-4cfc-86d3-0b29c44d74c1_screencapture-localhost-8001-grants-artist-calls-other-listings-2025-05-21-08_33_31.png
+2025-06-24 01:42:06,926 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:42:06,931 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/01adac3f-2604-4cfc-86d3-0b29c44d74c1_screencapture-localhost-8001-grants-artist-calls-other-listings-2025-05-21-08_33_31.png
+2025-06-24 01:42:06,932 - fastapi - INFO - main.py:75 - Response: 404
+2025-06-24 01:42:47,662 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/051d980c-b382-4e40-80aa-1e9a54ba7c6f_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 01:42:47,666 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:42:47,676 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/051d980c-b382-4e40-80aa-1e9a54ba7c6f_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 01:42:47,678 - fastapi - INFO - main.py:75 - Response: 404
+2025-06-24 01:45:17,614 - fastapi - INFO - main.py:64 - Shutting down FastAPI application
+2025-06-24 01:45:19,491 - fastapi - INFO - main.py:52 - Starting up FastAPI application
+2025-06-24 01:45:19,579 - fastapi - INFO - main.py:57 - Database connections established
+2025-06-24 01:45:30,907 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:45:31,679 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:45:31,681 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:45:31,844 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:45:55,075 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/01adac3f-2604-4cfc-86d3-0b29c44d74c1_screencapture-localhost-8001-grants-artist-calls-other-listings-2025-05-21-08_33_31.png
+2025-06-24 01:45:55,077 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:45:55,082 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/01adac3f-2604-4cfc-86d3-0b29c44d74c1_screencapture-localhost-8001-grants-artist-calls-other-listings-2025-05-21-08_33_31.png
+2025-06-24 01:45:55,226 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:46:00,933 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 01:46:00,935 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:46:00,937 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 01:46:00,938 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:46:00,939 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:46:00,945 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:46:01,144 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:46:02,811 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:50:36,987 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:50:36,990 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:50:37,699 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:50:37,712 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:55:11,968 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:55:11,975 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:55:12,909 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:55:12,942 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:55:42,559 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-24 01:55:42,580 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-24 01:55:44,128 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:55:44,143 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:42,490 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/051d980c-b382-4e40-80aa-1e9a54ba7c6f_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 01:56:42,493 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:42,497 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/051d980c-b382-4e40-80aa-1e9a54ba7c6f_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 01:56:43,099 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:43,109 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/061309a6-fe76-43df-8be9-66efb80bf424_kitten-pic-2.jpg
+2025-06-24 01:56:43,110 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:43,129 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/061309a6-fe76-43df-8be9-66efb80bf424_kitten-pic-2.jpg
+2025-06-24 01:56:43,280 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:54,511 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/65f219e4-b8a8-4e43-b58d-5670dbbb8df5_WhatsApp Image 2025-05-19 at 16.40.14.jpeg
+2025-06-24 01:56:54,514 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:54,518 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/65f219e4-b8a8-4e43-b58d-5670dbbb8df5_WhatsApp Image 2025-05-19 at 16.40.14.jpeg
+2025-06-24 01:56:54,661 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:54,717 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/5fdc5253-632a-4f77-b2b1-759ec63d7bdf_name-testing.png
+2025-06-24 01:56:54,762 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:56:54,787 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/5fdc5253-632a-4f77-b2b1-759ec63d7bdf_name-testing.png
+2025-06-24 01:56:54,958 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:06,022 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 01:57:06,026 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:06,053 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 01:57:06,063 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:08,221 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 01:57:08,224 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:08,229 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:57:08,409 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:14,291 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:57:14,501 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 01:57:14,505 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 01:57:14,667 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:55:55,930 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 19:55:56,221 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:55:56,237 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:55:56,667 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:55:56,680 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:55:56,694 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:56:10,519 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:56:10,530 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:56:10,634 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:56:10,652 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:57:15,234 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:57:15,239 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:57:15,242 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:57:15,246 - fastapi - INFO - main.py:75 - Response: 401
+2025-06-24 19:57:47,048 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/login
+2025-06-24 19:57:47,355 - fastapi - INFO - main.py:99 - Successful login for user: admin
+2025-06-24 19:57:47,390 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:57:51,443 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/admin/posts
+2025-06-24 19:57:51,446 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:57:51,455 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
+2025-06-24 19:57:53,245 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:58:03,570 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 19:58:03,573 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:58:03,577 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 19:58:03,580 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:58:03,582 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:58:03,602 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 19:58:05,833 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 19:58:05,843 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:11:43,004 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images
+2025-06-24 20:11:43,011 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:11:43,017 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 20:11:43,678 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:11:43,682 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 20:11:43,782 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,446 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/0bd0a788-4e0a-49b7-8364-cea5279fa921_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:57,449 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,452 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/0bd0a788-4e0a-49b7-8364-cea5279fa921_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:57,797 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,802 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/0d7be970-160c-42ae-9c32-ec47f590542b_logo-1.png
+2025-06-24 20:12:57,804 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,808 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/0d7be970-160c-42ae-9c32-ec47f590542b_logo-1.png
+2025-06-24 20:12:57,899 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,919 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/29757e09-1b29-4efc-9863-0b605c3e3e60_ChatGPT Image May 30, 2025, 05_01_22 PM.png
+2025-06-24 20:12:57,920 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:57,923 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/29757e09-1b29-4efc-9863-0b605c3e3e60_ChatGPT Image May 30, 2025, 05_01_22 PM.png
+2025-06-24 20:12:58,015 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,021 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/2aaa76bd-3181-453f-bcc4-d6052e5ab8f7_ChatGPT Image May 30, 2025, 05_01_22 PM.png
+2025-06-24 20:12:58,022 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,025 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/2aaa76bd-3181-453f-bcc4-d6052e5ab8f7_ChatGPT Image May 30, 2025, 05_01_22 PM.png
+2025-06-24 20:12:58,115 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,120 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/3febfe3b-e25b-40bc-adf5-7d73890f63b8_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,121 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,124 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/3febfe3b-e25b-40bc-adf5-7d73890f63b8_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,251 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,255 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/4dee96b0-2a8a-4d36-9f8c-5e2bb3d201fd_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,256 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,260 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/4dee96b0-2a8a-4d36-9f8c-5e2bb3d201fd_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,349 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,354 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/51224107-9974-4e70-91ba-1dbb99f21423_screencapture-laudtetteh-io-my-tech-journey-html-2025-05-31-23_42_21.png
+2025-06-24 20:12:58,355 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,358 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/51224107-9974-4e70-91ba-1dbb99f21423_screencapture-laudtetteh-io-my-tech-journey-html-2025-05-31-23_42_21.png
+2025-06-24 20:12:58,454 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,462 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/59962545-ac79-4bd4-b39f-d5ba12c4b009_logo-2.png
+2025-06-24 20:12:58,463 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,465 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/59962545-ac79-4bd4-b39f-d5ba12c4b009_logo-2.png
+2025-06-24 20:12:58,562 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,567 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/62c239f8-d63e-42d0-ba5b-df197c4f0946_kitten-pic-3.jpg
+2025-06-24 20:12:58,568 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,572 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/62c239f8-d63e-42d0-ba5b-df197c4f0946_kitten-pic-3.jpg
+2025-06-24 20:12:58,661 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,667 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/6519a91e-f4b0-491a-bc4d-b50655312a83_cat-new-4.jpg
+2025-06-24 20:12:58,668 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,671 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/6519a91e-f4b0-491a-bc4d-b50655312a83_cat-new-4.jpg
+2025-06-24 20:12:58,767 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,772 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/68e2e277-7dd8-4b62-a088-55ccc22f42f8_screencapture-laudtetteh-io-my-tech-journey-html-2025-05-31-23_42_21.png
+2025-06-24 20:12:58,773 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,777 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/68e2e277-7dd8-4b62-a088-55ccc22f42f8_screencapture-laudtetteh-io-my-tech-journey-html-2025-05-31-23_42_21.png
+2025-06-24 20:12:58,873 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,878 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/6bc1ce8d-0595-48a0-89a0-3baadcec7508_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,880 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,885 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/6bc1ce8d-0595-48a0-89a0-3baadcec7508_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:12:58,980 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,985 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/6c772c23-2d3a-4b89-9859-0e529feeafe5_kitten-pic-3.jpg
+2025-06-24 20:12:58,986 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:58,989 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/6c772c23-2d3a-4b89-9859-0e529feeafe5_kitten-pic-3.jpg
+2025-06-24 20:12:59,094 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,099 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/72b06350-7a5c-497e-8c92-9a19cb8ccd09_cat-new-2.jpeg
+2025-06-24 20:12:59,101 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,105 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/72b06350-7a5c-497e-8c92-9a19cb8ccd09_cat-new-2.jpeg
+2025-06-24 20:12:59,205 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,209 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/77da710c-2693-48aa-8713-5e56647d84ba_logo-1.png
+2025-06-24 20:12:59,210 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,213 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/77da710c-2693-48aa-8713-5e56647d84ba_logo-1.png
+2025-06-24 20:12:59,307 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,312 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/78acd3e5-d38c-43e8-a68b-e3f97162923b_kitten-pic-3.jpg
+2025-06-24 20:12:59,313 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,315 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/78acd3e5-d38c-43e8-a68b-e3f97162923b_kitten-pic-3.jpg
+2025-06-24 20:12:59,410 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,415 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/801b0a89-dbb9-41ef-9491-e76884e85922_screencapture-wpml-org-forums-topic-acf-integration-issue-with-secondary-language-2025-04-05-12_31_25.png
+2025-06-24 20:12:59,416 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,419 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/801b0a89-dbb9-41ef-9491-e76884e85922_screencapture-wpml-org-forums-topic-acf-integration-issue-with-secondary-language-2025-04-05-12_31_25.png
+2025-06-24 20:12:59,513 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,517 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/826fb842-6f6a-4048-b2d7-134aeeb5827c_65f219e4-b8a8-4e43-b58d-5670dbbb8df5_WhatsApp Image 2025-05-19 at 16.40.14.jpg
+2025-06-24 20:12:59,518 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,521 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/826fb842-6f6a-4048-b2d7-134aeeb5827c_65f219e4-b8a8-4e43-b58d-5670dbbb8df5_WhatsApp Image 2025-05-19 at 16.40.14.jpg
+2025-06-24 20:12:59,608 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,612 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/858d62f3-ee05-4a7e-8456-0146687e740e_screencapture-github-laudtetteh-2025-06-01-11_20_28.png
+2025-06-24 20:12:59,613 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,616 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/858d62f3-ee05-4a7e-8456-0146687e740e_screencapture-github-laudtetteh-2025-06-01-11_20_28.png
+2025-06-24 20:12:59,706 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,711 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/979ad492-25cd-4fd8-bf46-3a2dc27458e5_cat-new-3.jpg
+2025-06-24 20:12:59,712 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:12:59,715 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/979ad492-25cd-4fd8-bf46-3a2dc27458e5_cat-new-3.jpg
+2025-06-24 20:12:59,811 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:33,733 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.21.37_18b846.jpeg
+2025-06-24 20:14:33,735 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:33,738 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.21.37_18b846.jpeg
+2025-06-24 20:14:34,041 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,048 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/a455434a-5b7a-4bfd-b479-4ad31a28e66c_laud-passport-photo.jpg
+2025-06-24 20:14:34,049 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,055 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/a455434a-5b7a-4bfd-b479-4ad31a28e66c_laud-passport-photo.jpg
+2025-06-24 20:14:34,164 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,170 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/a7caca2b-707e-4149-90c3-e09a294947a5_cat-new-3.jpg
+2025-06-24 20:14:34,171 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,174 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/a7caca2b-707e-4149-90c3-e09a294947a5_cat-new-3.jpg
+2025-06-24 20:14:34,261 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,266 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:34,267 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,271 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:34,361 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,367 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/ad5cdf0a-3dd6-403b-8a3d-6318596ae057_Screenshot 2024-02-21 at 10.43.19 AM.png
+2025-06-24 20:14:34,368 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,372 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/ad5cdf0a-3dd6-403b-8a3d-6318596ae057_Screenshot 2024-02-21 at 10.43.19 AM.png
+2025-06-24 20:14:34,468 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,472 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/adcdb347-b15e-4acf-8c4c-64080b339487_cat-new-6.jpg
+2025-06-24 20:14:34,474 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,476 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/adcdb347-b15e-4acf-8c4c-64080b339487_cat-new-6.jpg
+2025-06-24 20:14:34,570 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,575 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/another-test_bbb53b.jpg
+2025-06-24 20:14:34,576 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,579 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/another-test_bbb53b.jpg
+2025-06-24 20:14:34,674 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,679 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/b49a3a73-6a46-4722-ae5e-3d5e4ac0b6cc_Screenshot 2024-03-07 at 4.45.10 AM.png
+2025-06-24 20:14:34,680 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,684 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/b49a3a73-6a46-4722-ae5e-3d5e4ac0b6cc_Screenshot 2024-03-07 at 4.45.10 AM.png
+2025-06-24 20:14:34,782 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,787 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/b5f7829d-ccbe-4e72-8abb-447cf3530231_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 20:14:34,788 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,791 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/b5f7829d-ccbe-4e72-8abb-447cf3530231_screencapture-github-laudtetteh-laudtetteh-io-react-pull-1-2025-06-11-01_51_41.png
+2025-06-24 20:14:34,895 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,900 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/bb9160f4-f6e2-4169-8bca-cd3a83a9bc6b_cat-new-5.jpg
+2025-06-24 20:14:34,901 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:34,905 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/bb9160f4-f6e2-4169-8bca-cd3a83a9bc6b_cat-new-5.jpg
+2025-06-24 20:14:35,004 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,009 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/c02df448-5804-4af9-ba38-5311e712f4db_ChatGPT Image May 30, 2025, 05_01_10 PM.png
+2025-06-24 20:14:35,010 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,013 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/c02df448-5804-4af9-ba38-5311e712f4db_ChatGPT Image May 30, 2025, 05_01_10 PM.png
+2025-06-24 20:14:35,111 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,115 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/c70ea2f5-8922-4dac-bd03-c4d551a07cc3_logo-1.png
+2025-06-24 20:14:35,117 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,120 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/c70ea2f5-8922-4dac-bd03-c4d551a07cc3_logo-1.png
+2025-06-24 20:14:35,215 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,221 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/cat-new-1_b6f783.jpg
+2025-06-24 20:14:35,222 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,226 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/cat-new-1_b6f783.jpg
+2025-06-24 20:14:35,325 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,331 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/de23992e-f517-41ed-9b8c-9cd0694055c7_cat-new-1.jpg
+2025-06-24 20:14:35,332 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,335 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/de23992e-f517-41ed-9b8c-9cd0694055c7_cat-new-1.jpg
+2025-06-24 20:14:35,442 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,447 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/df557ba5-9e88-49d1-86fc-67a1573f5c3b_kitten-pic-2.jpg
+2025-06-24 20:14:35,448 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,452 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/df557ba5-9e88-49d1-86fc-67a1573f5c3b_kitten-pic-2.jpg
+2025-06-24 20:14:35,554 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,560 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/e13b0003-37cb-43ea-a2d8-d8a2c358c72f_ChatGPT Image Jun 23, 2025, 06_20_00 AM.png
+2025-06-24 20:14:35,561 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,564 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/e13b0003-37cb-43ea-a2d8-d8a2c358c72f_ChatGPT Image Jun 23, 2025, 06_20_00 AM.png
+2025-06-24 20:14:35,658 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,663 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/e2ed2492-208f-4db9-ab6d-b23d2df36b5a_screencapture-chatgpt-g-g-p-67c0f66b9ca08191b4aee7f27f09ed6e-scrap-c-6807dc10-8bb8-800c-a0f8-9e3d61b1e9c5-2025-04-22-11_23_23-2.png
+2025-06-24 20:14:35,664 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,667 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/e2ed2492-208f-4db9-ab6d-b23d2df36b5a_screencapture-chatgpt-g-g-p-67c0f66b9ca08191b4aee7f27f09ed6e-scrap-c-6807dc10-8bb8-800c-a0f8-9e3d61b1e9c5-2025-04-22-11_23_23-2.png
+2025-06-24 20:14:35,770 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,777 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/e4edcdca-3617-49d3-9564-75a38d6eb25e_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:35,778 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,781 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/e4edcdca-3617-49d3-9564-75a38d6eb25e_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:35,880 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,887 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/e64cd250-46d1-470d-80cf-326afd64aa90_Screenshot 2024-03-08 at 6.42.05 AM.png
+2025-06-24 20:14:35,888 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,891 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/e64cd250-46d1-470d-80cf-326afd64aa90_Screenshot 2024-03-08 at 6.42.05 AM.png
+2025-06-24 20:14:35,984 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,989 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/f72df9d6-ca32-418a-9a88-7597e8e071ad_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:35,990 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:35,993 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/f72df9d6-ca32-418a-9a88-7597e8e071ad_ab520529-e142-44e0-8a7a-0ca9859196eb_kitten-pic-3.jpg
+2025-06-24 20:14:36,085 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:41,111 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/fc3eaf99-86c2-44cd-88d6-7ab3f2b691d1_logo-1.png
+2025-06-24 20:14:41,112 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:14:41,115 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/fc3eaf99-86c2-44cd-88d6-7ab3f2b691d1_logo-1.png
+2025-06-24 20:14:41,219 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,841 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,845 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,847 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,849 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,852 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,854 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,856 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,857 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,859 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,860 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,871 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,873 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,874 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,876 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,879 - fastapi - INFO - main.py:73 - Request: POST http://localhost:8000/api/upload-url
+2025-06-24 20:16:04,901 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,910 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,911 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,913 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:04,914 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:07,103 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/images
+2025-06-24 20:16:07,428 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,581 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/ChatGPT Image Jun 23, 2025, 06_00_29 AM_c4712f.png
+2025-06-24 20:16:28,583 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,586 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/ChatGPT Image Jun 23, 2025, 06_00_29 AM_c4712f.png
+2025-06-24 20:16:28,680 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,684 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/ChatGPT Image Jun 23, 2025, 06_20_00 AM_ed6b6c.png
+2025-06-24 20:16:28,686 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,689 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/ChatGPT Image Jun 23, 2025, 06_20_00 AM_ed6b6c.png
+2025-06-24 20:16:28,782 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,788 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.21.37_5e2f7a.jpeg
+2025-06-24 20:16:28,790 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,793 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.21.37_5e2f7a.jpeg
+2025-06-24 20:16:28,900 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,906 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.48.24_ff8d6a.jpeg
+2025-06-24 20:16:28,908 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:28,911 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/WhatsApp Image 2025-06-17 at 19.48.24_ff8d6a.jpeg
+2025-06-24 20:16:29,018 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:29,023 - fastapi - INFO - main.py:73 - Request: OPTIONS http://localhost:8000/api/images/uploads/another-test_8be8e0.jpg
+2025-06-24 20:16:29,024 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-24 20:16:29,028 - fastapi - INFO - main.py:73 - Request: DELETE http://localhost:8000/api/images/uploads/another-test_8be8e0.jpg
+2025-06-24 20:16:29,119 - fastapi - INFO - main.py:75 - Response: 200
