@@ -5,6 +5,7 @@ import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import BlogHeader from '@/components/BlogHeader';
+import Footer from '@/components/Footer';
 
 interface BlogPost {
   title: string;
@@ -36,6 +37,7 @@ function formatDate(dateString?: string) {
     month: 'short',
     day: '2-digit',
     year: 'numeric',
+    timeZone: 'America/Los_Angeles',
   });
 }
 
@@ -161,6 +163,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
           }
         `}</style>
       </main>
+      <Footer />
     </Layout>
   );
 }

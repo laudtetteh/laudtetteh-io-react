@@ -9,7 +9,7 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ repos }) => (
-  <Layout title="Laud Tetteh | Portfolio" description="Personal site and portfolio of Laud Tetteh.">
+  <Layout title="Laud Tetteh | Full Stack Developer" description="Personal site and portfolio of Laud Tetteh.">
     <PortfolioLayout repos={repos} />
   </Layout>
 );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import BlogHeader from '@/components/BlogHeader';
 import Layout from '@/components/Layout';
+import Footer from '@/components/Footer';
 
 type BlogPost = {
   title: string;
@@ -41,8 +42,9 @@ const BlogIndex: React.FC = () => {
     if (isNaN(date.getTime())) return dateString;
     return date.toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric',
+      day: '2-digit',
       year: 'numeric',
+      timeZone: 'America/Los_Angeles',
     });
   }
 
@@ -74,94 +76,149 @@ const BlogIndex: React.FC = () => {
         {/* Header */}
         <h1 className="text-4xl font-bold mb-12">Blog</h1>
 
-        {/* Category Navigation */}
-        <div className="mb-12">
-          <div className="flex flex-wrap gap-8 border-b border-gray-200">
-            {allCategories.map(category => (
-              <button
-                key={category}
-                onClick={() => {
-                  setSelectedCategory(category);
-                  setCurrentPage(1);
-                }}
-                className={`pb-4 text-lg font-medium transition-colors ${
-                  selectedCategory === category
-                    ? 'text-black border-b-2 border-black'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Posts List */}
-        <div className="mb-12 bg-white border border-gray-200" style={{ borderRadius: 0, padding: '0 2rem' }}>
-          {paginatedPosts.map((post, idx) => {
-            const displayDate = post.date_published || post.date;
-            const formattedDate = formatDate(displayDate);
-            return (
-              <div key={post.slug}>
-                <div className="flex flex-col md:flex-row items-center py-10" style={{ minHeight: 192, borderBottom: '1px solid #d9d9d9'}}>
-                  {/* Image */}
-                  <div className="w-full md:w-1/3 h-48 overflow-hidden bg-gray-100 flex items-center justify-center" style={{ borderRadius: 0 }}>
-                    <img
-                      src={post.featuredImage}
-                      alt={post.title}
-                      className="w-full h-full object-cover" style={{ borderRadius: 0, objectFit: 'cover', objectPosition: 'center' }}
-                    />
+        <div id="blog" className="arlo_tm_section animated rollIn active" style={{ position: 'relative' }}>
+          <div className="section_inner">
+            <div className="arlo_tm_news">
+              <div className="news_list">
+                {/* Category Navigation */}
+                <div className="mb-12">
+                  {/* Desktop Category Buttons */}
+                  <div className="hidden md:flex flex-wrap gap-8 border-b border-gray-200">
+                    {allCategories.map(category => (
+                      <button
+                        key={category}
+                        onClick={() => {
+                          setSelectedCategory(category);
+                          setCurrentPage(1);
+                        }}
+                        className={`pb-4 text-lg font-medium transition-colors ${
+                          selectedCategory === category
+                            ? 'text-black border-b-2 border-black'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
                   </div>
-                  {/* Content */}
-                  <div className="w-full md:w-2/3 flex flex-col justify-center h-full md:pl-10 mt-6 md:mt-0">
-                    {/* Date */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-500 font-medium">{formattedDate}</span>
-                    </div>
-                    {/* Categories */}
-                    {post.categories && post.categories.length > 0 && (
-                      <div className="mb-2 flex flex-wrap gap-2">
-                        {post.categories.map((cat) => (
-                          <span key={cat} className="bg-gray-100 text-gray-800 text-xs px-2 py-1" style={{ borderRadius: 0, fontWeight: 500, letterSpacing: 0.5 }}>{cat}</span>
-                        ))}
-                      </div>
-                    )}
-                    {/* Title as Link */}
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2" style={{ letterSpacing: 0 }}>
-                      <Link href={`/blog/${post.slug}`} className="hover:text-blue-600 transition-colors">
-                        {post.title}
-                      </Link>
-                    </h2>
-                    {/* Summary */}
-                    <p className="text-gray-600 text-base mb-4">{post.summary}</p>
-                    {/* Read More Button */}
-                    <div className="arlo_tm_button" style={{ width: 'auto', display: 'inline-block' }}>
-                      <a href={`/blog/${post.slug}`} style={{ textTransform: 'uppercase', fontWeight: 700, fontSize: 14, borderRadius: 0, letterSpacing: 1 }}>
-                        <span className="back">Read More</span>
-                        <span className="front">Read More</span>
-                      </a>
-                    </div>
-                    {/* Admin Edit Link */}
-                    {loggedIn && (
-                      <div className="mt-4 pt-4 border-t border-gray-100">
-                        <Link
-                          href={`/admin/edit/${post.slug}`}
-                          className="text-blue-500 text-sm underline hover:text-blue-700"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Edit
-                        </Link>
-                      </div>
-                    )}
+
+                  {/* Mobile Category Dropdown */}
+                  <div className="md:hidden">
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => {
+                        setSelectedCategory(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      className="w-full p-3 border border-gray-200 rounded-none bg-white text-lg font-medium focus:outline-none focus:border-black"
+                      style={{ 
+                        appearance: 'none',
+                        backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 1rem center',
+                        backgroundSize: '1.5em',
+                        paddingRight: '3rem'
+                      }}
+                    >
+                      {allCategories.map(category => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-                {/* Divider except after last post */}
-                {idx !== paginatedPosts.length - 1 && (
-                  <div className="border-t border-gray-200 w-full" />
+
+                <div className="arlo_tm_title"><h3>Recent Posts</h3></div>
+                {paginatedPosts.length > 0 ? (
+                  <ul>
+                    {paginatedPosts.map((post) => {
+                      const displayDate = post.date_published || post.date;
+                      const formattedDate = formatDate(displayDate);
+                      return (
+                        <li key={post.slug}>
+                          <div className="list_inner">
+                            <div className="image">
+                              <img src="/img/thumbs/4-3.jpg" alt="" />
+                              <div
+                                className="main"
+                                data-img-url={post.featuredImage}
+                                style={{ backgroundImage: `url('${post.featuredImage}')` }}
+                              ></div>
+                              <Link className="arlo_tm_full_link" href={`/blog/${post.slug}`}></Link>
+                            </div>
+                            <div className="desc" style={{ 
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              height: '21rem',
+                              padding: '0 0 0 50px'
+                            }}>
+                              {/* Top section - Date and Categories */}
+                              <div style={{ marginBottom: '20px' }}>
+                                <div className="text-sm text-gray-500 font-medium">{formattedDate}</div>
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  {post.categories && post.categories.map((category) => (
+                                    <span 
+                                      key={category} 
+                                      className="bg-gray-100 text-gray-800 text-xs px-2 py-1" 
+                                      style={{ borderRadius: 0, fontWeight: 500, letterSpacing: 0.5 }}
+                                    >
+                                      {category}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Middle section - Title and Summary */}
+                              <div style={{ flex: 1, marginBottom: '20px' }}>
+                                <div className="title mb-2 mt-6">
+                                  <h3><Link className="text_hover_effect" href={`/blog/${post.slug}`}>{post.title}</Link></h3>
+                                </div>
+                                <div className="summary">
+                                  <p>{post.summary}</p>
+                                </div>
+                              </div>
+
+                              {/* Bottom section - Read More button */}
+                              <div>
+                                <div className="arlo_tm_button">
+                                  <Link href={`/blog/${post.slug}`}>
+                                    <span className="back">READ MORE</span>
+                                    <span className="front">READ MORE</span>
+                                  </Link>
+                                </div>
+                                {loggedIn && (
+                                  <div className="mt-4">
+                                    <Link
+                                      href={`/admin/edit/${post.slug}`}
+                                      className="text-blue-500 text-sm underline hover:text-blue-700"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      Edit
+                                    </Link>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">
+                      {selectedCategory === 'All' 
+                        ? 'No posts available yet.' 
+                        : `No posts found in "${selectedCategory}" category.`
+                      }
+                    </p>
+                  </div>
                 )}
               </div>
-            );
-          })}
+            </div>
+          </div>
         </div>
 
         {/* Pagination */}
@@ -212,19 +269,8 @@ const BlogIndex: React.FC = () => {
             </button>
           </div>
         )}
-
-        {/* No Posts Message */}
-        {paginatedPosts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">
-              {selectedCategory === 'All' 
-                ? 'No posts available yet.' 
-                : `No posts found in "${selectedCategory}" category.`
-              }
-            </p>
-          </div>
-        )}
       </div>
+      <Footer />
     </Layout>
   );
 };
