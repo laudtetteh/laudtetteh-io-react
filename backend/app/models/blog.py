@@ -23,7 +23,7 @@ class BlogPost(BaseModel):
     content: Content = Field(..., example={"html": "<p>This is the full article...</p>"})
     status: Literal["draft", "published"] = Field(default="draft")
     categories: List[str] = Field(default=[], example=["Python", "Backend"])
-    date: datetime = Field(default_factory=datetime.utcnow)
+    date: datetime = Field(default_factory=datetime.utcnow)  # legacy/fallback
     date_created: Optional[datetime] = None
     date_published: Optional[datetime] = None
     date_updated: Optional[datetime] = None
@@ -39,7 +39,10 @@ class BlogPostIn(BaseModel):
     content: Content
     status: Literal["draft", "published"] = "draft"
     categories: List[str] = Field(default=[])
+    date: Optional[datetime] = None  # legacy/fallback
+    date_created: Optional[datetime] = None
     date_published: Optional[datetime] = None
+    date_updated: Optional[datetime] = None
     featuredImage: Optional[str] = ""
     featured: bool = False
     weight: int = 0
@@ -50,7 +53,7 @@ class BlogPostOut(BaseModel):
     slug: str
     summary: str
     content: Content
-    date: datetime
+    date: Optional[datetime] = None  # legacy/fallback
     date_created: Optional[datetime] = None
     date_published: Optional[datetime] = None
     date_updated: Optional[datetime] = None

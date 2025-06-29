@@ -12,3 +12,4 @@ pydantic[email]
 bleach
 resend
 Authlib
+python-dateutil

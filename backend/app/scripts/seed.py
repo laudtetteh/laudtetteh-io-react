@@ -10,9 +10,11 @@ Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 
 import asyncio
 from datetime import datetime
-from core.db import connect_to_mongo, get_db
+import core.db
 import json
 from pathlib import Path
+import argparse
+from dateutil.parser import parse as parse_date
 
 # Sample blog posts
 posts = [
@@ -62,28 +64,69 @@ categories = [
     {"name": "Life & Balance", "slug": "life-balance", "group": "Life & Balance", "createdAt": datetime.utcnow()},
 ]
 
-async def seed():
-    await connect_to_mongo()
-    db = get_db()
+POSTS_FILE = Path(__file__).parent / "out" / "posts.json"
 
-    print("🔄 Clearing existing data...")
-    await db.posts.delete_many({})
-    await db.categories.delete_many({})
+async def seed(mode: str):
+    await core.db.connect_to_mongo()
+    db = core.db.get_db()
 
-    print("🌱 Inserting categories...")
-    await db.categories.insert_many(categories)
+    if mode == 'replace':
+        print("🔄 Clearing existing data (replace mode)...")
+        await core.db.db.categories.delete_many({})
+        await core.db.db.posts.delete_many({})
 
-    # Load posts from posts.json if it exists
-    posts_path = Path(__file__).parent / "posts.json"
-    if posts_path.exists():
-        print("📝 Inserting blog posts from posts.json...")
-        with open(posts_path, "r", encoding="utf-8") as f:
-            posts = json.load(f)
-        await db.posts.insert_many(posts)
+        print("🌱 Inserting categories...")
+        await core.db.db.categories.insert_many(categories)
+
+        # Load posts from posts.json if it exists
+        if POSTS_FILE.exists():
+            print("📝 Inserting blog posts from posts.json...")
+            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+                posts = json.load(f)
+            await core.db.db.posts.insert_many(posts)
+        else:
+            print("⚠️ posts.json not found. No blog posts inserted.")
     else:
-        print("⚠️ posts.json not found. No blog posts inserted.")
+        print("🔄 Upserting posts and categories (update mode)...")
+        # Upsert categories
+        for cat in categories:
+            await core.db.db.categories.update_one({"slug": cat["slug"]}, {"$set": cat}, upsert=True)
+        # Upsert posts
+        if POSTS_FILE.exists():
+            print("📝 Upserting blog posts from posts.json...")
+            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+                posts = json.load(f)
+            for post in posts:
+                # Fallback logic: if only 'date' is present, use it for the others
+                date_val = post.get("date")
+                if not post.get("date_created"):
+                    post["date_created"] = date_val or datetime.utcnow().isoformat()
+                if not post.get("date_published"):
+                    post["date_published"] = date_val or datetime.utcnow().isoformat()
+                if "date_updated" not in post:
+                    post["date_updated"] = None
+                # Always include 'date' as legacy/fallback
+                if not date_val:
+                    post["date"] = post["date_published"] or post["date_created"] or datetime.utcnow().isoformat()
+                # Parse all date fields to datetime
+                for field in ["date", "date_created", "date_published", "date_updated"]:
+                    val = post.get(field)
+                    if val and isinstance(val, str):
+                        try:
+                            post[field] = parse_date(val)
+                        except Exception:
+                            pass
+                await core.db.db.posts.update_one({"slug": post["slug"]}, {"$set": post}, upsert=True)
+        else:
+            print("⚠️ posts.json not found. No blog posts upserted.")
 
     print("✅ Blog posts and categories seeded successfully.")
 
 if __name__ == "__main__":
-    asyncio.run(seed())
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--update', action='store_true', help='Update existing posts or insert new ones (default)')
+    group.add_argument('--replace', action='store_true', help='Delete all posts and replace with seed data')
+    args = parser.parse_args()
+    mode = 'replace' if args.replace else 'update'
+    asyncio.run(seed(mode))

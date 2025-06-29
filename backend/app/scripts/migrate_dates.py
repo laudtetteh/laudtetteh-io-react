@@ -31,70 +31,48 @@ async def migrate_dates():
     
     print("🔍 Starting date migration...")
     
-    # Find all posts that have the old 'date' field but not the new ones
-    cursor = posts_collection.find({
-        "date": {"$exists": True},
-        "$or": [
-            {"date_created": {"$exists": False}},
-            {"date_published": {"$exists": False}},
-            {"date_updated": {"$exists": False}}
-        ]
-    })
-    
+    # Find all posts
+    cursor = posts_collection.find({})
     posts_to_migrate = []
     async for post in cursor:
         posts_to_migrate.append(post)
-    
-    print(f"📊 Found {len(posts_to_migrate)} posts to migrate")
-    
+
+    print(f"\U0001F4CA Found {len(posts_to_migrate)} posts to check for date normalization")
+
     if not posts_to_migrate:
-        print("✅ No posts need migration. All posts already have the new date fields.")
+        print("\u2705 No posts found.")
         return
-    
-    # Migrate each post
+
     migrated_count = 0
     for post in posts_to_migrate:
         try:
-            old_date = post.get("date")
-            if not old_date:
-                print(f"⚠️  Post {post.get('_id')} has empty date field, skipping...")
-                continue
-            
-            # Convert string date to datetime if needed
-            if isinstance(old_date, str):
-                try:
-                    old_date = datetime.fromisoformat(old_date.replace('Z', '+00:00'))
-                except ValueError:
-                    print(f"⚠️  Post {post.get('_id')} has invalid date format: {old_date}")
-                    continue
-            
-            # Prepare update - only add missing fields
             update_data = {}
-            if "date_created" not in post:
-                update_data["date_created"] = old_date
-            if "date_published" not in post:
-                update_data["date_published"] = old_date  # Assume existing posts are published
-            if "date_updated" not in post:
-                update_data["date_updated"] = None
-            
+            for field in ["date", "date_created", "date_published", "date_updated"]:
+                val = post.get(field)
+                if val and isinstance(val, str):
+                    try:
+                        # Try parsing ISO format, fallback to dateutil if needed
+                        try:
+                            dt = datetime.fromisoformat(val.replace('Z', '+00:00'))
+                        except Exception:
+                            from dateutil.parser import parse
+                            dt = parse(val)
+                        update_data[field] = dt
+                    except Exception as e:
+                        print(f"\u26A0\uFE0F  Post {post.get('_id')} has invalid {field} format: {val} ({e})")
             if update_data:
-                # Update the post
                 result = await posts_collection.update_one(
                     {"_id": post["_id"]},
                     {"$set": update_data}
                 )
-                
                 if result.modified_count > 0:
                     migrated_count += 1
-                    print(f"✅ Migrated post: {post.get('title', 'Unknown')} (ID: {post['_id']})")
-                else:
-                    print(f"❌ Failed to migrate post: {post.get('title', 'Unknown')} (ID: {post['_id']})")
-                    
+                    print(f"\u2705 Normalized dates for post: {post.get('title', 'Unknown')} (ID: {post['_id']})")
         except Exception as e:
-            print(f"❌ Error migrating post {post.get('_id')}: {str(e)}")
-    
-    print(f"\n🎉 Migration complete!")
-    print(f"📈 Successfully migrated {migrated_count} out of {len(posts_to_migrate)} posts")
+            print(f"\u274C Error normalizing post {post.get('_id')}: {str(e)}")
+
+    print(f"\n\U0001F389 Date normalization complete!")
+    print(f"\U0001F4C8 Successfully normalized {migrated_count} out of {len(posts_to_migrate)} posts")
     
     # Verify migration
     remaining_old_posts = await posts_collection.count_documents({

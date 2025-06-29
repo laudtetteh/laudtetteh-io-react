@@ -19,6 +19,7 @@ from core.auth import verify_token
 from pydantic import BaseModel
 from utils.sanitize import sanitize_html
 import pytz
+from dateutil.parser import parse as parse_date
 
 router = APIRouter()
 
@@ -35,6 +36,16 @@ def set_posts_collection(collection):
 def set_categories_collection(collection):
     global categories_collection
     categories_collection = collection
+
+def coerce_dates(post_dict):
+    for field in ["date", "date_created", "date_published", "date_updated"]:
+        val = post_dict.get(field)
+        if val and isinstance(val, str):
+            try:
+                post_dict[field] = parse_date(val)
+            except Exception:
+                pass
+    return post_dict
 
 @router.get("/api/posts", response_model=List[BlogPost])
 async def get_all_posts():
@@ -60,6 +71,7 @@ async def create_post(post_in: BlogPostIn):
         raise HTTPException(status_code=400, detail="Slug already exists")
 
     post = post_in.dict(exclude_unset=True)
+    post = coerce_dates(post)
     now = datetime.now(pytz.utc)
     post["date_created"] = now
     post["date_updated"] = now
@@ -84,6 +96,7 @@ async def update_post(slug: str, updated: BlogPostIn):
         raise HTTPException(status_code=404, detail="Post not found")
     
     updated_post = updated.dict(exclude_unset=True)
+    updated_post = coerce_dates(updated_post)
     now = datetime.now(pytz.utc)
     updated_post["date_updated"] = now
     updated_post["content"]["html"] = sanitize_html(updated_post["content"]["html"])

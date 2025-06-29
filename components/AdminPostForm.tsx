@@ -127,10 +127,12 @@ export default function AdminPostForm({
       '*': ['class', 'style'],
     },
   });
-  let initialContent = sanitizedHtml;
-  if (initialData) {
+  
+  // For editor initialization, convert HTML to ProseMirror JSON
+  let initialContent: string | Record<string, any> = '';
+  if (initialData && sanitizedHtml) {
     try {
-      // Use generateJSON to parse HTML to ProseMirror JSON
+      // Use generateJSON to parse HTML to ProseMirror JSON for editor initialization
       initialContent = generateJSON(sanitizedHtml, [
         StarterKit.configure(),
         Underline,
@@ -142,13 +144,14 @@ export default function AdminPostForm({
         HardBreak,
       ]);
     } catch (e) {
-      // Error generating ProseMirror JSON is expected for new post
+      // If generateJSON fails, use empty string - editor will handle it gracefully
+      initialContent = '';
     }
   }
 
   // Always initialize the editor, even if initialData is not present
   const editor = useEditor({
-    content: initialData ? initialContent : '',
+    content: initialContent,
     extensions: [
       StarterKit.configure(),
       Underline,
@@ -197,7 +200,7 @@ export default function AdminPostForm({
       const html = editor.getHTML();
       setEditorContent({ html });
     },
-  } as any);
+  });
 
   // Set editorContent state only after initialData is loaded
   useEffect(() => {
