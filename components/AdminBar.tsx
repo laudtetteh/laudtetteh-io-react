@@ -37,7 +37,8 @@ const AdminBar = () => {
     if (!slug) return;
     if (!window.confirm('Are you sure you want to delete this post?')) return;
     try {
-      await import('@/lib/api').then(mod => mod.deletePost(slug));
+      const realSlug = Array.isArray(slug) ? slug[0] : slug;
+      await import('@/lib/api').then(mod => mod.deletePost(realSlug));
       window.location.href = '/admin';
     } catch (e) {
       alert('Failed to delete post');
