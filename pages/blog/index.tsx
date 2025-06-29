@@ -91,9 +91,6 @@ const BlogIndex: React.FC = () => {
     <Layout title="Blog | Laud Tetteh" description="Read the latest posts from Laud Tetteh on software, tech, and more.">
       <BlogHeader adminBarOffset={loggedIn} />
       <div className="max-w-6xl mx-auto py-24 px-4" style={{ marginTop: 85 }}>
-        {/* Header */}
-        <h1 className="text-4xl font-bold mb-12">Blog</h1>
-
         {/* Posts List */}
         <div id="blog" className="arlo_tm_section animated rollIn active" style={{ position: 'relative' }}>
           <div className="section_inner">
@@ -146,7 +143,7 @@ const BlogIndex: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="arlo_tm_title"><h3>Recent Posts</h3></div>
+                <div className="arlo_tm_title"><h3>Blog</h3></div>
                 {paginatedPosts.length > 0 ? (
                   <ul>
                     {paginatedPosts.map((post) => {
