@@ -480,3 +480,27 @@
 2025-06-29 11:40:52,318 - fastapi - INFO - main.py:75 - Response: 200
 2025-06-29 11:40:52,475 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
 2025-06-29 11:40:52,563 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:49:26,257 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:49:26,291 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:49:26,351 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:49:26,402 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:49:32,815 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/admin/posts
+2025-06-29 11:49:32,906 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:49:42,545 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:49:42,586 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:49:42,631 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:49:42,670 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:29,148 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts
+2025-06-29 11:50:29,152 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts
+2025-06-29 11:50:29,237 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:29,266 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:29,327 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts/docker-networking-for-humans
+2025-06-29 11:50:29,332 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts/from-accra-to-seattle
+2025-06-29 11:50:29,369 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:29,373 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:30,888 - fastapi - INFO - main.py:73 - Request: GET http://api:8000/api/posts
+2025-06-29 11:50:30,974 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:49,928 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:50:49,937 - fastapi - INFO - main.py:73 - Request: GET http://localhost:8000/api/posts
+2025-06-29 11:50:50,021 - fastapi - INFO - main.py:75 - Response: 200
+2025-06-29 11:50:50,030 - fastapi - INFO - main.py:75 - Response: 200

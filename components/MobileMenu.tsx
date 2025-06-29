@@ -9,7 +9,7 @@ const MobileMenu: React.FC = () => {
     <>
       <div className="arlo_tm_topbar">
         <div className="topbar_inner">
-          <div className="transition_link">
+          <div className="transition_link" style={{marginTop: 25}}>
             <a href="#home" className="logo_link">
               <div className="logo" data-type="avatar">
                 <div 

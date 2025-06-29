@@ -60,7 +60,7 @@ const BlogMobileMenu: React.FC<BlogMobileMenuProps> = ({ open, onClose }) => {
         &#10005;
       </button>
       <div className="sidebar_inner" style={{ padding: '50px 30px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div className="transition_link" style={{ marginBottom: 50 }}>
+        <div className="transition_link" style={{ marginBottom: 50, marginTop: 25 }}>
           <Link href="/" className="logo_link">
             <div className="logo" data-type="avatar">
               <div
