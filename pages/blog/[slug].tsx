@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import BlogHeader from '@/components/BlogHeader';
 import Footer from '@/components/Footer';
+import { useBodyClass } from '@/lib/useBodyClass';
 
 interface BlogPost {
   title: string;
@@ -19,8 +20,19 @@ interface BlogPost {
   featuredImage?: string;
 }
 
+interface PostNav {
+  slug: string;
+  title: string;
+}
+
 interface PostPageProps {
   post: BlogPost;
+  prevPost?: PostNav | null;
+  nextPost?: PostNav | null;
+}
+
+function truncate(str: string, n: number) {
+  return str.length > n ? str.slice(0, n - 1) + '…' : str;
 }
 
 declare global {
@@ -41,9 +53,11 @@ function formatDate(dateString?: string) {
   });
 }
 
-export default function BlogPostPage({ post }: PostPageProps) {
+export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps) {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
+
+  useBodyClass('post-single-post');
 
   useEffect(() => {
     const token = typeof window !== 'undefined' && localStorage.getItem('token');
@@ -72,7 +86,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
   return (
     <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
       <BlogHeader />
-      <main className="arlo_tm_modalbox_page_wrap" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
+      <main className="arlo_tm_modalbox_page_wrap prose prose-wide" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
         <div className="arlo_tm_modalbox_page" style={{
           position: 'relative',
           display: 'block',
@@ -84,7 +98,7 @@ export default function BlogPostPage({ post }: PostPageProps) {
           boxShadow: '0 0 40px rgba(0,0,0,0.08)'
         }}>
           <div className="box_inner" style={{ position: 'relative', padding: 0 }}>
-            <div className="news_popup_informations" style={{ padding: '50px 50px 20px 50px', background: '#fff', borderRadius: 0 }}>
+            <div className="" style={{ padding: '50px 50px 20px 50px', background: '#fff', borderRadius: 0 }}>
               <div className="image" style={{ position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
                 <img src="/img/thumbs/4-2.jpg" alt="" style={{ width: '100%', opacity: 0 }} />
                 <div className="main" data-img-url={imageUrl} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundSize: 'cover', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat', minHeight: 350 }}></div>
@@ -100,15 +114,30 @@ export default function BlogPostPage({ post }: PostPageProps) {
                   </span>
                 </div>
                 <div className="title" style={{ marginBottom: 8 }}>
-                  <h3 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>{post.title}</h3>
+                  <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>{post.title}</h1>
                 </div>
               </div>
-              <div className="text">
+              <div className="">
                 <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
               </div>
               {loggedIn && (
                 <div className="pt-6 text-sm space-x-4">
                   <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
+                </div>
+              )}
+              {/* Previous/Next Navigation */}
+              {(prevPost || nextPost) && (
+                <div className="prev-next-nav">
+                  {prevPost ? (
+                    <Link href={`/blog/${prevPost.slug}`} className="btn-nav">
+                      Previous: {truncate(prevPost.title, 32)}
+                    </Link>
+                  ) : <span />}
+                  {nextPost ? (
+                    <Link href={`/blog/${nextPost.slug}`} className="btn-nav">
+                      Next: {truncate(nextPost.title, 32)}
+                    </Link>
+                  ) : <span />}
                 </div>
               )}
             </div>
@@ -126,6 +155,15 @@ export default function BlogPostPage({ post }: PostPageProps) {
             .image .date { font-size: 12px !important; padding: 2px 8px !important; top: 8px !important; left: 8px !important; }
             .details_news .title h3 { font-size: 18px !important; }
             .main { min-height: 180px !important; }
+            .prev-next-nav {
+              flex-direction: column;
+              gap: 0.75rem;
+            }
+            .btn-nav {
+              width: 100%;
+              text-align: center;
+              margin: 0;
+            }
           }
           .meta-arlo {
             display: inline-block;
@@ -161,6 +199,28 @@ export default function BlogPostPage({ post }: PostPageProps) {
             display: inline-block;
             position: relative;
           }
+          .btn-nav {
+            background: #222;
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            display: inline-block;
+            transition: background 0.2s, color 0.2s;
+            border: none;
+          }
+          .btn-nav:hover {
+            background: #1d4ed8;
+            color: #fff;
+          }
+          .prev-next-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1rem;
+          }
         `}</style>
       </main>
       <Footer />
@@ -188,11 +248,25 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
 
   try {
+    // Fetch all posts to determine prev/next
+    const allRes = await fetch(`${API_BASE_URL}/api/posts`);
+    const allPosts: BlogPost[] = await allRes.json();
+    const index = allPosts.findIndex((p) => p.slug === slug);
+    const prevPost = index > 0 ? allPosts[index - 1] : null;
+    const nextPost = index < allPosts.length - 1 ? allPosts[index + 1] : null;
+
+    // Fetch current post
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
     if (!res.ok) throw new Error("Post not found");
-
     const post: BlogPost = await res.json();
-    return { props: { post }, revalidate: 10 };
+    return {
+      props: {
+        post,
+        prevPost: prevPost ? { slug: prevPost.slug, title: prevPost.title } : null,
+        nextPost: nextPost ? { slug: nextPost.slug, title: nextPost.title } : null,
+      },
+      revalidate: 10,
+    };
   } catch (err) {
     console.error(`[getStaticProps] ❌ Failed to fetch post for slug '${slug}':`, err);
     return {
@@ -202,6 +276,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           slug,
           content: { html: '<p>This post could not be loaded.</p>' },
         },
+        prevPost: null,
+        nextPost: null,
       },
     };
   }

@@ -18,6 +18,10 @@ import WysiwygToolbar from './WysiwygToolbar';
 import WysiwygVisualEditor from './WysiwygVisualEditor';
 import WysiwygHtmlEditor from './WysiwygHtmlEditor';
 import WysiwygCharacterCount from './WysiwygCharacterCount';
+import CodeBlock from '@tiptap/extension-code-block';
+import HardBreak from '@tiptap/extension-hard-break';
+import sanitizeHtml from 'sanitize-html';
+import { generateJSON } from '@tiptap/html';
 
 /**
  * Props for WysiwygEditor
@@ -32,13 +36,15 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
   const [mode, setMode] = useState<'visual' | 'html'>('visual');
   const [isClient, setIsClient] = useState(false);
   const [localContent, setLocalContent] = useState<{ html: string }>({ html: content.html });
+  const lastModeRef = useRef<'visual' | 'html'>(mode);
+  const lastContentRef = useRef<string>(content.html);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const editor = useEditor({
-    content: content.html,
+    content: sanitizeHtml(content.html),
     editable: true,
     extensions: [
       StarterKit.configure(),
@@ -47,6 +53,8 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
       Link.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder: 'Write your post content here...' }),
       CharacterCount.configure({ limit }),
+      CodeBlock,
+      HardBreak,
       Extension.create({
         name: 'imagePasteHandler',
         addProseMirrorPlugins() {
@@ -118,6 +126,31 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
     }
   }, [editor, content]);
 
+  // Only set content when switching from HTML to Visual and content has changed
+  useEffect(() => {
+    if (
+      editor &&
+      lastModeRef.current === 'html' &&
+      mode === 'visual' &&
+      localContent.html !== lastContentRef.current
+    ) {
+      const sanitized = sanitizeHtml(localContent.html, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'pre', 'code']),
+        allowedAttributes: false,
+      });
+      const json = generateJSON(sanitized, editor.extensionManager.extensions);
+      if (json && json.content && json.content.length > 0) {
+        editor.commands.focus();
+        editor.commands.setContent(json, false);
+      } else {
+        editor.commands.focus();
+        editor.commands.setContent(sanitized || '', false);
+      }
+      lastContentRef.current = localContent.html;
+    }
+    lastModeRef.current = mode;
+  }, [mode, editor, localContent.html]);
+
   // Push localContent upstream only when user submits form
   useEffect(() => {
     onChange(localContent);
@@ -131,7 +164,10 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
         <WysiwygToolbar
           editor={editor}
           htmlMode={mode === 'html'}
-          setHtmlMode={(val) => setMode(val ? 'html' : 'visual')}
+          setHtmlMode={(val) => {
+            const newMode = val ? 'html' : 'visual';
+            setMode(newMode);
+          }}
         />
       </div>
       {mode === 'visual' ? (

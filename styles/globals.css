@@ -1,6 +1,14 @@
+@import './utilities/prose-overrides.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .prose,
+  .prose-wide {
+    max-width: 100% !important;
+  }
+}
 
 /* Theme */
 @import './theme/variables.css';
@@ -15,13 +23,3 @@
 /* Utilities */
 @import './utilities/typography.css';
 @import './utilities/layout.css';
-
-/* Third-party overrides */
-.editor-wrapper .ProseMirror {
-  min-height: 400px;
-  padding: 1rem;
-  outline: none;
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
-}

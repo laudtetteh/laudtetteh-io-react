@@ -25,6 +25,10 @@ import PostContentEditor from './admin/PostContentEditor';
 import PostOptions from './admin/PostOptions';
 import PostImageUploader from './admin/PostImageUploader';
 import PostActions from './admin/PostActions';
+import CodeBlock from '@tiptap/extension-code-block';
+import HardBreak from '@tiptap/extension-hard-break';
+import sanitizeHtml from 'sanitize-html';
+import { generateJSON } from '@tiptap/html';
 
 function slugify(text: string) {
   return text
@@ -54,6 +58,9 @@ export default function AdminPostForm({
   const [editorContent, setEditorContent] = useState<{ html: string }>({ html: '' });
   const [slugReadOnly, setSlugReadOnly] = useState(true);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+  const lastModeRef = useRef<boolean>(htmlMode);
+  const lastContentRef = useRef<string>(editorContent.html);
 
   useEffect(() => {
     if (initialData) {
@@ -108,15 +115,49 @@ export default function AdminPostForm({
     return errs;
   };
 
+  // Prepare and log raw and sanitized HTML before initializing the editor
+  const rawHtml = initialData?.content?.html || '';
+  const sanitizedHtml = sanitizeHtml(rawHtml, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code', 'ul', 'ol', 'li', 'blockquote', 'p', 'strong', 'em', 'a', 'img', 'br', 'hr'
+    ]),
+    allowedAttributes: {
+      a: ['href', 'name', 'target', 'rel'],
+      img: ['src', 'alt', 'title', 'width', 'height'],
+      '*': ['class', 'style'],
+    },
+  });
+  let initialContent = sanitizedHtml;
+  if (initialData) {
+    try {
+      // Use generateJSON to parse HTML to ProseMirror JSON
+      initialContent = generateJSON(sanitizedHtml, [
+        StarterKit.configure(),
+        Underline,
+        Image.configure({ inline: true, allowBase64: true }),
+        Link.configure({ openOnClick: false }),
+        Placeholder.configure({ placeholder: 'Write your post content here...' }),
+        CharacterCount.configure(),
+        CodeBlock,
+        HardBreak,
+      ]);
+    } catch (e) {
+      // Error generating ProseMirror JSON is expected for new post
+    }
+  }
+
+  // Always initialize the editor, even if initialData is not present
   const editor = useEditor({
-    content: editorContent.html,
+    content: initialData ? initialContent : '',
     extensions: [
       StarterKit.configure(),
       Underline,
       Image.configure({ inline: true, allowBase64: true }),
       Link.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder: 'Write your post content here...' }),
-      CharacterCount.configure({ limit: 5000 }),
+      CharacterCount.configure(),
+      CodeBlock,
+      HardBreak,
       Extension.create({
         name: 'imagePasteHandler',
         addProseMirrorPlugins() {
@@ -152,19 +193,48 @@ export default function AdminPostForm({
         },
       }),
     ],
-    onUpdate({ editor }) {
+    onUpdate({ editor }: { editor: any }) {
       const html = editor.getHTML();
       setEditorContent({ html });
     },
-  });
+  } as any);
 
+  // Set editorContent state only after initialData is loaded
   useEffect(() => {
-    if (editor && initialData) {
-      const html = initialData.content?.html || '';
-      editor.commands.setContent(html);
-      setEditorContent({ html });
+    if (initialData) {
+      setEditorContent(initialData.content || { html: '' });
     }
-  }, [editor, initialData]);
+  }, [initialData]);
+
+  // Hydrate editor with latest HTML when switching from HTML to Visual mode
+  useEffect(() => {
+    if (
+      editor &&
+      lastModeRef.current === true &&
+      htmlMode === false &&
+      editorContent.html !== lastContentRef.current
+    ) {
+      const sanitized = sanitizeHtml(editorContent.html, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'pre', 'code']),
+        allowedAttributes: false,
+      });
+      editor.commands.focus();
+      editor.commands.setContent(sanitized || '', false);
+      lastContentRef.current = editorContent.html;
+    } else if (
+      editor &&
+      lastModeRef.current === false &&
+      htmlMode === true
+    ) {
+      // When switching from Visual to HTML, ensure the textarea shows current editor content
+      const currentHtml = editor.getHTML();
+      if (currentHtml !== editorContent.html) {
+        setEditorContent({ html: currentHtml });
+        lastContentRef.current = currentHtml;
+      }
+    }
+    lastModeRef.current = htmlMode;
+  }, [htmlMode, editor, editorContent.html]);
 
   async function uploadAndInsert(file: File) {
     const token = localStorage.getItem('token');

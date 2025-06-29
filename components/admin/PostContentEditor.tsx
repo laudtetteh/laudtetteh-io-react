@@ -34,7 +34,9 @@ const PostContentEditor: React.FC<PostContentEditorProps> = ({
         <button onClick={() => editor?.chain().focus().setHorizontalRule().run()} type="button" className="btn">— HR</button>
         <button onClick={() => editor?.chain().focus().undo().run()} type="button" className="btn">↶ Undo</button>
         <button onClick={() => editor?.chain().focus().redo().run()} type="button" className="btn">↷ Redo</button>
-        <button onClick={() => setHtmlMode(!htmlMode)} type="button" className="ml-auto btn">{htmlMode ? '👁 Visual' : '</> HTML'}</button>
+        <button onClick={() => {
+          setHtmlMode(!htmlMode);
+        }} type="button" className="ml-auto btn">{htmlMode ? '👁 Visual' : '</> HTML'}</button>
       </div>
       {htmlMode ? (
         <textarea

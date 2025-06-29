@@ -3,6 +3,7 @@ import Link from 'next/link';
 import BlogHeader from '@/components/BlogHeader';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
+import { useBodyClass } from '@/lib/useBodyClass';
 
 type BlogPost = {
   title: string;
@@ -23,6 +24,8 @@ const BlogIndex: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+
+  useBodyClass('page-blog');
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts`)

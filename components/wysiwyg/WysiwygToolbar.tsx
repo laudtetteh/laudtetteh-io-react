@@ -88,7 +88,9 @@ export default function WysiwygToolbar({
         ↷ Redo
       </button>
       <button
-        onClick={() => setHtmlMode(!htmlMode)}
+        onClick={() => {
+          setHtmlMode(!htmlMode);
+        }}
         className={`ml-auto text-sm px-2 py-1 rounded ${htmlMode ? 'bg-blue-200 text-blue-900' : ''}`}
       >
         {htmlMode ? '👁 Visual' : '</> HTML'}

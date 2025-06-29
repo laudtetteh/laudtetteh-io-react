@@ -7,16 +7,16 @@ const Layout: React.FC<{ title?: string; description?: string; children: React.R
   children 
 }) => {
   return (
-    <>
-      <Head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-      </Head>
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-1 bg-gray-50">{children}</main>
-      </div>
-    </>
-  );
+  <>
+    <Head>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+    </Head>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1 bg-gray-50">{children}</main>
+    </div>
+  </>
+);
 };
 
 export default Layout;
