@@ -289,6 +289,18 @@ export default function AdminPostForm({
     onSubmit(updated);
   };
 
+  const handleDelete = async () => {
+    if (!formData?.slug) return;
+    try {
+      // Call your delete API (assume deletePost exists in lib/api)
+      await import('@/lib/api').then(mod => mod.deletePost(formData.slug));
+      pushMessage('Post deleted successfully', 'top-center', 'success');
+      router.push('/admin');
+    } catch (e) {
+      pushMessage('Failed to delete post', 'top-center', 'error');
+    }
+  };
+
   if (!formData) return <p className="text-center py-10">Loading form...</p>;
 
   return (
@@ -329,7 +341,7 @@ export default function AdminPostForm({
         onChange={(url) => setFormData({ ...formData, featuredImage: url })}
       />
 
-      <PostActions isEdit={isEdit} />
+      <PostActions isEdit={isEdit} slug={formData.slug} onDelete={handleDelete} />
     </form>
   );
 }

@@ -84,8 +84,8 @@ const BlogSection: React.FC = () => {
                       </div>
                       <div className="desc">
                         <div className="meta">
-                          <span>By <a className="line_effect" href="#">{author}</a></span>
-                          <span>In <a className="line_effect" href="#">{category}</a></span>
+                          <span>By <span className="byline-author" style={{ textDecoration: 'none', cursor: 'default', color: '#000' }}>{author}</span></span>
+                          <span>In <a className="hover:underline" href={`/blog?category=${encodeURIComponent(category)}`}>{category}</a></span>
                         </div>
                         <div className="title">
                           <h3>
@@ -115,6 +115,9 @@ const BlogSection: React.FC = () => {
                 </li>
               )}
             </ul>
+            <div className="flex justify-center mt-8">
+              <a href="/blog" className="inline-block bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-700 font-semibold transition" style={{ backgroundColor: 'rgb(153, 153, 153)'}}>See All</a>
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import BlogHeader from '@/components/BlogHeader';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 import { useBodyClass } from '@/lib/useBodyClass';
+import { useRouter } from 'next/router';
 
 type BlogPost = {
   title: string;
@@ -24,6 +25,7 @@ const BlogIndex: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+  const router = useRouter();
 
   useBodyClass('page-blog');
 
@@ -38,6 +40,19 @@ const BlogIndex: React.FC = () => {
     const token = typeof window !== 'undefined' && localStorage.getItem('token');
     setLoggedIn(Boolean(token));
   }, []);
+
+  // On mount, set category from URL param if present
+  useEffect(() => {
+    if (!router.isReady) return;
+    const urlCategory = router.query.category;
+    if (typeof urlCategory === 'string' && urlCategory !== 'All') {
+      // Wait for posts to load to get allCategories
+      if (allCategories.includes(urlCategory)) {
+        setSelectedCategory(urlCategory);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.category, posts]);
 
   function formatDate(dateString?: string) {
     if (!dateString) return '';
@@ -74,8 +89,8 @@ const BlogIndex: React.FC = () => {
 
   return (
     <Layout title="Blog | Laud Tetteh" description="Read the latest posts from Laud Tetteh on software, tech, and more.">
-      <BlogHeader />
-      <div className="max-w-6xl mx-auto py-24 px-4">
+      <BlogHeader adminBarOffset={loggedIn} />
+      <div className="max-w-6xl mx-auto py-24 px-4" style={{ marginTop: 85 }}>
         {/* Header */}
         <h1 className="text-4xl font-bold mb-12">Blog</h1>
 
@@ -89,20 +104,18 @@ const BlogIndex: React.FC = () => {
                   {/* Desktop Category Buttons */}
                   <div className="hidden md:flex flex-wrap gap-8 border-b border-gray-200">
                     {allCategories.map(category => (
-                      <button
+                      <Link
                         key={category}
-                        onClick={() => {
-                          setSelectedCategory(category);
-                          setCurrentPage(1);
-                        }}
+                        href={category === 'All' ? '/blog' : `/blog?category=${encodeURIComponent(category)}`}
                         className={`pb-4 text-lg font-medium transition-colors ${
                           selectedCategory === category
                             ? 'text-black border-b-2 border-black'
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
+                        scroll={false}
                       >
                         {category}
-                      </button>
+                      </Link>
                     ))}
                   </div>
 
@@ -143,13 +156,20 @@ const BlogIndex: React.FC = () => {
                         <li key={post.slug}>
                           <div className="list_inner">
                             <div className="image">
-                              <img src="/img/thumbs/4-3.jpg" alt="" />
-                              <div
-                                className="main"
-                                data-img-url={post.featuredImage}
-                                style={{ backgroundImage: `url('${post.featuredImage}')` }}
-                              ></div>
-                              <Link className="arlo_tm_full_link" href={`/blog/${post.slug}`}></Link>
+                              {(() => {
+                                const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/img/news/1.jpg';
+                                return (
+                                  <>
+                                    <img src="/img/thumbs/4-3.jpg" alt="" />
+                                    <div
+                                      className="main"
+                                      data-img-url={imageUrl}
+                                      style={{ backgroundImage: `url('${imageUrl}')` }}
+                                    ></div>
+                                    <Link className="arlo_tm_full_link" href={`/blog/${post.slug}`}></Link>
+                                  </>
+                                );
+                              })()}
                             </div>
                             <div className="desc" style={{ 
                               display: 'flex', 
@@ -159,17 +179,25 @@ const BlogIndex: React.FC = () => {
                             }}>
                               {/* Top section - Date and Categories */}
                               <div style={{ marginBottom: '20px' }}>
-                                <div className="text-sm text-gray-500 font-medium">{formattedDate}</div>
-                                <div className="mt-2 flex flex-wrap gap-2">
-                                  {post.categories && post.categories.map((category) => (
-                                    <span 
-                                      key={category} 
-                                      className="bg-gray-100 text-gray-800 text-xs px-2 py-1" 
-                                      style={{ borderRadius: 0, fontWeight: 500, letterSpacing: 0.5 }}
-                                    >
-                                      {category}
-                                    </span>
-                                  ))}
+                                <div className="text-sm text-gray-500 font-medium">
+                                  By <span className="byline-author" style={{ textDecoration: 'none', cursor: 'default', color: '#000' }}>Laud Tetteh</span>
+                                  {post.categories && post.categories.length > 0 && (
+                                    <>
+                                      {' '}•{' '}
+                                      {post.categories.map((category, idx) => (
+                                        <React.Fragment key={category}>
+                                          <Link
+                                            href={`/blog?category=${encodeURIComponent(category)}`}
+                                            className="bg-gray-100 text-gray-800 text-xs px-2 py-1 hover:underline"
+                                            style={{ borderRadius: 0, fontWeight: 500, letterSpacing: 0.5 }}
+                                          >
+                                            {category}
+                                          </Link>
+                                          {idx < post.categories.length - 1 && ', '}
+                                        </React.Fragment>
+                                      ))}
+                                    </>
+                                  )}
                                 </div>
                               </div>
 

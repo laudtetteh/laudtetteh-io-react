@@ -85,8 +85,8 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
 
   return (
     <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
-      <BlogHeader />
-      <main className="arlo_tm_modalbox_page_wrap prose prose-wide" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
+      <BlogHeader adminBarOffset={loggedIn} />
+      <main className="arlo_tm_modalbox_page_wrap prose prose-wide" style={{ minHeight: '100vh', background: '#f5f6fa', marginTop: 130 }}>
         <div className="arlo_tm_modalbox_page" style={{
           position: 'relative',
           display: 'block',
@@ -97,6 +97,22 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
           borderRadius: 0,
           boxShadow: '0 0 40px rgba(0,0,0,0.08)'
         }}>
+          {/* Breadcrumbs */}
+          <nav aria-label="Breadcrumb" className="w-full pt-8 pb-4 px-6" style={{ padding: '50px 50px 20px' }}>
+            <ul className="flex items-center flex-wrap text-sm text-gray-500 list-none p-0 m-0" style={{ listStyle: 'none'}}>
+              <li className="pl-0" style={{ paddingLeft: 0 }}><Link href="/" className="hover:underline">Home</Link></li>
+              <li className="mx-2">›</li>
+              <li><Link href="/blog" className="hover:underline">Blog</Link></li>
+              <li className="mx-2">›</li>
+              <li>
+                <Link href={`/blog?category=${encodeURIComponent(category)}`} className="hover:underline font-semibold text-gray-700">
+                  {category}
+                </Link>
+              </li>
+              <li className="mx-2">›</li>
+              <li className="truncate max-w-xs text-gray-700" title={post.title}>{post.title}</li>
+            </ul>
+          </nav>
           <div className="box_inner" style={{ position: 'relative', padding: 0 }}>
             <div className="" style={{ padding: '50px 50px 20px 50px', background: '#fff', borderRadius: 0 }}>
               <div className="image" style={{ position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
@@ -107,10 +123,10 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
               <div className="details_news">
                 <div className="meta-arlo">
                   <span className="byline-author">
-                    By <a href="#" className="byline-link line_effect">{author}</a>
+                    By <span className="byline-link line_effect" style={{ textDecoration: 'none', cursor: 'default' }}>{author}</span>
                   </span>
                   <span className="byline-category">
-                    In <a href="#" className="byline-link line_effect">{category}</a>
+                    In <Link href={`/blog?category=${encodeURIComponent(category)}`} className="byline-link line_effect hover:underline" style={{ color: '#000' }}>{category}</Link>
                   </span>
                 </div>
                 <div className="title" style={{ marginBottom: 8 }}>

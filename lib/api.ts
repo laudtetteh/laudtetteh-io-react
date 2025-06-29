@@ -36,6 +36,21 @@ export async function updatePost(slug: string, data: BlogPostFormData, token: st
   return res.json();
 }
 
+export async function deletePost(slug: string) {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Failed to delete post');
+  }
+  return res.json();
+}
+
 // Categories
 export async function getCategories(): Promise<Record<string, Category[]>> {
   const res = await fetch(`${API_BASE_URL}/api/categories`);

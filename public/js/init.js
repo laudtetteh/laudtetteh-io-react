@@ -139,7 +139,7 @@ function arlo_tm_modalbox_news(){
 	"use strict";
 	
 	var modalBox		= jQuery('.arlo_tm_modalbox');
-	var button			= jQuery('.arlo_tm_news .arlo_tm_full_link, .arlo_tm_news .news_list .title a, .arlo_tm_news .arlo_tm_button a');
+	var button			= jQuery('.arlo_tm_news .arlo_tm_full_link');
 	var closePopup		= modalBox.find('.close');
 	
 	button.on('click',function(){

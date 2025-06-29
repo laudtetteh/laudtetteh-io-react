@@ -8,6 +8,12 @@ import '../public/css/plugins.css';
 import '../public/css/modalboxes.css';
 import '../public/css/style.css';
 
+declare global {
+  interface Window {
+    arlo_tm_background_effects?: () => void;
+  }
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // Prevent double script loading (Strict Mode, Fast Refresh, etc)
@@ -36,6 +42,10 @@ export default function App({ Component, pageProps }: AppProps) {
       })
       .then(script => {
         scripts.push(script);
+        // Immediately trigger the streaking lines animation if available
+        if (typeof window.arlo_tm_background_effects === 'function') {
+          window.arlo_tm_background_effects();
+        }
         // Inject animated text as a sibling to <h3>David Parker</h3> inside .content
         const contentDiv = document.querySelector('.arlo_tm_home .content');
         if (contentDiv && (window as any).jQuery) {

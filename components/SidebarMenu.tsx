@@ -31,6 +31,9 @@ const SidebarMenu: React.FC = () => {
           <p>Copyright &copy; {currentYear} by <a className="line_effect" href="#">Laud Tetteh</a></p>
           <p>All rights are reserved</p>
         </div>
+        <div className="mt-2 text-center">
+          <a href="mailto:hello@laudtetteh.io" className="hover:underline">hello@laudtetteh.io</a>
+        </div>
         <div className="social">
           <ul>
             <li><a href="https://github.com/laudtetteh" target="_blank" rel="noopener noreferrer"><i className="icon-github-squared"></i></a></li>

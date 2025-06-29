@@ -32,24 +32,40 @@ const AdminBar = () => {
   const slug = router.query.slug;
   const isViewablePostPage = router.pathname === "/blog/[slug]" && typeof slug === 'string';
 
+  // Handler for delete from toolbar
+  const handleDelete = async () => {
+    if (!slug) return;
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
+    try {
+      await import('@/lib/api').then(mod => mod.deletePost(slug));
+      window.location.href = '/admin';
+    } catch (e) {
+      alert('Failed to delete post');
+    }
+  };
+
   return (
     <>
       <FlashMessage />
-      <div className="fixed top-0 inset-x-0 bg-black text-white text-sm py-2 px-4 flex justify-between items-center z-40 shadow">
+      <div className="fixed top-0 inset-x-0 bg-black text-white text-sm py-2 px-4 flex justify-between items-center z-50 shadow border-b border-gray-800">
         <div className="space-x-4 flex items-center">
+          <Link href="/admin" className="underline hover:text-gray-300 font-semibold">
+            🏠 Dashboard
+          </Link>
+          <Link href="/admin/create" className="underline hover:text-gray-300 font-semibold">
+            ➕ New Post
+          </Link>
+          {isEditPage && slug && (
+            <>
+              <a href={`/blog/${slug}`} target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-300 font-semibold">🔎 View</a>
+              <button onClick={handleDelete} className="underline hover:text-red-400 font-semibold ml-2">🗑️ Delete</button>
+            </>
+          )}
           {isViewablePostPage && (
-            <Link href={`/admin/edit/${slug}`} className="underline hover:text-gray-300">
+            <Link href={`/admin/edit/${slug}`} className="underline hover:text-yellow-300 font-semibold">
               ✏️ Edit Post
             </Link>
           )}
-          {isEditPage && (
-            <Link href="/admin" className="underline hover:text-gray-300">
-              🔙 Back to Posts
-            </Link>
-          )}
-          <Link href="/admin/create" className="underline hover:text-gray-300">
-            ➕ New Post
-          </Link>
         </div>
         <div className="relative">
           <button onClick={() => setShowDropdown(!showDropdown)} className="hover:text-gray-300">
