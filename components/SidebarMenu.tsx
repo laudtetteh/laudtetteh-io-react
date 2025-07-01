@@ -27,8 +27,8 @@ const SidebarMenu: React.FC = () => {
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
-        <div className="copyright">
-          <p>Copyright &copy; {currentYear} by <a className="line_effect" href="#">Laud Tetteh</a></p>
+        <div className="copyright transition_link">
+          <p>Copyright &copy; {currentYear} by <a className="line_effect" href="#home">Laud Tetteh</a></p>
           <p>All rights are reserved</p>
         </div>
         <div className="mt-2 text-center">

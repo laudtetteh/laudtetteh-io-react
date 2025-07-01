@@ -45,11 +45,10 @@ const BlogIndex: React.FC = () => {
   useEffect(() => {
     if (!router.isReady) return;
     const urlCategory = router.query.category;
-    if (typeof urlCategory === 'string' && urlCategory !== 'All') {
-      // Wait for posts to load to get allCategories
-      if (allCategories.includes(urlCategory)) {
-        setSelectedCategory(urlCategory);
-      }
+    if (typeof urlCategory === 'string' && allCategories.includes(urlCategory)) {
+      setSelectedCategory(urlCategory);
+    } else {
+      setSelectedCategory('All');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.category, posts]);

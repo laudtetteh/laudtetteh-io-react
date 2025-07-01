@@ -10,7 +10,7 @@ const BlogHeader: React.FC<BlogHeaderProps> = ({ adminBarOffset = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className={`fixed top-0 left-0 w-full text-white shadow-md z-30 ${adminBarOffset ? 'mt-[36px]' : ''}`} style={{ background: '#999999' }}>
+    <header className={`fixed top-0 left-0 w-full md:block hidden text-white shadow-md z-30 ${adminBarOffset ? 'mt-[36px]' : ''}`} style={{ background: '#999999' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
         {/* Centered Brand/Logo */}
         <div className="flex-1 flex justify-left">

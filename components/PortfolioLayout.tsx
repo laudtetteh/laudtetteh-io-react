@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Loader from './Loader';
 import BackgroundLines from './BackgroundLines';
-import MobileMenu from './MobileMenu';
 import SidebarMenu from './SidebarMenu';
 import HomeSection from './sections/HomeSection';
 import AboutSection from '../components/AboutSection';
@@ -31,7 +30,6 @@ const PortfolioLayout: React.FC<PortfolioLayoutProps> = ({ repos }) => {
       {loading && <Loader />}
       <div className="arlo_tm_all_wrap" data-enter="rollIn" data-exit="rollOut">
         <BackgroundLines />
-        <MobileMenu />
         <SidebarMenu />
         <div className="arlo_tm_mainpart">
           <div className="mainpart_inner">

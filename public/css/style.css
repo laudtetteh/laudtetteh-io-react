@@ -491,10 +491,10 @@ h6 { font-size: 16px; }
 .arlo_tm_mobile_menu .social ul li:last-child{
 	margin-right: 0px;
 }
-.arlo_tm_mobile_menu .social ul li a{
+/*.arlo_tm_mobile_menu .social ul li a{
 	text-decoration: none;
 	color: #333;
-}
+}*/
 .arlo_tm_mobile_menu .copyright{
 	width: 100%;
 	float: left;
@@ -575,8 +575,11 @@ h6 { font-size: 16px; }
 	width: 100%;
 	margin-bottom: 20px;
 }
-.arlo_tm_sidebar_menu .copyright a{
-	color: #000;
+.arlo_tm_sidebar_menu .copyright a,
+.arlo_tm_sidebar_menu .contact a,
+.arlo_tm_mobile_menu .copyright a,
+.arlo_tm_mobile_menu .contact a {
+	color: #333;
 }
 .arlo_tm_sidebar_menu .social{
 	width: 100%;

@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import MobileMenu from './MobileMenu';
 
 const Layout: React.FC<{ title?: string; description?: string; children: React.ReactNode }> = ({ 
   title = 'Laud Tetteh', 
@@ -14,6 +15,7 @@ const Layout: React.FC<{ title?: string; description?: string; children: React.R
     </Head>
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 bg-gray-50">{children}</main>
+      <MobileMenu />
     </div>
   </>
 );
