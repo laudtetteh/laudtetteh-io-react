@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-interface BlogMobileMenuProps {
+interface BlogMenuProps {
   open?: boolean;
   onClose?: () => void;
 }
@@ -14,7 +14,7 @@ const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ];
 
-const BlogMobileMenu: React.FC<BlogMobileMenuProps> = ({ open, onClose }) => {
+const BlogMenu: React.FC<BlogMenuProps> = ({ open, onClose }) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -37,14 +37,14 @@ const BlogMobileMenu: React.FC<BlogMobileMenuProps> = ({ open, onClose }) => {
         padding: 0,
       }}
     >
-      {/* Close button at top right */}
+      {/* Close button at top left */}
       <button
         onClick={onClose}
         aria-label="Close menu"
         style={{
           position: 'absolute',
           top: 18,
-          right: 18,
+          left: 18,
           zIndex: 51,
           background: 'none',
           border: 'none',
@@ -91,8 +91,8 @@ const BlogMobileMenu: React.FC<BlogMobileMenuProps> = ({ open, onClose }) => {
             ))}
           </ul>
         </div>
-        <div className="copyright" style={{ width: '100%', marginBottom: 20 }}>
-          <p style={{ color: '#868a9b', fontSize: 15 }}>Copyright &copy; {new Date().getFullYear()} by <a className="line_effect" href="#" style={{ color: '#000', textDecoration: 'none' }}>Laud Tetteh</a></p>
+        <div className="copyright transition_link" style={{ width: '100%', marginBottom: 20 }}>
+          <p style={{ color: '#868a9b', fontSize: 15 }}>Copyright &copy; {new Date().getFullYear()} by <a className="line_effect" href="#home" style={{ color: '#000', textDecoration: 'none' }}>Laud Tetteh</a></p>
           <p style={{ color: '#868a9b', fontSize: 15 }}>All rights are reserved</p>
         </div>
         <div className="social" style={{ width: '100%' }}>
@@ -106,4 +106,4 @@ const BlogMobileMenu: React.FC<BlogMobileMenuProps> = ({ open, onClose }) => {
   );
 };
 
-export default BlogMobileMenu; 
+export default BlogMenu; 

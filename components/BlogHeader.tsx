@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import BlogMobileMenu from './BlogMobileMenu';
+import BlogMenu from './BlogMenu';
 
 interface BlogHeaderProps {
   adminBarOffset?: boolean;
@@ -33,7 +33,7 @@ const BlogHeader: React.FC<BlogHeaderProps> = ({ adminBarOffset = false }) => {
       {/* Mobile Menu Overlay */}
       {menuOpen && (
         <div className="fixed inset-0 z-40 bg-black/70">
-          <BlogMobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+          <BlogMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
         </div>
       )}
     </header>
