@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface BlogMenuProps {
   open?: boolean;
@@ -16,7 +17,71 @@ const navLinks = [
 
 const BlogMenu: React.FC<BlogMenuProps> = ({ open, onClose }) => {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  
   useEffect(() => { setMounted(true); }, []);
+
+  const handleNavClick = (sectionId: string) => {
+    // Close menu first
+    if (onClose) onClose();
+    
+    if (router.pathname === '/') {
+      // Already on homepage, use legacy transition system
+      setTimeout(() => {
+        const link = document.querySelector(`.transition_link a[href="#${sectionId}"]`);
+        if (link) {
+          (link as HTMLElement).click();
+        } else {
+          // Fallback to direct scroll
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+        // Update URL with hash
+        router.replace(`/#${sectionId}`, undefined, { shallow: true });
+      }, 100);
+    } else {
+      // Navigate to homepage first, then trigger transition
+      router.push(`/#${sectionId}`).then(() => {
+        setTimeout(() => {
+          const link = document.querySelector(`.transition_link a[href="#${sectionId}"]`);
+          if (link) {
+            (link as HTMLElement).click();
+          }
+        }, 300); // Longer delay after navigation
+      });
+    }
+  };
+
+  const handleBlogClick = () => {
+    // Close menu first
+    if (onClose) onClose();
+    
+    // Delay navigation slightly to allow menu to close
+    setTimeout(() => {
+      router.push('/blog');
+    }, 100);
+  };
+
+  const handleHomeClick = () => {
+    if (onClose) onClose();
+    
+    setTimeout(() => {
+      if (router.pathname === '/') {
+        // Already on homepage, trigger home transition
+        const link = document.querySelector(`.transition_link a[href="#home"]`);
+        if (link) {
+          (link as HTMLElement).click();
+        }
+        // Update URL with hash
+        router.replace('/#home', undefined, { shallow: true });
+      } else {
+        // Navigate to homepage
+        router.push('/#home');
+      }
+    }, 100);
+  };
 
   if (!mounted) return null;
   return (
@@ -74,21 +139,76 @@ const BlogMenu: React.FC<BlogMenuProps> = ({ open, onClose }) => {
         </div>
         <div className="menu" style={{ marginBottom: 50 }}>
           <ul className="transition_link">
-            {navLinks.map((link) => (
-              <li key={link.href} className={link.label === 'Blog' ? 'active' : ''} style={{ marginBottom: 12 }}>
-                <Link href={link.href} className="" style={{
-                  color: link.label === 'Blog' ? '#000' : '#868a9b',
-                  fontWeight: link.label === 'Blog' ? 700 : 400,
-                  fontSize: 20,
-                  padding: '2px 0',
-                  display: 'inline-block',
-                  transition: 'all .3s',
-                  textDecoration: 'none',
-                }}>
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            <li className={router.pathname === '/' ? 'active' : ''} style={{ marginBottom: 12 }}>
+              <a href="#home" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleHomeClick(); }} style={{
+                color: router.pathname === '/' ? '#000' : '#868a9b',
+                fontWeight: router.pathname === '/' ? 700 : 400,
+                fontSize: 20,
+                padding: '2px 0',
+                display: 'inline-block',
+                transition: 'all .3s',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}>
+                Home
+              </a>
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <a href="#about" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleNavClick('about'); }} style={{
+                color: '#868a9b',
+                fontWeight: 400,
+                fontSize: 20,
+                padding: '2px 0',
+                display: 'inline-block',
+                transition: 'all .3s',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}>
+                About
+              </a>
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <a href="#sandbox" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleNavClick('sandbox'); }} style={{
+                color: '#868a9b',
+                fontWeight: 400,
+                fontSize: 20,
+                padding: '2px 0',
+                display: 'inline-block',
+                transition: 'all .3s',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}>
+                Sandbox
+              </a>
+            </li>
+            <li className={router.pathname.startsWith('/blog') ? 'active' : ''} style={{ marginBottom: 12 }}>
+              <a href="#blog" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleBlogClick(); }} style={{
+                color: router.pathname.startsWith('/blog') ? '#000' : '#868a9b',
+                fontWeight: router.pathname.startsWith('/blog') ? 700 : 400,
+                fontSize: 20,
+                padding: '2px 0',
+                display: 'inline-block',
+                transition: 'all .3s',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}>
+                Blog
+              </a>
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <a href="#contact" onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleNavClick('contact'); }} style={{
+                color: '#868a9b',
+                fontWeight: 400,
+                fontSize: 20,
+                padding: '2px 0',
+                display: 'inline-block',
+                transition: 'all .3s',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}>
+                Contact
+              </a>
+            </li>
           </ul>
         </div>
         <div className="copyright transition_link" style={{ width: '100%', marginBottom: 20 }}>
