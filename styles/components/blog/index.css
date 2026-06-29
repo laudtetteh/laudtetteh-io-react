@@ -19,10 +19,6 @@
   @apply rounded-lg shadow-lg my-8;
 }
 
-.blog-post code {
-  @apply bg-gray-100 rounded px-2 py-1;
-}
-
 .blog-post pre {
   @apply bg-gray-900 text-white p-4 rounded-lg overflow-x-auto;
 }
