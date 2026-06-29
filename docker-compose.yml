@@ -20,7 +20,7 @@ services:
       context: ./backend
     container_name: fastapi-app
     ports:
-      - "8000:8000"
+      - "8004:8000"
     volumes:
       - ./backend/app:/app
     env_file:

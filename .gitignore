@@ -45,6 +45,9 @@ __pycache__/
 *.pyc
 /backend/__pycache__/*
 
+# Logs
+backend/app/logs/*.log
+
 # Workspace
 *.code-workspace
 kitchen-sink/*
