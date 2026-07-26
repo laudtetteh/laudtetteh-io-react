@@ -3,6 +3,7 @@ import PortfolioLayout from '../components/PortfolioLayout';
 import { GetStaticProps } from 'next';
 import { GithubRepo } from '../types/github';
 import Layout from '../components/Layout';
+import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '../lib/github';
 
 interface HomePageProps {
   repos: GithubRepo[];
@@ -16,23 +17,14 @@ const HomePage: React.FC<HomePageProps> = ({ repos }) => (
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const res = await fetch('https://api.github.com/users/laudtetteh/repos?sort=pushed&per_page=100');
-    if (!res.ok) {
-      throw new Error(`Failed to fetch repos: ${res.status}`);
-    }
-    const allRepos: GithubRepo[] = await res.json();
-
-    const allowedTopics = new Set(['frontend', 'backend', 'devops', 'ci-cd']);
-    const filteredRepos = allRepos.filter(repo => 
-      repo.topics.some(topic => allowedTopics.has(topic))
-    );
+    const repos = await getSandboxRepos();
 
     return {
       props: {
-        repos: filteredRepos,
+        repos,
       },
       // Re-generate the page every 6 hours to fetch new repo data
-      revalidate: 21600, 
+      revalidate: SANDBOX_REVALIDATE_SECONDS,
     };
   } catch (error) {
     console.error(error);
