@@ -114,7 +114,7 @@ function SortablePost({
 }
 
 export default function AdminDashboard() {
-  UseAuthRedirect();
+  const isCheckingAuth = UseAuthRedirect();
 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [error, setError] = useState("");
@@ -345,6 +345,19 @@ export default function AdminDashboard() {
       }
     }
   };
+
+  // Withhold the dashboard chrome (heading, filters, bulk actions) until the
+  // client-side auth check completes, so unauthenticated visitors never see
+  // it flash before the redirect to /admin/login lands.
+  if (isCheckingAuth) {
+    return (
+      <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
+        <div className="max-w-6xl mx-auto py-12 px-6 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
