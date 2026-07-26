@@ -69,7 +69,7 @@ These will not be built:
 | Rich text | Tiptap | Client-side only; sanitized with `bleach` before DB write |
 | Infra | Docker + Docker Compose | `docker-compose.override.yml` for dev hot reload |
 | CI/CD | GitHub Actions → DigitalOcean droplet (SSH + SCP) | Deploys on push to `main` |
-| Testing | None installed | Aspirational; jest/pytest not yet wired up |
+| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on PRs touching frontend paths. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26) |
 
 ---
 
