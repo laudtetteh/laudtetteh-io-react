@@ -3,8 +3,7 @@ import Header from './Header';
 import AboutSection from './AboutSection';
 import ExperienceSection from './ExperienceSection';
 import ProjectsSection from './ProjectsSection';
-
-const SECTION_STUBS = ['sandbox', 'writing', 'contact', 'footer'];
+import ContactSection from './ContactSection';
 
 export default function RedesignLayout() {
   return (
@@ -13,9 +12,10 @@ export default function RedesignLayout() {
       <AboutSection />
       <ExperienceSection />
       <ProjectsSection />
-      {SECTION_STUBS.map(section => (
-        <div key={section} id={section} data-redesign-section={section} />
-      ))}
+      <div id="sandbox" data-redesign-section="sandbox" />
+      <div id="writing" data-redesign-section="writing" />
+      <ContactSection />
+      <div id="footer" data-redesign-section="footer" />
     </div>
   );
 }

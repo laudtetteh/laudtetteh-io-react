@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const MAP_SRC =
   'https://maps.google.com/maps?q=11335%20NE%20122nd%20Way%2C%20Suite%20105%2C%20Kirkland%2C%20WA%2098034&t=&z=15&ie=UTF8&iwloc=&output=embed';
@@ -28,12 +28,22 @@ const labelClasses = 'mb-1.5 block text-sm font-medium text-slate-900 dark:text-
  * pre-existing bug: it reads `NEXT_PUBLIC_API_URL` rather than the project's
  * `NEXT_PUBLIC_API_BROWSER`/`API_SERVER` convention. That bug is intentionally
  * left as-is here — it's tracked and fixed as its own, separate ticket.
+ *
+ * One SSR-only fix, needed here because this is the first time this captcha
+ * logic runs through a real server-rendered page: `generateCaptcha()` uses
+ * `Math.random()`, so seeding it directly in `useState`'s initializer produces
+ * a different value on the server vs. the client, causing a hydration
+ * mismatch. The captcha is generated client-side only, after mount, instead.
  */
 const ContactSection: React.FC = () => {
   const [form, setForm] = useState(initialForm);
-  const [captcha, setCaptcha] = useState(generateCaptcha());
+  const [captcha, setCaptcha] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCaptcha(generateCaptcha());
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
