@@ -3,12 +3,12 @@ import { test, expect } from '@playwright/test';
 /**
  * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
  * (redesign-header-nav), #9 (redesign-about-section), #10
- * (redesign-experience-section), #11 (redesign-projects-section), #14
- * (redesign-contact-section), and #15 (redesign-footer). `header`, `about`,
- * `experience`, `projects`, `contact`, and `footer` now render real content —
- * `sandbox` and `writing` stay stubs until their own tickets land, each of
- * which should extend this spec further (and remove itself from the stub
- * loop below) per testing-conventions.md.
+ * (redesign-experience-section), #11 (redesign-projects-section), #12
+ * (redesign-sandbox-section), #14 (redesign-contact-section), and #15
+ * (redesign-footer). `header`, `about`, `experience`, `projects`, `sandbox`,
+ * `contact`, and `footer` now render real content — `writing` stays a stub
+ * until its own ticket lands, which should extend this spec further (and
+ * remove itself from the stub loop below) per testing-conventions.md.
  */
 test('redesign renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -20,9 +20,7 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  for (const section of ['sandbox', 'writing']) {
-    await expect(page.locator(`[data-redesign-section="${section}"]`)).toBeAttached();
-  }
+  await expect(page.locator('[data-redesign-section="writing"]')).toBeAttached();
   expect(consoleErrors).toEqual([]);
 });
 
@@ -46,6 +44,16 @@ test('projects section renders placeholder case-study cards in initial HTML', as
   const projects = page.locator('#projects');
   await expect(projects).toContainText('[Project title]');
   await expect(projects.getByRole('img').first()).toBeVisible();
+});
+
+test('sandbox section renders real GitHub repos with a working category filter', async ({ page }) => {
+  await page.goto('/redesign');
+  const sandbox = page.locator('#sandbox');
+  await expect(sandbox.getByRole('button', { name: 'All' })).toBeVisible();
+  const initialCardCount = await sandbox.locator('article').count();
+  expect(initialCardCount).toBeGreaterThan(0);
+  await sandbox.getByRole('button', { name: 'Backend' }).click();
+  await expect(sandbox.locator('article').first()).toBeVisible();
 });
 
 test('contact section renders the real form shell in initial HTML', async ({ page }) => {
