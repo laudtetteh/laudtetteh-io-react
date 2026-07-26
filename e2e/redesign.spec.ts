@@ -3,12 +3,12 @@ import { test, expect } from '@playwright/test';
 /**
  * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
  * (redesign-header-nav), #9 (redesign-about-section), #10
- * (redesign-experience-section), #11 (redesign-projects-section), and #14
- * (redesign-contact-section). `header`, `about`, `experience`, `projects`,
- * and `contact` now render real content — the remaining sections stay stubs
- * until their own tickets land, each of which should extend this spec
- * further (and remove itself from the stub loop below) per
- * testing-conventions.md.
+ * (redesign-experience-section), #11 (redesign-projects-section), #14
+ * (redesign-contact-section), and #15 (redesign-footer). `header`, `about`,
+ * `experience`, `projects`, `contact`, and `footer` now render real content —
+ * `sandbox` and `writing` stay stubs until their own tickets land, each of
+ * which should extend this spec further (and remove itself from the stub
+ * loop below) per testing-conventions.md.
  */
 test('redesign renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -20,7 +20,7 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  for (const section of ['sandbox', 'writing', 'footer']) {
+  for (const section of ['sandbox', 'writing']) {
     await expect(page.locator(`[data-redesign-section="${section}"]`)).toBeAttached();
   }
   expect(consoleErrors).toEqual([]);
@@ -66,6 +66,15 @@ test('contact form rejects submission when the security code is wrong', async ({
   await contact.locator('#txtInput').fill('00000');
   await contact.locator('#send_message').click();
   await expect(contact.getByRole('alert')).toContainText('Security code does not match');
+});
+
+test('footer renders real copyright and contact links in initial HTML', async ({ page }) => {
+  await page.goto('/redesign');
+  const footer = page.locator('#footer');
+  await expect(footer).toContainText(`Copyright © ${new Date().getFullYear()} by Laud Tetteh`);
+  await expect(footer.locator('a[href="mailto:hello@laudtetteh.io"]')).toBeVisible();
+  await expect(footer.locator('a[href="https://github.com/laudtetteh"]')).toBeVisible();
+  await expect(footer.locator('a[href="https://www.linkedin.com/in/laudtetteh"]')).toBeVisible();
 });
 
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
