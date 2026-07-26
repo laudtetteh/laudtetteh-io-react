@@ -46,7 +46,7 @@ const ContactSection: React.FC = () => {
     if (!validate()) return;
     setStatus('loading');
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const backendUrl = process.env.NEXT_PUBLIC_API_BROWSER || 'http://localhost:8000';
       const res = await fetch(`${backendUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
