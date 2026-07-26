@@ -5,7 +5,8 @@ import { test, expect } from '@playwright/test';
  * `redesign/site-refresh` has no `/redesign` content yet — this proves the
  * Playwright setup itself (webServer boot, MCP config, CI job) actually works.
  * Once a redesign task lands a real `/redesign` route/section, add a spec for it
- * per `docs/testing-conventions.md` and leave this one as the pre-app baseline.
+ * per the testing conventions doc (external — see rules/verification.md) and
+ * leave this one as the pre-app baseline.
  */
 test('homepage renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];

@@ -1,6 +1,6 @@
 # Runs the Playwright e2e suite on PRs that touch frontend code.
-# See docs/BROWSER_INTERACTIONS.md and docs/testing-conventions.md for the
-# tool/testing conventions this suite follows.
+# Tool/testing conventions live in this project's external Rig docs
+# (BROWSER_INTERACTIONS.md, testing-conventions.md) - see rules/verification.md.
 name: E2E tests
 
 on:
