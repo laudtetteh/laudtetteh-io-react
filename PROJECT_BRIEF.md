@@ -69,7 +69,8 @@ These will not be built:
 | Rich text | Tiptap | Client-side only; sanitized with `bleach` before DB write |
 | Infra | Docker + Docker Compose | `docker-compose.override.yml` for dev hot reload |
 | CI/CD | GitHub Actions → DigitalOcean droplet (SSH + SCP) | Deploys on push to `main` |
-| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on PRs touching frontend paths. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26) |
+| Linting | ESLint (frontend) + ruff (backend), wired up (#30) | `npm run lint`, `ruff check backend/app`. Required locally before committing anything either covers; CI-enforced on every push (`.github/workflows/lint.yml`). ~28 pre-existing violations temporarily downgraded/ignored, tracked in #31 |
+| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on every push touching frontend paths. Run locally for changes e2e would actually catch (new/changed routes or components), not every edit. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26) |
 
 ---
 

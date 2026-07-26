@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         document.body.appendChild(script);
       });
     };
-    let scripts: HTMLScriptElement[] = [];
+    const scripts: HTMLScriptElement[] = [];
     loadScript('/js/jquery.js')
       .then(script => {
         scripts.push(script);

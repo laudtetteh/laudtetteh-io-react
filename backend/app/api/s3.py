@@ -5,11 +5,12 @@ This endpoint returns a pre-signed PUT URL for uploading a file to S3.
 Access is protected using JWT admin authentication.
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Path
-from pydantic import BaseModel
-from core.auth import verify_token
-from services.s3 import generate_presigned_upload_url, list_uploaded_images, delete_image
 import urllib.parse
+
+from core.auth import verify_token
+from fastapi import APIRouter, Depends, HTTPException, Path
+from pydantic import BaseModel
+from services.s3 import delete_image, generate_presigned_upload_url, list_uploaded_images
 
 router = APIRouter()
 

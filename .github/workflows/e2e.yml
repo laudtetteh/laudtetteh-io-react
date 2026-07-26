@@ -1,10 +1,10 @@
-# Runs the Playwright e2e suite on PRs that touch frontend code.
+# Runs the Playwright e2e suite on every push that touches frontend code.
 # Tool/testing conventions live in this project's external Rig docs
 # (BROWSER_INTERACTIONS.md, testing-conventions.md) - see rules/verification.md.
 name: E2E tests
 
 on:
-  pull_request:
+  push:
     paths:
       - "pages/**"
       - "components/**"

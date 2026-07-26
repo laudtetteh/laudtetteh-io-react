@@ -1,7 +1,7 @@
+from core.logging import setup_logging
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
 from services.email import send_contact_email
-from core.logging import setup_logging
 
 router = APIRouter()
 logger = setup_logging(name="contact-form")

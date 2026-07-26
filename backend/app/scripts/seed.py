@@ -8,12 +8,13 @@ Note:
 Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 """
 
-import asyncio
-from datetime import datetime
-import core.db
-import json
-from pathlib import Path
 import argparse
+import asyncio
+import json
+from datetime import datetime
+from pathlib import Path
+
+import core.db
 from dateutil.parser import parse as parse_date
 
 # Sample blog posts
@@ -81,7 +82,7 @@ async def seed(mode: str):
         # Load posts from posts.json if it exists
         if POSTS_FILE.exists():
             print("📝 Inserting blog posts from posts.json...")
-            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+            with open(POSTS_FILE, encoding="utf-8") as f:
                 posts = json.load(f)
             await core.db.db.posts.insert_many(posts)
         else:
@@ -94,7 +95,7 @@ async def seed(mode: str):
         # Upsert posts
         if POSTS_FILE.exists():
             print("📝 Upserting blog posts from posts.json...")
-            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+            with open(POSTS_FILE, encoding="utf-8") as f:
                 posts = json.load(f)
             for post in posts:
                 # Fallback logic: if only 'date' is present, use it for the others

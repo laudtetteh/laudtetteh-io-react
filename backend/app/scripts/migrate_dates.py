@@ -10,9 +10,10 @@ This script will:
 """
 
 import asyncio
-import motor.motor_asyncio
-from datetime import datetime
 import os
+from datetime import datetime
+
+import motor.motor_asyncio
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -71,7 +72,7 @@ async def migrate_dates():
         except Exception as e:
             print(f"\u274C Error normalizing post {post.get('_id')}: {str(e)}")
 
-    print(f"\n\U0001F389 Date normalization complete!")
+    print("\n\U0001F389 Date normalization complete!")
     print(f"\U0001F4C8 Successfully normalized {migrated_count} out of {len(posts_to_migrate)} posts")
     
     # Verify migration
@@ -84,7 +85,7 @@ async def migrate_dates():
         ]
     })
     
-    print(f"🔍 Verification:")
+    print("🔍 Verification:")
     print(f"   - Posts still needing migration: {remaining_old_posts}")
     
     if remaining_old_posts == 0:
