@@ -175,8 +175,9 @@ export default function AdminMedia() {
         xhr.send(file);
       });
 
-    } catch (err: any) {
-      updateProgress(file.name, 0, 'error', err.message || "Upload failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Upload failed";
+      updateProgress(file.name, 0, 'error', message);
       throw err;
     }
   };
@@ -192,7 +193,7 @@ export default function AdminMedia() {
       await Promise.all(files.map(uploadFile));
       pushMessage(`Successfully uploaded ${files.length} file(s)!`, "top-center", "success");
       await fetchImages();
-    } catch (err: any) {
+    } catch {
       pushMessage(`Some uploads failed. Check the progress for details.`, "top-center", "error");
     } finally {
       setUploading(false);

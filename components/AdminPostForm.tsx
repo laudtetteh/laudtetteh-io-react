@@ -3,20 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFlashMessage } from '@/lib/useFlashMessage';
-import CategoryPicker from './CategoryPicker';
-import ImageUploader from './shared/ImageUploader';
-import {
-  useEditor,
-  EditorContent,
-  Editor,
-} from '@tiptap/react';
+import { useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Extension } from '@tiptap/core';
+import { Extension, type JSONContent } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 import { uploadImage, getPost } from '@/lib/api';
 import type { PostData } from '@/types/blog';
@@ -129,7 +123,7 @@ export default function AdminPostForm({
   });
   
   // For editor initialization, convert HTML to ProseMirror JSON
-  let initialContent: string | Record<string, any> = '';
+  let initialContent: string | JSONContent = '';
   if (initialData && sanitizedHtml) {
     try {
       // Use generateJSON to parse HTML to ProseMirror JSON for editor initialization
@@ -142,8 +136,8 @@ export default function AdminPostForm({
         CharacterCount.configure(),
         CodeBlock,
         HardBreak,
-      ]);
-    } catch (e) {
+      ]) as JSONContent;
+    } catch {
       // If generateJSON fails, use empty string - editor will handle it gracefully
       initialContent = '';
     }
@@ -196,7 +190,7 @@ export default function AdminPostForm({
         },
       }),
     ],
-    onUpdate({ editor }: { editor: any }) {
+    onUpdate({ editor }: { editor: Editor }) {
       const html = editor.getHTML();
       setEditorContent({ html });
     },
@@ -244,7 +238,7 @@ export default function AdminPostForm({
     try {
       const file_url = await uploadImage(file, token || '');
       editor?.chain().focus().setImage({ src: file_url }).run();
-    } catch (e) {
+    } catch {
       alert('Image upload failed');
     }
   }
@@ -276,7 +270,7 @@ export default function AdminPostForm({
         setErrors({ ...validationErrors, slug: 'Slug already exists. Please choose a unique one.' });
         pushMessage('Slug already exists. Please choose a unique one.', 'top-center', 'error');
         return;
-      } catch (e) {
+      } catch {
         // Not found is expected for new post
       }
     }
@@ -296,7 +290,7 @@ export default function AdminPostForm({
       await import('@/lib/api').then(mod => mod.deletePost(formData.slug));
       pushMessage('Post deleted successfully', 'top-center', 'success');
       router.push('/admin');
-    } catch (e) {
+    } catch {
       pushMessage('Failed to delete post', 'top-center', 'error');
     }
   };

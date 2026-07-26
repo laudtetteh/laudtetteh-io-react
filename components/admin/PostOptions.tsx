@@ -8,7 +8,7 @@ interface PostOptionsProps {
   featured: boolean;
   weight: number;
   date_published?: string;
-  onChange: (field: string, value: any) => void;
+  onChange: (field: string, value: string | string[] | boolean | number) => void;
 }
 
 const PostOptions: React.FC<PostOptionsProps> = ({

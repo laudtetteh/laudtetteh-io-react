@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 type BlogPost = {
   title: string;
@@ -116,7 +117,7 @@ const BlogSection: React.FC = () => {
               )}
             </ul>
             <div className="flex justify-center mt-8">
-              <a href="/blog" className="inline-block bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-700 font-semibold transition" style={{ backgroundColor: 'rgb(153, 153, 153)'}}>See All</a>
+              <Link href="/blog" className="inline-block bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-700 font-semibold transition" style={{ backgroundColor: 'rgb(153, 153, 153)'}}>See All</Link>
             </div>
           </div>
         </div>

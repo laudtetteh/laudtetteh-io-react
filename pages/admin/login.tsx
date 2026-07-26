@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { API_BASE_URL } from "@/utils/api";
 import { useFlashMessage } from "@/lib/useFlashMessage";
 import Layout from '@/components/Layout';
@@ -132,9 +133,9 @@ export default function AdminLogin() {
           </button>
 
           <div className="mt-4 text-center">
-            <a href="/" className="text-sm text-blue-600 underline hover:text-blue-800">
+            <Link href="/" className="text-sm text-blue-600 underline hover:text-blue-800">
               ← Back to site
-            </a>
+            </Link>
           </div>
         </form>
       </div>

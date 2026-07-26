@@ -7,14 +7,6 @@ interface BlogMenuProps {
   onClose?: () => void;
 }
 
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/#about' },
-  { label: 'Sandbox', href: '/#sandbox' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/#contact' },
-];
-
 const BlogMenu: React.FC<BlogMenuProps> = ({ open, onClose }) => {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();

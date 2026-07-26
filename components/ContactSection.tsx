@@ -25,8 +25,8 @@ export default function ContactSection() {
       await sendContact(form);
       setStatus('success');
       setForm({ name: '', email: '', message: '' });
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Unknown error');
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Unknown error');
       setStatus('error');
     }
   };
