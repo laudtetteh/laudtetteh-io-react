@@ -3,11 +3,12 @@ import { test, expect } from '@playwright/test';
 /**
  * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
  * (redesign-header-nav), #9 (redesign-about-section), #10
- * (redesign-experience-section), and #11 (redesign-projects-section).
- * `header`, `about`, `experience`, and `projects` now render real content —
- * the remaining sections stay stubs until their own tickets land, each of
- * which should extend this spec further (and remove itself from the stub
- * loop below) per testing-conventions.md.
+ * (redesign-experience-section), #11 (redesign-projects-section), and #14
+ * (redesign-contact-section). `header`, `about`, `experience`, `projects`,
+ * and `contact` now render real content — the remaining sections stay stubs
+ * until their own tickets land, each of which should extend this spec
+ * further (and remove itself from the stub loop below) per
+ * testing-conventions.md.
  */
 test('redesign renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -19,7 +20,7 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  for (const section of ['sandbox', 'writing', 'contact', 'footer']) {
+  for (const section of ['sandbox', 'writing', 'footer']) {
     await expect(page.locator(`[data-redesign-section="${section}"]`)).toBeAttached();
   }
   expect(consoleErrors).toEqual([]);
@@ -45,6 +46,26 @@ test('projects section renders placeholder case-study cards in initial HTML', as
   const projects = page.locator('#projects');
   await expect(projects).toContainText('[Project title]');
   await expect(projects.getByRole('img').first()).toBeVisible();
+});
+
+test('contact section renders the real form shell in initial HTML', async ({ page }) => {
+  await page.goto('/redesign');
+  const contact = page.locator('#contact');
+  await expect(contact.locator('#contact_name')).toBeVisible();
+  await expect(contact.locator('#contact_email')).toBeVisible();
+  await expect(contact.locator('#contact_message')).toBeVisible();
+  await expect(contact.locator('#send_message')).toBeVisible();
+});
+
+test('contact form rejects submission when the security code is wrong', async ({ page }) => {
+  await page.goto('/redesign');
+  const contact = page.locator('#contact');
+  await contact.locator('#contact_name').fill('Test User');
+  await contact.locator('#contact_email').fill('test@example.com');
+  await contact.locator('#contact_message').fill('Hello there');
+  await contact.locator('#txtInput').fill('00000');
+  await contact.locator('#send_message').click();
+  await expect(contact.getByRole('alert')).toContainText('Security code does not match');
 });
 
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
