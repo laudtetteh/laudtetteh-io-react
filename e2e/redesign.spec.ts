@@ -2,10 +2,11 @@ import { test, expect } from '@playwright/test';
 
 /**
  * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
- * (redesign-header-nav). `header` now renders real content via
- * `components/redesign/Header.tsx` — the remaining sections stay stubs until
- * their own tickets land, each of which should extend this spec further per
- * testing-conventions.md.
+ * (redesign-header-nav) and #9 (redesign-about-section). `header` and
+ * `about` now render real content via `components/redesign/Header.tsx` and
+ * `AboutSection.tsx` — the remaining sections stay stubs until their own
+ * tickets land, each of which should extend this spec further (and remove
+ * itself from the stub loop below) per testing-conventions.md.
  */
 test('redesign renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -17,10 +18,18 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  for (const section of ['about', 'experience', 'projects', 'sandbox', 'writing', 'contact', 'footer']) {
+  for (const section of ['experience', 'projects', 'sandbox', 'writing', 'contact', 'footer']) {
     await expect(page.locator(`[data-redesign-section="${section}"]`)).toBeAttached();
   }
   expect(consoleErrors).toEqual([]);
+});
+
+test('about section renders real bio content in initial HTML', async ({ page }) => {
+  await page.goto('/redesign');
+  const about = page.locator('#about');
+  await expect(about).toContainText('Laud Tetteh');
+  await expect(about).toContainText('Download CV');
+  await expect(about).toContainText('Server Side');
 });
 
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
@@ -37,7 +46,9 @@ test('header tagline rotates over time', async ({ page }) => {
   await page.goto('/redesign');
   const tagline = page.locator('#header p[aria-live="polite"]');
   const first = await tagline.textContent();
-  await page.waitForTimeout(4500);
+  // Interval is 4000ms + a 200ms fade before the swap; pad generously so
+  // CI hydration/render jitter doesn't make this flaky.
+  await page.waitForTimeout(5500);
   const second = await tagline.textContent();
   expect(second).not.toBe(first);
 });
