@@ -1,15 +1,21 @@
 import { inter } from '@/lib/fonts';
 import Header from './Header';
-
-const SECTION_STUBS = ['about', 'experience', 'projects', 'sandbox', 'writing', 'contact', 'footer'];
+import AboutSection from './AboutSection';
+import ExperienceSection from './ExperienceSection';
+import ProjectsSection from './ProjectsSection';
+import ContactSection from './ContactSection';
 
 export default function RedesignLayout() {
   return (
     <div className={`${inter.variable} font-inter`}>
       <Header />
-      {SECTION_STUBS.map(section => (
-        <div key={section} id={section} data-redesign-section={section} />
-      ))}
+      <AboutSection />
+      <ExperienceSection />
+      <ProjectsSection />
+      <div id="sandbox" data-redesign-section="sandbox" />
+      <div id="writing" data-redesign-section="writing" />
+      <ContactSection />
+      <div id="footer" data-redesign-section="footer" />
     </div>
   );
 }
