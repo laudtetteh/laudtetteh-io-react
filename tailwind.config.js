@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         mont: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
         syne: ["Syne", "ui-sans-serif", "system-ui", "sans-serif"],
+        inter: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in forwards',
