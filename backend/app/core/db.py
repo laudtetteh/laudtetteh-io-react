@@ -7,7 +7,8 @@ This module:
 - Provides `get_db()` to retrieve the db instance
 - Allows scripts like `seed.py` to use the same connection logic
 
-Note: For FastAPI routes, `posts_collection = db["posts"]` is done separately after `connect_to_mongo()` is called.
+Note: For FastAPI routes, `posts_collection = db["posts"]` is done separately after
+`connect_to_mongo()` is called.
 """
 
 import os
