@@ -64,4 +64,4 @@ def verify_token(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError as e:
         print(f"❌ JWTError: {str(e)}")
-        raise credentials_exception
+        raise credentials_exception from e

@@ -1,7 +1,6 @@
 import { API_BASE_URL } from '@/utils/api';
 import type { PostData, BlogPostFormData } from '@/types/blog';
 import type { Category } from '@/types/category';
-import type { ApiResponse, ErrorResponse } from '@/types/api';
 
 // Blog Posts
 export async function getPosts(): Promise<PostData[]> {

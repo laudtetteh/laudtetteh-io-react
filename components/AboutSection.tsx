@@ -9,7 +9,7 @@ const AboutSection: React.FC = () => (
             <h3>About Me</h3>
           </div>
           <div className="text">
-            <p>I'm Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+ years of experience building, optimizing, and maintaining web applications for clients and employers across the US and Africa. I thrive on learning new technologies, collaborating with smart people, and solving real-world problems through code. My background spans backend, frontend and DevOps. Let's build something great together!</p>
+            <p>I&apos;m Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+ years of experience building, optimizing, and maintaining web applications for clients and employers across the US and Africa. I thrive on learning new technologies, collaborating with smart people, and solving real-world problems through code. My background spans backend, frontend and DevOps. Let&apos;s build something great together!</p>
           </div>
           <div className="details">
             <ul>
@@ -136,19 +136,19 @@ const AboutSection: React.FC = () => (
             <div className="quote"><img className="svg" src="/img/svg/quote.svg" alt="" /></div>
             <div className="wrapper owl-carousel">
               <div className="item">
-                <div className="text"><p>"Laud is a highly skilled engineer who consistently delivers high-quality work. He is proactive, collaborative, and always willing to go the extra mile to ensure project success. His technical expertise and positive attitude make him a valuable asset to any team."</p></div>
+                <div className="text"><p>&quot;Laud is a highly skilled engineer who consistently delivers high-quality work. He is proactive, collaborative, and always willing to go the extra mile to ensure project success. His technical expertise and positive attitude make him a valuable asset to any team.&quot;</p></div>
                 <div className="info"><h3 className="author"><span>Jennifer Alderete (Salesforce)</span></h3><h3 className="job"><span>Software Engineering Manager, Salesforce</span></h3></div>
               </div>
               <div className="item">
-                <div className="text"><p>"Laud is a talented engineer, responsive to requests, and delivered on projects. As a marketer speaking to a marketer, he was patient and I appreciated his ability to collaborate and clearly lay out his technical work so that I could better understand. His positive attitude and work ethic make him an excellent coworker."</p></div>
+                <div className="text"><p>&quot;Laud is a talented engineer, responsive to requests, and delivered on projects. As a marketer speaking to a marketer, he was patient and I appreciated his ability to collaborate and clearly lay out his technical work so that I could better understand. His positive attitude and work ethic make him an excellent coworker.&quot;</p></div>
                 <div className="info"><h3 className="author"><span>Danielle Citrine (Moz)</span></h3><h3 className="job"><span>Demand Generation & Event Marketer</span></h3></div>
               </div>
               <div className="item">
-                <div className="text"><p>"Laud was fantastic to work with at Moz for several months. He helped us during a very busy period by working through a hefty backlog of front-end tickets, giving the rest of the UX team time to work on implementing a new CMS and UX framework. He was conscientious about completing tickets on time, communicated well with project stakeholders, and wasn't afraid to ask questions when he needed help. Most importantly, he has just an enjoyably low drama nature."</p></div>
+                <div className="text"><p>&quot;Laud was fantastic to work with at Moz for several months. He helped us during a very busy period by working through a hefty backlog of front-end tickets, giving the rest of the UX team time to work on implementing a new CMS and UX framework. He was conscientious about completing tickets on time, communicated well with project stakeholders, and wasn&apos;t afraid to ask questions when he needed help. Most importantly, he has just an enjoyably low drama nature.&quot;</p></div>
                 <div className="info"><h3 className="author"><span>Christopher Ferris (Moz)</span></h3><h3 className="job"><span>Software Engineer</span></h3></div>
               </div>
               <div className="item">
-                <div className="text"><p>"Laud was awesome to work with at Moz. As a marketer, I appreciated his communication style the most as well as his speediness. My job was to request new landing pages and updates to our marketing pages... I really appreciated that. I'd recommend Laud for any marketer or designer looking for a front end developer, and to any dev team looking for a developer who can work well with marketers. He also has a great can-do attitude, adorable twins, and a super solid goal to help his community."</p></div>
+                <div className="text"><p>&quot;Laud was awesome to work with at Moz. As a marketer, I appreciated his communication style the most as well as his speediness. My job was to request new landing pages and updates to our marketing pages... I really appreciated that. I&apos;d recommend Laud for any marketer or designer looking for a front end developer, and to any dev team looking for a developer who can work well with marketers. He also has a great can-do attitude, adorable twins, and a super solid goal to help his community.&quot;</p></div>
                 <div className="info"><h3 className="author"><span>Brittani Dinsmore (Moz)</span></h3><h3 className="job"><span>Marketing Leader</span></h3></div>
               </div>
             </div>

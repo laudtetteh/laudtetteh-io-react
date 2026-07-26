@@ -1,6 +1,5 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Inter } from 'next/font/google';
 import AdminBar from '@/components/AdminBar';
 import FlashMessage from '@/components/flash/FlashMessage';
 import { useEffect } from 'react';
@@ -9,10 +8,35 @@ import '../public/css/plugins.css';
 import '../public/css/modalboxes.css';
 import '../public/css/style.css';
 
+/** Options accepted by the legacy `textition` jQuery plugin (loaded via /js/plugins.js). */
+interface TextitionOptions {
+  speed: number;
+  animation: string;
+  map: { x: number; y: number; z: number };
+  autoplay: boolean;
+  interval: number;
+}
+
+/** Minimal shape of the jQuery-wrapped element the legacy plugin scripts attach to `window`. */
+interface LegacyJQueryElement {
+  length: number;
+  textition: (options: TextitionOptions) => LegacyJQueryElement;
+}
+
+/** Minimal shape of the global `jQuery`/`$` the legacy plugin scripts expect. */
+interface LegacyJQueryStatic {
+  (el: Element): LegacyJQueryElement;
+  fn: {
+    textition?: (options: TextitionOptions) => LegacyJQueryElement;
+  };
+}
+
 declare global {
   interface Window {
     arlo_tm_background_effects?: () => void;
     arlo_tm_init_all?: () => void;
+    __arloScriptsLoaded?: boolean;
+    jQuery?: LegacyJQueryStatic;
   }
 }
 
@@ -20,8 +44,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     // Prevent double script loading (Strict Mode, Fast Refresh, etc)
-    if ((window as any).__arloScriptsLoaded) return;
-    (window as any).__arloScriptsLoaded = true;
+    if (window.__arloScriptsLoaded) return;
+    window.__arloScriptsLoaded = true;
     // Sequentially load JS files: jquery.js -> plugins.js -> init.js
     const loadScript = (src: string) => {
       return new Promise<HTMLScriptElement>((resolve, reject) => {
@@ -51,7 +75,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }
         // Inject animated text as a sibling to <h3>David Parker</h3> inside .content
         const contentDiv = document.querySelector('.arlo_tm_home .content');
-        if (contentDiv && (window as any).jQuery) {
+        if (contentDiv && window.jQuery) {
           // Only inject if not already present
           if (!contentDiv.querySelector('Databases.animateText')) {
             const animateTextDiv = document.createElement('div');
@@ -72,7 +96,7 @@ export default function App({ Component, pageProps }: AppProps) {
               contentDiv.appendChild(animateTextDiv);
             }
             // Initialize plugin
-            const $ = (window as any).jQuery;
+            const $ = window.jQuery;
             const $el = $(animateTextDiv);
             if ($el.length && $.fn.textition) {
               $el.textition({
@@ -107,7 +131,7 @@ export default function App({ Component, pageProps }: AppProps) {
         if (window.location.pathname === '/') {
           setTimeout(() => {
             const contentDiv = document.querySelector('.arlo_tm_home .content');
-            if (contentDiv && (window as any).jQuery) {
+            if (contentDiv && window.jQuery) {
               // Remove any existing .animateText
               const old = contentDiv.querySelector('.animateText');
               if (old) old.remove();
@@ -129,7 +153,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 contentDiv.appendChild(animateTextDiv);
               }
               // Initialize plugin
-              const $ = (window as any).jQuery;
+              const $ = window.jQuery;
               const $el = $(animateTextDiv);
               if ($el.length && $.fn.textition) {
                 $el.textition({

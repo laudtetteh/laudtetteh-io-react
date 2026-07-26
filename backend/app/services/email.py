@@ -14,7 +14,10 @@ def send_contact_email(name: str, email: str, message: str) -> bool:
     to_email = os.getenv("RESEND_TO_EMAIL")
 
     if not all([api_key, from_email, to_email]):
-        logger.error("❌ Missing Resend configuration. Check RESEND_API_KEY, RESEND_FROM_EMAIL, and RESEND_TO_EMAIL.")
+        logger.error(
+            "❌ Missing Resend configuration. "
+            "Check RESEND_API_KEY, RESEND_FROM_EMAIL, and RESEND_TO_EMAIL."
+        )
         return False
 
     resend.api_key = api_key
@@ -40,7 +43,10 @@ def send_contact_email(name: str, email: str, message: str) -> bool:
         
         # Check if the response indicates success
         if response.get("id"):
-            logger.info(f"✅ Email sent successfully to {to_email} via Resend. Message ID: {response['id']}")
+            logger.info(
+                f"✅ Email sent successfully to {to_email} via Resend. "
+                f"Message ID: {response['id']}"
+            )
             return True
         else:
             logger.error(f"❌ Failed to send email via Resend. Response: {response}")

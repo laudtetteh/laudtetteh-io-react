@@ -34,7 +34,7 @@ def get_upload_url(data: UploadRequest, token: str = Depends(verify_token)):
         }
     except Exception as e:
         print("❌ Failed to generate presigned URL:", str(e))
-        raise HTTPException(status_code=500, detail=f"Error generating URL: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating URL: {str(e)}") from e
 
 @router.get("/images")
 def get_uploaded_images(token: str = Depends(verify_token)):
@@ -47,7 +47,7 @@ def get_uploaded_images(token: str = Depends(verify_token)):
         return images
     except Exception as e:
         print("❌ Failed to list images:", str(e))
-        raise HTTPException(status_code=500, detail=f"Error listing images: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error listing images: {str(e)}") from e
 
 @router.delete("/images/{key:path}")
 def delete_uploaded_image(key: str = Path(...), token: str = Depends(verify_token)):
@@ -62,4 +62,4 @@ def delete_uploaded_image(key: str = Path(...), token: str = Depends(verify_toke
         return {"message": "Image deleted"}
     except Exception as e:
         print("❌ Failed to delete image:", str(e))
-        raise HTTPException(status_code=500, detail=f"Error deleting image: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error deleting image: {str(e)}") from e
