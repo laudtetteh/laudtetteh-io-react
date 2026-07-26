@@ -6,7 +6,7 @@ import { defineConfig, devices } from '@playwright/test';
  * `e2e/smoke.spec.ts` runs against the current live homepage (`/`) — it exists to
  * prove the toolchain works before any real `/redesign` content has landed on this
  * branch. Once a redesign task adds a real route/section, add a spec for it here
- * following `docs/testing-conventions.md`.
+ * following the testing conventions doc (external — see rules/verification.md).
  */
 export default defineConfig({
   testDir: './e2e',
