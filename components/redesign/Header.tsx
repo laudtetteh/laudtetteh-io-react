@@ -46,7 +46,7 @@ export default function Header(): React.ReactElement {
   const activeSectionId = useScrollSpy(NAV_ITEMS.map(item => item.id));
 
   return (
-    <header className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-full lg:flex-col lg:justify-between lg:py-16">
+    <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-full lg:flex-col lg:justify-between lg:py-16">
       <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
