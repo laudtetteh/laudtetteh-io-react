@@ -7,10 +7,12 @@ Includes:
 - BlogPostOut: Output model for safe public API exposure
 """
 
-from pydantic import BaseModel, Field
-from typing import List, Optional, Literal
-from typing_extensions import TypedDict
 from datetime import datetime
+from typing import Literal
+
+from pydantic import BaseModel, Field
+from typing_extensions import TypedDict
+
 
 class Content(TypedDict):
     html: str
@@ -22,12 +24,12 @@ class BlogPost(BaseModel):
     summary: str = Field(..., example="Intro to FastAPI with examples.")
     content: Content = Field(..., example={"html": "<p>This is the full article...</p>"})
     status: Literal["draft", "published"] = Field(default="draft")
-    categories: List[str] = Field(default=[], example=["Python", "Backend"])
+    categories: list[str] = Field(default=[], example=["Python", "Backend"])
     date: datetime = Field(default_factory=datetime.utcnow)  # legacy/fallback
-    date_created: Optional[datetime] = None
-    date_published: Optional[datetime] = None
-    date_updated: Optional[datetime] = None
-    featuredImage: Optional[str] = Field(default="", example="https://example.com/image.jpg")
+    date_created: datetime | None = None
+    date_published: datetime | None = None
+    date_updated: datetime | None = None
+    featuredImage: str | None = Field(default="", example="https://example.com/image.jpg")
     featured: bool = Field(default=False)
     weight: int = Field(default=0)
 
@@ -38,12 +40,12 @@ class BlogPostIn(BaseModel):
     summary: str
     content: Content
     status: Literal["draft", "published"] = "draft"
-    categories: List[str] = Field(default=[])
-    date: Optional[datetime] = None  # legacy/fallback
-    date_created: Optional[datetime] = None
-    date_published: Optional[datetime] = None
-    date_updated: Optional[datetime] = None
-    featuredImage: Optional[str] = ""
+    categories: list[str] = Field(default=[])
+    date: datetime | None = None  # legacy/fallback
+    date_created: datetime | None = None
+    date_published: datetime | None = None
+    date_updated: datetime | None = None
+    featuredImage: str | None = ""
     featured: bool = False
     weight: int = 0
 
@@ -53,12 +55,12 @@ class BlogPostOut(BaseModel):
     slug: str
     summary: str
     content: Content
-    date: Optional[datetime] = None  # legacy/fallback
-    date_created: Optional[datetime] = None
-    date_published: Optional[datetime] = None
-    date_updated: Optional[datetime] = None
+    date: datetime | None = None  # legacy/fallback
+    date_created: datetime | None = None
+    date_published: datetime | None = None
+    date_updated: datetime | None = None
     status: Literal["draft", "published"] = "draft"
-    categories: List[str] = Field(default=[])
-    featuredImage: Optional[str] = ""
+    categories: list[str] = Field(default=[])
+    featuredImage: str | None = ""
     featured: bool = False
     weight: int = 0

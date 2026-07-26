@@ -63,7 +63,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
               props: {
                 handlePaste(view, event) {
                   const items = event.clipboardData?.items || [];
-                  for (let item of items) {
+                  for (const item of items) {
                     if (item.type.indexOf('image') === 0) {
                       const file = item.getAsFile();
                       if (file) {
@@ -76,7 +76,7 @@ export default function WysiwygEditor({ content, onChange, limit = 5000 }: Wysiw
                 },
                 handleDrop(view, event) {
                   const files = event.dataTransfer?.files || [];
-                  for (let file of files) {
+                  for (const file of files) {
                     if (file.type.startsWith('image/')) {
                       uploadAndInsert(file);
                       return true;

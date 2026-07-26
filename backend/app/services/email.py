@@ -1,4 +1,5 @@
 import os
+
 import resend
 from core.logging import setup_logging
 

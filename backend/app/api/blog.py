@@ -10,16 +10,16 @@ Blog API routes for:
 Backed by MongoDB via Motor.
 """
 
-from fastapi import APIRouter, HTTPException, Depends
-from typing import List, Dict
 from datetime import datetime
+
+import pytz
+from core.auth import verify_token
+from dateutil.parser import parse as parse_date
+from fastapi import APIRouter, Depends, HTTPException
 from models.blog import BlogPost, BlogPostIn
 from models.category import Category
-from core.auth import verify_token
 from pydantic import BaseModel
 from utils.sanitize import sanitize_html
-import pytz
-from dateutil.parser import parse as parse_date
 
 router = APIRouter()
 
@@ -47,7 +47,7 @@ def coerce_dates(post_dict):
                 pass
     return post_dict
 
-@router.get("/api/posts", response_model=List[BlogPost])
+@router.get("/api/posts", response_model=list[BlogPost])
 async def get_all_posts():
     # Sort by date_published (desc), falling back to date_created for older posts
     posts = await posts_collection.find().sort([
@@ -130,7 +130,7 @@ async def delete_post(slug: str):
         raise HTTPException(status_code=404, detail="Post not found")
     return {"message": "Post deleted"}
 
-@router.get("/api/admin/posts", response_model=List[BlogPost], dependencies=[Depends(verify_token)])
+@router.get("/api/admin/posts", response_model=list[BlogPost], dependencies=[Depends(verify_token)])
 async def get_all_posts_admin():
     # Sort by date_published (desc), falling back to date_created for older posts
     posts = await posts_collection.find().sort([
@@ -147,7 +147,7 @@ async def get_public_post(slug: str):
         raise HTTPException(status_code=404, detail="Post not found")
     return post
 
-@router.get("/api/blog", response_model=List[BlogPost])
+@router.get("/api/blog", response_model=list[BlogPost])
 async def blog_alias():
     return await get_all_posts()
 
@@ -156,7 +156,7 @@ class WeightUpdate(BaseModel):
     weight: int
 
 @router.post("/api/admin/update-weights", dependencies=[Depends(verify_token)])
-async def update_post_weights(weights: List[WeightUpdate]):
+async def update_post_weights(weights: list[WeightUpdate]):
     for item in weights:
         await posts_collection.update_one(
             {"slug": item.slug},
@@ -165,7 +165,7 @@ async def update_post_weights(weights: List[WeightUpdate]):
     return {"message": "Weights updated"}
 
 # 🆕 NEW ENDPOINT: GET grouped categories
-@router.get("/api/categories", response_model=Dict[str, List[Category]])
+@router.get("/api/categories", response_model=dict[str, list[Category]])
 async def get_grouped_categories():
     all_cats = await categories_collection.find().sort("name", 1).to_list(100)
     grouped = {}

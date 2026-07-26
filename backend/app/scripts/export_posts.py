@@ -8,14 +8,15 @@ Examples:
 $ python -m scripts.export_posts --output published.json --filter status=published
 $ python -m scripts.export_posts --filter categories=Tech\ \&\ Projects
 """
+import argparse
 import asyncio
 import json
-from pathlib import Path
-import argparse
 import shutil
 from datetime import datetime
+from pathlib import Path
+
 import core.db
-import os
+
 
 async def export_posts(filters: dict):
     await core.db.connect_to_mongo()

@@ -9,8 +9,8 @@ WORKDIR /app
 # Copy only app code inside /app
 COPY app /app
 
-# Copy requirements first to install dependencies
-COPY requirements.txt .
+# Copy requirements and lint config first to install dependencies
+COPY requirements.txt pyproject.toml .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
