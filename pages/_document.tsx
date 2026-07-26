@@ -4,6 +4,15 @@ export default function Document() {
     return (
       <Html lang="en">
       <Head>
+        {/* Blocking inline script: sets the `dark` class on <html> before paint to
+            prevent a flash of the wrong theme. Must run before any stylesheet.
+            Reads an explicit user choice from localStorage first, falling back to
+            the OS-level color-scheme preference on first visit. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+          }}
+        />
         <meta name="description" content="Name of your web site" />
         <meta name="author" content="Marketify" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
