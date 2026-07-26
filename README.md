@@ -4,7 +4,7 @@ A modern, production-ready monorepo with:
 
 - **Frontend:** Next.js (React, TypeScript, Tailwind CSS)
 - **Backend:** FastAPI (Python 3.11+)
-- **Dev Workflow:** Docker, Prettier, ESLint, Ruff, Black, mypy, pre-commit, GitHub Actions CI/CD
+- **Dev Workflow:** Docker, ESLint (frontend), Ruff (backend), Playwright (e2e), GitHub Actions CI/CD
 
 ---
 
@@ -57,27 +57,17 @@ docker compose up --build
 
 ---
 
-## 🧹 **Linting, Formatting, Type Checking**
+## 🧹 **Linting**
 
-- **All at once:**
-  ```sh
-  npm run lint:all
-  ```
-- **Individually:**
-
-  - JS/TS Lint: `npm run lint:js`
-  - JS/TS Format: `npm run format:js`
-  - Python Lint: `npm run lint:py`
-  - Python Format: `npm run format:py`
-  - Python Type Check: `npm run typecheck:py`
-
-- **Pre-commit hooks** and **CI/CD** enforce all checks before deploy.
+- Frontend (ESLint): `npm run lint`
+- Backend (Ruff): `ruff check backend/app` (`pip install ruff`, or use the Docker image)
+- **CI** (`.github/workflows/lint.yml`) enforces both on every push, every branch. Run them locally before committing anything either covers.
 
 ---
 
 ## ⚙️ **Environment Variables**
 
-- Copy `.env.example` to `.env.local` and fill in required values for local dev.
+- `.env.local` is the dev env file (gitignored, no `.env.example` — use `.env.local` as the template).
 - Docker/CI/CD uses `.env.production` (see GitHub secrets).
 
 ---
@@ -105,29 +95,15 @@ laudtetteh-io-react/
 
 ## 🧪 **Testing**
 
-### Frontend (React/Next.js)
+### End-to-End (E2E) — real, wired up
 
-- **Unit/Integration:**
-  - Add tests with [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-  - Example:
-    ```sh
-    npm install --save-dev jest @testing-library/react @testing-library/jest-dom
-    npm run test
-    ```
+- [Playwright](https://playwright.dev/) is installed and configured (`playwright.config.ts`, specs in `e2e/`).
+- Run: `npm run test:e2e` (or `npx playwright test e2e/<file>.spec.ts` for one spec).
+- CI-enforced on every push touching frontend paths (`.github/workflows/e2e.yml`).
 
-### Backend (FastAPI)
+### Unit/Integration — not yet installed
 
-- **Unit/Integration:**
-  - Add tests with [pytest](https://docs.pytest.org/en/stable/) and [httpx](https://www.python-httpx.org/)
-  - Example:
-    ```sh
-    pip install pytest httpx
-    pytest backend/app/tests
-    ```
-
-### End-to-End (E2E)
-
-- Consider [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/) for full-stack E2E tests.
+No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a deliberate follow-up, deferred until the in-progress frontend redesign lands and stabilizes.
 
 ---
 
@@ -156,11 +132,7 @@ laudtetteh-io-react/
 - **API Docs:**
   - FastAPI auto-generates docs at `/docs` (Swagger UI).
 - **Pre-commit hooks:**
-  - Set up with [pre-commit](https://pre-commit.com/) for auto-linting on commit.
-    ```sh
-    pip install pre-commit
-    pre-commit install
-    ```
+  - A gitleaks secret-scan runs automatically on every commit (`git/hooks`, no setup needed).
 - **Updating dependencies:**
   - JS: `npm update` or `npm install <pkg>@latest`
   - Python: `pip install -U <package>`
@@ -171,15 +143,16 @@ laudtetteh-io-react/
 
 ## 🏗️ **CI/CD (GitHub Actions)**
 
-- Lints, formats, and type-checks both frontend and backend before deploy.
-- Deploys to DigitalOcean using Docker Compose.
+- `lint.yml` — ESLint + Ruff, on every push, every branch.
+- `e2e.yml` — Playwright, on every push touching frontend paths.
+- `deploy.yml` — deploys to DigitalOcean using Docker Compose on push to `main`.
 
 ---
 
 ## 🤝 **Contributing & Best Practices**
 
 - Always activate your Python virtualenv: `source .venv/bin/activate`
-- Use `npm run lint:all` before pushing code.
+- Run `npm run lint` and `ruff check backend/app` before pushing code.
 - Keep `requirements.txt` up to date: `pip freeze > backend/requirements.txt`
 - Never commit `.venv/` or other environment-specific files.
 
