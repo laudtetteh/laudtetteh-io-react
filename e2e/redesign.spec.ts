@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 
 /**
  * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
- * (redesign-header-nav) and #9 (redesign-about-section). `header` and
- * `about` now render real content via `components/redesign/Header.tsx` and
- * `AboutSection.tsx` — the remaining sections stay stubs until their own
+ * (redesign-header-nav), #9 (redesign-about-section), and #10
+ * (redesign-experience-section). `header`, `about`, and `experience` now
+ * render real content — the remaining sections stay stubs until their own
  * tickets land, each of which should extend this spec further (and remove
  * itself from the stub loop below) per testing-conventions.md.
  */
@@ -18,7 +18,7 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  for (const section of ['experience', 'projects', 'sandbox', 'writing', 'contact', 'footer']) {
+  for (const section of ['projects', 'sandbox', 'writing', 'contact', 'footer']) {
     await expect(page.locator(`[data-redesign-section="${section}"]`)).toBeAttached();
   }
   expect(consoleErrors).toEqual([]);
@@ -30,6 +30,13 @@ test('about section renders real bio content in initial HTML', async ({ page }) 
   await expect(about).toContainText('Laud Tetteh');
   await expect(about).toContainText('Download CV');
   await expect(about).toContainText('Server Side');
+});
+
+test('experience section renders real work history in initial HTML', async ({ page }) => {
+  await page.goto('/redesign');
+  const experience = page.locator('#experience');
+  await expect(experience).toContainText('Salesforce');
+  await expect(experience).toContainText('Brittani Dinsmore');
 });
 
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
