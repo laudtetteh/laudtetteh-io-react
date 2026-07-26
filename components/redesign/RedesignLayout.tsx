@@ -4,6 +4,7 @@ import AboutSection from './AboutSection';
 import ExperienceSection from './ExperienceSection';
 import ProjectsSection from './ProjectsSection';
 import ContactSection from './ContactSection';
+import Footer from './Footer';
 
 export default function RedesignLayout() {
   return (
@@ -15,7 +16,7 @@ export default function RedesignLayout() {
       <div id="sandbox" data-redesign-section="sandbox" />
       <div id="writing" data-redesign-section="writing" />
       <ContactSection />
-      <div id="footer" data-redesign-section="footer" />
+      <Footer />
     </div>
   );
 }
