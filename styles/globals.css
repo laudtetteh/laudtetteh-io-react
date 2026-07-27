@@ -132,3 +132,22 @@ html[data-route='redesign'] input[type='text'] {
 html[data-route='redesign'].dark input[type='text'] {
   border-color: rgb(30 41 59) !important; /* slate-800 (dark mode) */
 }
+
+/*
+ * `/redesign` Inter glyph-shape fix (#57).
+ *
+ * Both sites load the same Inter font-family, but the reference explicitly
+ * sets `font-feature-settings: "cv02", "cv11", "ss03"` (Inter's own
+ * recommended alternate-glyph character variants — visibly changes letter
+ * shapes like the lowercase "a", not just which typeface is loaded).
+ * Next.js's `next/font/google` Inter loader doesn't apply this by default,
+ * so ours rendered as `font-feature-settings: normal` — same family name,
+ * visibly different letterforms. Tailwind's own preflight already sets
+ * `font-feature-settings: normal` on `html`; this rule's attribute-selector
+ * specificity beats that plain-element rule without needing `!important`,
+ * and inherits down to every element normally (no direct-rule fight like
+ * the font-family bug above).
+ */
+html[data-route='redesign'] {
+  font-feature-settings: 'cv02', 'cv11', 'ss03';
+}
