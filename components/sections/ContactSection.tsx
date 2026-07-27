@@ -60,9 +60,10 @@ const ContactSection: React.FC = () => {
       setStatus('success');
       setForm(initialForm);
       setCaptcha(generateCaptcha());
-    } catch (err: any) {
+    } catch (err) {
       setStatus('error');
-      setErrorMsg(err.message || 'Unknown error');
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setErrorMsg(message);
       setCaptcha(generateCaptcha());
     }
   };

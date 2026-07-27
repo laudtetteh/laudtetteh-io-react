@@ -3,12 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFlashMessage } from '@/lib/useFlashMessage';
-import CategoryPicker from './CategoryPicker';
-import ImageUploader from './shared/ImageUploader';
 import {
   useEditor,
-  EditorContent,
-  Editor,
+  type Editor,
 } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -129,7 +126,7 @@ export default function AdminPostForm({
   });
   
   // For editor initialization, convert HTML to ProseMirror JSON
-  let initialContent: string | Record<string, any> = '';
+  let initialContent: string | Record<string, unknown> = '';
   if (initialData && sanitizedHtml) {
     try {
       // Use generateJSON to parse HTML to ProseMirror JSON for editor initialization
@@ -143,7 +140,7 @@ export default function AdminPostForm({
         CodeBlock,
         HardBreak,
       ]);
-    } catch (e) {
+    } catch {
       // If generateJSON fails, use empty string - editor will handle it gracefully
       initialContent = '';
     }
@@ -169,7 +166,7 @@ export default function AdminPostForm({
               props: {
                 handlePaste(view, event) {
                   const items = event.clipboardData?.items || [];
-                  for (let item of items) {
+                  for (const item of items) {
                     if (item.type.indexOf('image') === 0) {
                       const file = item.getAsFile();
                       if (file) {
@@ -182,7 +179,7 @@ export default function AdminPostForm({
                 },
                 handleDrop(view, event) {
                   const files = event.dataTransfer?.files || [];
-                  for (let file of files) {
+                  for (const file of files) {
                     if (file.type.startsWith('image/')) {
                       uploadAndInsert(file);
                       return true;
@@ -196,7 +193,7 @@ export default function AdminPostForm({
         },
       }),
     ],
-    onUpdate({ editor }: { editor: any }) {
+    onUpdate({ editor }: { editor: Editor }) {
       const html = editor.getHTML();
       setEditorContent({ html });
     },
@@ -244,7 +241,7 @@ export default function AdminPostForm({
     try {
       const file_url = await uploadImage(file, token || '');
       editor?.chain().focus().setImage({ src: file_url }).run();
-    } catch (e) {
+    } catch {
       alert('Image upload failed');
     }
   }
@@ -276,7 +273,7 @@ export default function AdminPostForm({
         setErrors({ ...validationErrors, slug: 'Slug already exists. Please choose a unique one.' });
         pushMessage('Slug already exists. Please choose a unique one.', 'top-center', 'error');
         return;
-      } catch (e) {
+      } catch {
         // Not found is expected for new post
       }
     }
@@ -296,7 +293,7 @@ export default function AdminPostForm({
       await import('@/lib/api').then(mod => mod.deletePost(formData.slug));
       pushMessage('Post deleted successfully', 'top-center', 'success');
       router.push('/admin');
-    } catch (e) {
+    } catch {
       pushMessage('Failed to delete post', 'top-center', 'error');
     }
   };

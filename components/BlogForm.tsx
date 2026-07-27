@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { createPost, updatePost, uploadImage } from '@/lib/api';
 import type { BlogPostFormData } from '@/types/blog';
@@ -28,12 +28,6 @@ export default function BlogForm({ initialData, isEditing = false }: BlogFormPro
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
-  // Handle input changes
-  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
   // Handle image upload to S3
   async function handleImageUpload() {
     if (!image) return;
@@ -48,7 +42,7 @@ export default function BlogForm({ initialData, isEditing = false }: BlogFormPro
           html: prev.content.html + `\n\n<img src="${imageUrl}" alt="uploaded image" />`,
         },
       }));
-    } catch (e) {
+    } catch {
       alert('Image upload failed');
     } finally {
       setUploading(false);
@@ -66,7 +60,7 @@ export default function BlogForm({ initialData, isEditing = false }: BlogFormPro
         await createPost(formData, token);
       }
       router.push('/admin');
-    } catch (e) {
+    } catch {
       alert('Error saving post');
     }
   }
