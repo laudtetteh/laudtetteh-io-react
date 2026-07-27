@@ -80,3 +80,41 @@ html[data-route='redesign'] h5,
 html[data-route='redesign'] h6 {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif !important;
 }
+
+/*
+ * `/redesign` contact-form text input border fix (#19).
+ *
+ * `public/css/plugins.css` (loaded globally via `_app.tsx`) has an
+ * unscoped rule targeting every text-like `<input>` by attribute selector
+ * (`input[type="text"], input[type="email"], ...`) that sets
+ * `border: 1px solid #eee` and `border-radius: 0`. An attribute selector
+ * carries the same specificity weight as a class selector, and this rule
+ * also matches on the element's tag name, so its specificity (0,1,1) beats
+ * `ContactSection.tsx`'s `.border-slate-200`/`.rounded-md` utility classes
+ * (0,1,0) — same class of bug as the two fixes above, just a specificity
+ * fight instead of an inherited-vs-direct one. Visible impact: the three
+ * `type="text"` contact-form inputs (name/email/security-code) rendered
+ * with hard-square corners while the message `<textarea>` beside them
+ * (untouched by this rule, which doesn't match `<textarea>`) correctly
+ * rendered with rounded corners — and the border color didn't match the
+ * intended slate-200 in light mode.
+ *
+ * `border-radius` has no `dark:` variant fighting the legacy rule, so it's
+ * wrong in both themes and gets one unconditional override. `border-color`
+ * is different: `dark:border-slate-800` compiles to
+ * `.dark\:border-slate-800:is(.dark *)`, whose specificity already beats
+ * the legacy rule on its own, so dark mode's border-color was correct
+ * without help (verified live via `getComputedStyle` on a fresh page
+ * load per theme) — only light mode needs the explicit override below.
+ * The second rule below is scoped to `.dark` purely so it can't ever
+ * fight the first rule's `!important` on a future refactor; it isn't
+ * required for dark mode to render correctly today.
+ */
+html[data-route='redesign'] input[type='text'] {
+  border-radius: 0.375rem !important; /* rounded-md */
+  border-color: rgb(226 232 240) !important; /* slate-200 (light mode default) */
+}
+
+html[data-route='redesign'].dark input[type='text'] {
+  border-color: rgb(30 41 59) !important; /* slate-800 (dark mode) */
+}

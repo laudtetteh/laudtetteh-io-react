@@ -338,3 +338,19 @@ test('skip-to-content link is the first focusable element and targets #content (
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#content$/);
 });
+
+test('contact form text inputs render rounded corners and the intended border color, not the legacy square/grey plugins.css style (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  const nameInput = page.locator('#contact_name');
+  const messageTextarea = page.locator('#contact_message');
+
+  const inputRadius = await nameInput.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  const textareaRadius = await messageTextarea.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  // The legacy `input[type="text"]` rule in `public/css/plugins.css` doesn't
+  // match `<textarea>`, so the textarea's rounded-md corners are a reliable
+  // "what it should look like" reference to compare the input against.
+  expect(inputRadius).toBe(textareaRadius);
+
+  const inputBorderColor = await nameInput.evaluate((el) => getComputedStyle(el).borderTopColor);
+  expect(inputBorderColor).toBe('rgb(226, 232, 240)'); // slate-200, not the legacy #eee
+});
