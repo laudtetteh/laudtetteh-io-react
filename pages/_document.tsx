@@ -7,12 +7,13 @@ interface DocumentProps {
 /**
  * `scroll-smooth` (Tailwind's `scroll-behavior: smooth`) has to live on
  * `<html>` to affect whole-document/anchor-link scrolling, but this file is
- * shared by every route in the pages router — the old homepage and `/admin`
- * must not pick up smooth-scroll behavior they were never designed around.
+ * shared by every route in the pages router — `/admin` must not pick up
+ * smooth-scroll behavior it was never designed around.
  * `getInitialProps` gives us `ctx.pathname` at render time (works for SSR,
- * the `/redesign` route's SSG build, and `/blog`'s SSG/ISR build), so the
+ * the homepage's SSG build, and `/blog`'s SSG/ISR build), so the
  * class is only added on routes that have opted into the redesign system
- * (`/redesign`, `/blog`, `/blog/[slug]` — see #60). `motion-safe:` keeps it
+ * (`/` as of #17's cutover, plus `/blog`, `/blog/[slug]` — see #60, and
+ * `/redesign` while it remains a redirect). `motion-safe:` keeps it
  * off entirely for `prefers-reduced-motion: reduce`, matching this
  * project's existing pattern (`ThemeToggle`, tagline rotation) of
  * respecting that preference.
@@ -63,7 +64,10 @@ export default function Document({ appliesRedesignSystem }: DocumentProps) {
     );
   }
 
-const REDESIGN_SYSTEM_PATHNAMES = ['/redesign', '/blog', '/blog/[slug]'];
+// `/` is included as of the homepage cutover (#17) — it now renders
+// RedesignLayout, so it needs the same treatment as the other redesign-system
+// routes. `/redesign` stays listed while it remains a redirect to `/`.
+const REDESIGN_SYSTEM_PATHNAMES = ['/', '/redesign', '/blog', '/blog/[slug]'];
 
 Document.getInitialProps = async (ctx: DocumentContext) => {
   const initialProps = await NextDocument.getInitialProps(ctx);
