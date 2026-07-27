@@ -36,9 +36,16 @@ app = FastAPI(
 # ----------------------
 # CORS Setup
 # ----------------------
+# Explicit allowlist: production domains + local dev frontend. No wildcard.
+ALLOWED_ORIGINS = [
+    "https://laudtetteh.io",
+    "https://www.laudtetteh.io",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict to frontend domain
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
