@@ -43,11 +43,25 @@
  * `pages/_document.tsx` only for the `/redesign` route) so the old
  * homepage, `/blog`, and `/admin` keep the legacy theme's overflow
  * behavior unchanged.
+ *
+ * Same file's `body{ background-color: #eee; color: #868a9b; }` (a direct
+ * element-selector rule, so it beats the Tailwind dark:bg-slate-900 classes
+ * applied to individual `<section>`s, which don't cover `body` itself) leaks
+ * a light-gray body background into any gap the sections don't cover —
+ * fixed here too, same scoping.
  */
 html[data-route='redesign'],
 html[data-route='redesign'] body {
   overflow-x: visible !important;
   overflow-y: visible !important;
+  background-color: rgb(15 23 42) !important; /* slate-900 */
+  color: rgb(241 245 249) !important; /* slate-100 */
+}
+
+html[data-route='redesign']:not(.dark),
+html[data-route='redesign']:not(.dark) body {
+  background-color: rgb(248 250 252) !important; /* slate-50 */
+  color: rgb(15 23 42) !important; /* slate-900 */
 }
 
 /*

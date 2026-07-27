@@ -61,35 +61,8 @@ const SKILLS: SkillCategory[] = [
 ];
 
 /**
- * "Korok seeds" hover easter egg, ported from the reference design.
- *
- * 11 sibling `<span>`s (one per character of "Korok seeds") each carry a
- * staggered `transition-delay`, so hovering the phrase triggers a per-letter
- * color cascade rather than every letter changing at once. Purely
- * CSS/JSX — no JS, no state. The custom cursor image is applied to the
- * group wrapper via a Tailwind arbitrary value so it's active for the whole
- * hover target, not just individual letters.
- */
-const KOROK_LETTERS = ['K', 'o', 'r', 'o', 'k', ' ', 's', 'e', 'e', 'd', 's'] as const;
-
-const KOROK_LETTER_STYLES = [
-  'group-hover/korok:text-rose-500 dark:group-hover/korok:text-rose-400 delay-[50ms]',
-  'group-hover/korok:text-orange-500 dark:group-hover/korok:text-orange-400 delay-[75ms]',
-  'group-hover/korok:text-amber-500 dark:group-hover/korok:text-amber-400 delay-[100ms]',
-  'group-hover/korok:text-yellow-500 dark:group-hover/korok:text-yellow-400 delay-[125ms]',
-  'group-hover/korok:text-lime-500 dark:group-hover/korok:text-lime-400 delay-[150ms]',
-  'group-hover/korok:text-green-500 dark:group-hover/korok:text-green-400 delay-[175ms]',
-  'group-hover/korok:text-emerald-500 dark:group-hover/korok:text-emerald-400 delay-[200ms]',
-  'group-hover/korok:text-teal-500 dark:group-hover/korok:text-teal-400 delay-[225ms]',
-  'group-hover/korok:text-cyan-500 dark:group-hover/korok:text-cyan-400 delay-[250ms]',
-  'group-hover/korok:text-blue-500 dark:group-hover/korok:text-blue-400 delay-[275ms]',
-  'group-hover/korok:text-violet-500 dark:group-hover/korok:text-violet-400 delay-[300ms]',
-] as const;
-
-/**
- * The new design's About section: real bio, info table, skills breakdown,
- * and the ported Korok-seed hover easter egg. Server-rendered — no
- * client-only gate, no hooks, no interactivity beyond pure-CSS hover state.
+ * The new design's About section: real bio, info table, and skills
+ * breakdown. Server-rendered — no client-only gate, no hooks.
  */
 export default function AboutSection() {
   return (
@@ -104,31 +77,13 @@ export default function AboutSection() {
           About
         </h2>
 
-        <p className="mt-6 text-base leading-relaxed text-slate-900 dark:text-slate-100 sm:text-lg">
+        <p className="mt-6 text-base leading-normal text-slate-700 dark:text-slate-400">
           I&apos;m Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+
           years of experience building, optimizing, and maintaining web applications for
           clients and employers across the US and Africa. I thrive on learning new
           technologies, collaborating with smart people, and solving real-world problems
           through code. My background spans backend, frontend and DevOps. Let&apos;s build
           something great together!
-        </p>
-
-        <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-          Psst — hover{' '}
-          <span
-            className="group/korok inline-flex cursor-[url('/images/koroks/Elma.png'),_pointer] font-medium"
-            aria-hidden="true"
-          >
-            {KOROK_LETTERS.map((letter, index) => (
-              <span
-                key={index}
-                className={`transition-colors duration-300 ease-out ${KOROK_LETTER_STYLES[index]}`}
-              >
-                {letter === ' ' ? ' ' : letter}
-              </span>
-            ))}
-          </span>{' '}
-          <span className="sr-only">Korok seeds</span> for a little surprise.
         </p>
 
         {/* Info table */}
