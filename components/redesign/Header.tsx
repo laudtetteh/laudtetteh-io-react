@@ -49,10 +49,10 @@ export default function Header(): React.ReactElement {
     <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
       <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
             <a href="#header">Laud Tetteh</a>
           </h1>
-          <h2 className="mt-2 text-lg font-medium text-slate-700 dark:text-slate-300">Software Engineer</h2>
+          <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">Software Engineer</h2>
           <p
             aria-live="polite"
             className={classNames(

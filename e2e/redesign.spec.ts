@@ -306,3 +306,61 @@ test('old routes are unaffected by the redesign shell (#48)', async ({ page }) =
     expect(hasSpotlight).toBe(false);
   }
 });
+
+test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  const h1Family = await page.locator('#header h1').evaluate((el) => getComputedStyle(el).fontFamily);
+  const h2Family = await page.locator('#about h2').evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(h1Family).not.toContain('Syne');
+  expect(h2Family).not.toContain('Syne');
+
+  // / and /blog keep the legacy Syne heading font untouched — this fix is
+  // scoped to `[data-route="redesign"]` only.
+  for (const route of ['/', '/blog']) {
+    await page.goto(route);
+    const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
+    expect(dataRoute).toBeNull();
+  }
+});
+
+test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  await page.locator('a[href="#content"]').waitFor();
+
+  // Explicitly establish a known focus baseline (`<body>`) before pressing
+  // Tab, rather than relying on the browser's implicit post-load focus
+  // state — under heavy parallel-worker CPU contention a Tab press sent
+  // right after `goto` can otherwise race the browser's own focus-context
+  // setup (the same class of synthetic-input timing issue already
+  // documented on the spotlight-cursor test above).
+  await page.evaluate(() => document.body.focus());
+  await page.keyboard.press('Tab');
+
+  const active = await page.evaluate(() => ({
+    tag: document.activeElement?.tagName,
+    href: document.activeElement?.getAttribute('href'),
+    text: document.activeElement?.textContent,
+  }));
+  expect(active.tag).toBe('A');
+  expect(active.href).toBe('#content');
+  expect(active.text).toContain('Skip to Content');
+
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#content$/);
+});
+
+test('contact form text inputs render rounded corners and the intended border color, not the legacy square/grey plugins.css style (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  const nameInput = page.locator('#contact_name');
+  const messageTextarea = page.locator('#contact_message');
+
+  const inputRadius = await nameInput.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  const textareaRadius = await messageTextarea.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+  // The legacy `input[type="text"]` rule in `public/css/plugins.css` doesn't
+  // match `<textarea>`, so the textarea's rounded-md corners are a reliable
+  // "what it should look like" reference to compare the input against.
+  expect(inputRadius).toBe(textareaRadius);
+
+  const inputBorderColor = await nameInput.evaluate((el) => getComputedStyle(el).borderTopColor);
+  expect(inputBorderColor).toBe('rgb(226, 232, 240)'); // slate-200, not the legacy #eee
+});
