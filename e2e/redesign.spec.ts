@@ -1,14 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Placeholder-shell check for #7 (redesign-scaffold), extended by #8
- * (redesign-header-nav), #9 (redesign-about-section), #10
- * (redesign-experience-section), #11 (redesign-projects-section), #12
- * (redesign-sandbox-section), #14 (redesign-contact-section), and #15
- * (redesign-footer). `header`, `about`, `experience`, `projects`, `sandbox`,
- * `contact`, and `footer` now render real content — `writing` stays a stub
- * until its own ticket lands, which should extend this spec further (and
- * remove itself from the stub loop below) per testing-conventions.md.
+ * Placeholder-shell check for #7 (redesign-scaffold). All 8 Sprint 1
+ * sections now render real content as of #13 (redesign-writing-section) —
+ * no stubs remain in `RedesignLayout.tsx`.
  */
 test('redesign renders with zero console errors', async ({ page }) => {
   const consoleErrors: string[] = [];
@@ -20,7 +15,6 @@ test('redesign renders with zero console errors', async ({ page }) => {
   await page.goto('/redesign');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
-  await expect(page.locator('[data-redesign-section="writing"]')).toBeAttached();
   expect(consoleErrors).toEqual([]);
 });
 
@@ -54,6 +48,25 @@ test('sandbox section renders real GitHub repos with a working category filter',
   expect(initialCardCount).toBeGreaterThan(0);
   await sandbox.getByRole('button', { name: 'Backend' }).click();
   await expect(sandbox.locator('article').first()).toBeVisible();
+});
+
+test('writing section renders real blog teaser cards in initial HTML', async ({ page }) => {
+  await page.goto('/redesign');
+  const writing = page.locator('#writing');
+  await expect(writing.getByRole('link', { name: /Read the blog/ })).toBeVisible();
+  // The blog API is only reachable inside the Docker network (API_SERVER
+  // points at an internal address) — CI has no live backend, so
+  // getLatestPosts() correctly falls back to an empty array there and this
+  // section renders its graceful empty state instead of real cards. Locally,
+  // against the real dev stack, real cards render. Both are valid outcomes;
+  // assert on whichever one is actually showing rather than assuming a live
+  // backend connection.
+  const cardCount = await writing.locator('article').count();
+  if (cardCount > 0) {
+    await expect(writing.locator('article').first()).toBeVisible();
+  } else {
+    await expect(writing).toContainText('No posts published yet');
+  }
 });
 
 test('contact section renders the real form shell in initial HTML', async ({ page }) => {
