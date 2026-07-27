@@ -46,7 +46,7 @@ export default function Header(): React.ReactElement {
   const activeSectionId = useScrollSpy(NAV_ITEMS.map(item => item.id));
 
   return (
-    <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-full lg:flex-col lg:justify-between lg:py-16">
+    <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
       <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
@@ -80,15 +80,15 @@ export default function Header(): React.ReactElement {
                   className={classNames(
                     'group flex items-center py-1 text-sm font-semibold uppercase tracking-widest transition-colors',
                     isActive
-                      ? 'active text-teal-600 dark:text-teal-400'
-                      : 'text-slate-600 hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400'
+                      ? 'active text-slate-900 dark:text-slate-200'
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                   )}
                 >
                   <span
                     aria-hidden="true"
                     className={classNames(
                       'mr-3 hidden h-px transition-all lg:block',
-                      isActive ? 'w-10 bg-teal-600 dark:bg-teal-400' : 'w-6 bg-slate-400 group-hover:w-10 group-hover:bg-teal-600 dark:bg-slate-600 dark:group-hover:bg-teal-400'
+                      isActive ? 'w-10 bg-slate-900 dark:bg-slate-200' : 'w-6 bg-slate-400 group-hover:w-10 group-hover:bg-slate-900 dark:bg-slate-600 dark:group-hover:bg-slate-200'
                     )}
                   />
                   {item.label}

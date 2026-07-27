@@ -121,16 +121,22 @@ test('header tagline rotates over time', async ({ page }) => {
 
 test('header scroll-spy marks the active nav link', async ({ page }) => {
   await page.goto('/redesign');
-  // #about is still a zero-height stub until its own ticket lands real
-  // content — give it real height so IntersectionObserver has something to
+  // Give #about real height so IntersectionObserver has something to
   // report a nonzero ratio against, isolating useScrollSpy's own logic.
   await page.locator('#about').evaluate(el => {
     (el as HTMLElement).style.minHeight = '150vh';
   });
   const aboutLink = page.locator('#header a[href="#about"]');
-  await expect(aboutLink).not.toHaveClass(/active/);
-  await page.locator('#about').scrollIntoViewIfNeeded();
+  const experienceLink = page.locator('#header a[href="#experience"]');
+
+  // Under the #48 two-column shell, #about sits immediately beside the
+  // sticky header (not below a full-width header block), so it's already
+  // the active section at the top of the page — assert that directly,
+  // then confirm scrolling to a later section moves the highlight.
   await expect(aboutLink).toHaveClass(/active/);
+  await page.locator('#experience').scrollIntoViewIfNeeded();
+  await expect(experienceLink).toHaveClass(/active/);
+  await expect(aboutLink).not.toHaveClass(/active/);
 });
 
 test('header theme toggle switches dark class on html element', async ({ page }) => {
@@ -149,4 +155,154 @@ test('header stacks within viewport width on mobile', async ({ page }) => {
   await expect(header).toBeVisible();
   const box = await header.boundingBox();
   expect(box?.width).toBeLessThanOrEqual(375);
+
+  // Regression coverage for #48: the mobile-only sticky section-title bar's
+  // `-mx-6 w-screen` breakout previously caused real horizontal scroll on
+  // narrow viewports (an ambient double-padding bug, since fixed) — assert
+  // the whole document never exceeds the viewport width.
+  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+});
+
+test('two-column shell splits header and main side by side at desktop width (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+  await expect(page.locator('#header')).toBeVisible();
+  await expect(page.locator('#content')).toBeVisible();
+  const headerBox = await page.locator('#header').boundingBox();
+  const mainBox = await page.locator('#content').boundingBox();
+  expect(headerBox).not.toBeNull();
+  expect(mainBox).not.toBeNull();
+  // Real left margin — header is not flush against the viewport edge.
+  expect(headerBox!.x).toBeGreaterThan(0);
+  // Main sits immediately to the right of header, not below it.
+  expect(mainBox!.x).toBeGreaterThanOrEqual(headerBox!.x + headerBox!.width);
+  // Both columns start at the same vertical position.
+  expect(mainBox!.y).toBeCloseTo(headerBox!.y, 0);
+});
+
+test('header stays visually pinned while scrolling at desktop width (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+  for (const y of [0, 300, 800, 1500, 3000]) {
+    await page.evaluate((yy) => window.scrollTo(0, yy), y);
+    // Let the sticky recalculation settle — scroll listeners aren't
+    // synchronous with the JS-driven `scrollTo`.
+    await page.waitForTimeout(100);
+    const top = await page.locator('#header').evaluate((el) => el.getBoundingClientRect().top);
+    // This is the exact regression that shipped unnoticed: before the
+    // two-column shell, `top` moved in lockstep with `-scrollY` (i.e.
+    // `position: sticky` behaved as `static`). Pinned means `top` stays
+    // near 0 regardless of how far the page has scrolled.
+    expect(Math.abs(top)).toBeLessThanOrEqual(5);
+  }
+});
+
+test('smooth scroll animates gradually on in-page nav click, not an instant jump (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+
+  const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+  expect(scrollBehavior).toBe('smooth');
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator('#header a[href="#experience"]').click();
+
+  // Sample scrollY on a tight poll rather than at two fixed wall-clock
+  // offsets — under heavy parallel-worker CPU contention a fixed delay can
+  // land after the (browser-timed, not JS-timed) animation has already
+  // finished, making a two-sample comparison flaky. Collecting the full
+  // trajectory and asserting it passed through more than one distinct,
+  // non-zero, non-final value proves the scroll was gradual regardless of
+  // exactly when each sample landed.
+  const samples: number[] = [];
+  const deadline = Date.now() + 2000;
+  while (Date.now() < deadline) {
+    samples.push(await page.evaluate(() => window.scrollY));
+    await page.waitForTimeout(20);
+  }
+  const finalY = samples[samples.length - 1];
+  const intermediate = samples.filter((y) => y > 0 && y < finalY);
+
+  expect(finalY).toBeGreaterThan(0);
+  expect(intermediate.length).toBeGreaterThan(0);
+});
+
+test('spotlight cursor glow follows the mouse (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+  const spotlight = page.locator('div.pointer-events-none.fixed.inset-0.z-30');
+
+  // A single-jump `mouse.move()` right after `goto` is occasionally missed
+  // entirely (dispatched before React's `mousemove` listener has attached
+  // post-hydration) — an artifact of Playwright's synthetic input, not a
+  // real-user scenario. `{ steps }` dispatches intermediate `mousemove`
+  // events along the path, and `expect.poll` absorbs any remaining
+  // scheduling variance, so this reliably observes the update either way.
+  await page.mouse.move(50, 50);
+  await page.mouse.move(100, 200, { steps: 5 });
+  await expect
+    .poll(async () => spotlight.getAttribute('style'))
+    .toContain('100px 200px');
+  const styleAtFirst = await spotlight.getAttribute('style');
+
+  await page.mouse.move(500, 650, { steps: 5 });
+  await expect
+    .poll(async () => spotlight.getAttribute('style'))
+    .toContain('500px 650px');
+  const styleAtSecond = await spotlight.getAttribute('style');
+  expect(styleAtSecond).not.toBe(styleAtFirst);
+});
+
+test('hovering an experience entry dims its siblings, not itself (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+  const items = page.locator('#experience ol.group\\/list > li');
+  await expect(items.first()).toBeVisible();
+
+  const first = items.nth(0);
+  const second = items.nth(1);
+
+  await expect(second).toHaveCSS('opacity', '1');
+  await first.hover();
+  // `toHaveCSS` auto-retries until the `transition-opacity` finishes.
+  await expect(first).toHaveCSS('opacity', '1');
+  await expect(second).toHaveCSS('opacity', '0.5');
+});
+
+test('mobile-only sticky section-title bar shows on mobile, hidden at desktop width (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/redesign');
+  const mobileTitle = page.locator('#about div[aria-hidden="true"]').first();
+  await expect(mobileTitle).toBeVisible();
+  await expect(mobileTitle).toContainText('About');
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(mobileTitle).toBeHidden();
+});
+
+test('active nav indicator uses the neutral palette, not the teal accent (#48)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/redesign');
+  await page.locator('#about').evaluate((el) => {
+    (el as HTMLElement).style.minHeight = '150vh';
+  });
+  const aboutLink = page.locator('#header a[href="#about"]');
+  await expect(aboutLink).toHaveClass(/active/);
+  const className = (await aboutLink.getAttribute('class')) ?? '';
+  expect(className).not.toContain('teal');
+  expect(className).toContain('slate');
+});
+
+test('old routes are unaffected by the redesign shell (#48)', async ({ page }) => {
+  for (const route of ['/', '/blog']) {
+    await page.goto(route);
+    const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+    const hasSpotlight = await page.evaluate(
+      () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
+    );
+    expect(scrollBehavior).toBe('auto');
+    expect(hasSpotlight).toBe(false);
+  }
 });

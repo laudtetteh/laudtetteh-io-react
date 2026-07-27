@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
     <footer
       id="footer"
       data-redesign-section="footer"
-      className="border-t border-slate-200 bg-slate-50 px-6 py-10 dark:border-slate-800 dark:bg-slate-900"
+      className="scroll-mt-16 border-t border-slate-200 bg-slate-50 px-6 py-10 dark:border-slate-800 dark:bg-slate-900 lg:scroll-mt-24"
     >
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
         <p className="text-sm text-slate-600 dark:text-slate-400">

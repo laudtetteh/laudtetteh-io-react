@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import MobileSectionTitle from './MobileSectionTitle';
 
 const MAP_SRC =
   'https://maps.google.com/maps?q=11335%20NE%20122nd%20Way%2C%20Suite%20105%2C%20Kirkland%2C%20WA%2098034&t=&z=15&ie=UTF8&iwloc=&output=embed';
@@ -93,7 +94,11 @@ const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="bg-slate-50 py-20 transition-colors dark:bg-slate-900 sm:py-28">
+    <section
+      id="contact"
+      className="mb-16 scroll-mt-16 bg-slate-50 transition-colors dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+    >
+      <MobileSectionTitle title="Contact" />
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-10 text-center sm:mb-14">
           <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">Get in Touch</h2>

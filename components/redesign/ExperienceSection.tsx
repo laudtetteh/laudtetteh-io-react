@@ -9,8 +9,13 @@
  * fabricated detail — a content-fill item for Laud later, not a decision
  * made by this component.
  *
- * Server-rendered — no client-only gate, no interactivity required.
+ * Server-rendered — no client-only gate, no interactivity required beyond
+ * the pure-CSS hover-dims-siblings effect on the work-history timeline
+ * (`group/list` on the `<ol>`, `group-hover/list:opacity-50` +
+ * `hover:!opacity-100` per entry — ported from the reference, verified live).
  */
+
+import MobileSectionTitle from './MobileSectionTitle';
 
 interface ExperienceEntry {
   dateRange: string;
@@ -97,9 +102,10 @@ export default function ExperienceSection() {
       id="experience"
       data-redesign-section="experience"
       aria-labelledby="experience-heading"
-      className="bg-slate-50 px-6 py-20 dark:bg-slate-900 sm:px-10 lg:px-16"
+      className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
-      <div className="mx-auto max-w-4xl">
+      <MobileSectionTitle title="Experience" />
+      <div className="mx-auto max-w-4xl px-6 sm:px-10 lg:px-16">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <h2
             id="experience-heading"
@@ -119,9 +125,12 @@ export default function ExperienceSection() {
         </div>
 
         {/* Work history timeline */}
-        <ol className="mt-12 space-y-10 border-l border-slate-200 pl-8 dark:border-slate-800">
+        <ol className="group/list mt-12 space-y-10 border-l border-slate-200 pl-8 dark:border-slate-800">
           {experience.map((entry) => (
-            <li key={`${entry.company}-${entry.dateRange}`} className="relative">
+            <li
+              key={`${entry.company}-${entry.dateRange}`}
+              className="group relative transition-opacity motion-reduce:transition-none lg:hover:!opacity-100 lg:group-hover/list:opacity-50"
+            >
               <span
                 aria-hidden="true"
                 className="absolute -left-[2.15rem] top-1.5 h-3 w-3 rounded-full border-2 border-teal-600 bg-slate-50 dark:border-teal-400 dark:bg-slate-900"
