@@ -8,12 +8,13 @@ Note:
 Ensure your `.env` contains MONGO_URI and MONGO_DB_NAME.
 """
 
-import asyncio
-from datetime import datetime
-import core.db
-import json
-from pathlib import Path
 import argparse
+import asyncio
+import json
+from datetime import datetime
+from pathlib import Path
+
+import core.db
 from dateutil.parser import parse as parse_date
 
 # Sample blog posts
@@ -22,7 +23,9 @@ posts = [
         "title": "Blog Post 1",
         "slug": "first-post",
         "summary": "This is a short summary of the first post.",
-        "content": {"html": "<p>This is the full content of the first blog post. You can use HTML here.</p>"},
+        "content": {
+            "html": "<p>This is the full content of the first blog post. You can use HTML here.</p>"
+        },
         "date": datetime(2024, 1, 1),
         "status": "published",
         "categories": ["Tech:FastAPI", "Tech:Backend"],
@@ -34,7 +37,12 @@ posts = [
         "title": "Blog Post 2",
         "slug": "second-post",
         "summary": "Another brief summary.",
-        "content": {"html": "<p>This is the second post's content. Lots of interesting insights go here.</p>"},
+        "content": {
+            "html": (
+                "<p>This is the second post's content. "
+                "Lots of interesting insights go here.</p>"
+            )
+        },
         "date": datetime(2024, 2, 1),
         "status": "draft",
         "categories": ["Infra:DevOps", "Infra:MongoDB"],
@@ -58,17 +66,28 @@ posts = [
 
 # Grouped categories
 categories = [
-    {"name": "My Journey", "slug": "my-journey", "group": "My Journey", "createdAt": datetime.utcnow()},
-    {"name": "Tech & Projects", "slug": "tech-projects", "group": "Tech & Projects", "createdAt": datetime.utcnow()},
-    {"name": "Career & Mindset", "slug": "career-mindset", "group": "Career & Mindset", "createdAt": datetime.utcnow()},
-    {"name": "Life & Balance", "slug": "life-balance", "group": "Life & Balance", "createdAt": datetime.utcnow()},
+    {
+        "name": "My Journey", "slug": "my-journey",
+        "group": "My Journey", "createdAt": datetime.utcnow(),
+    },
+    {
+        "name": "Tech & Projects", "slug": "tech-projects",
+        "group": "Tech & Projects", "createdAt": datetime.utcnow(),
+    },
+    {
+        "name": "Career & Mindset", "slug": "career-mindset",
+        "group": "Career & Mindset", "createdAt": datetime.utcnow(),
+    },
+    {
+        "name": "Life & Balance", "slug": "life-balance",
+        "group": "Life & Balance", "createdAt": datetime.utcnow(),
+    },
 ]
 
 POSTS_FILE = Path(__file__).parent / "out" / "posts.json"
 
 async def seed(mode: str):
     await core.db.connect_to_mongo()
-    db = core.db.get_db()
 
     if mode == 'replace':
         print("🔄 Clearing existing data (replace mode)...")
@@ -81,7 +100,7 @@ async def seed(mode: str):
         # Load posts from posts.json if it exists
         if POSTS_FILE.exists():
             print("📝 Inserting blog posts from posts.json...")
-            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+            with open(POSTS_FILE, encoding="utf-8") as f:
                 posts = json.load(f)
             await core.db.db.posts.insert_many(posts)
         else:
@@ -90,11 +109,13 @@ async def seed(mode: str):
         print("🔄 Upserting posts and categories (update mode)...")
         # Upsert categories
         for cat in categories:
-            await core.db.db.categories.update_one({"slug": cat["slug"]}, {"$set": cat}, upsert=True)
+            await core.db.db.categories.update_one(
+                {"slug": cat["slug"]}, {"$set": cat}, upsert=True
+            )
         # Upsert posts
         if POSTS_FILE.exists():
             print("📝 Upserting blog posts from posts.json...")
-            with open(POSTS_FILE, "r", encoding="utf-8") as f:
+            with open(POSTS_FILE, encoding="utf-8") as f:
                 posts = json.load(f)
             for post in posts:
                 # Fallback logic: if only 'date' is present, use it for the others
@@ -107,7 +128,11 @@ async def seed(mode: str):
                     post["date_updated"] = None
                 # Always include 'date' as legacy/fallback
                 if not date_val:
-                    post["date"] = post["date_published"] or post["date_created"] or datetime.utcnow().isoformat()
+                    post["date"] = (
+                        post["date_published"]
+                        or post["date_created"]
+                        or datetime.utcnow().isoformat()
+                    )
                 # Parse all date fields to datetime
                 for field in ["date", "date_created", "date_published", "date_updated"]:
                     val = post.get(field)
@@ -116,7 +141,9 @@ async def seed(mode: str):
                             post[field] = parse_date(val)
                         except Exception:
                             pass
-                await core.db.db.posts.update_one({"slug": post["slug"]}, {"$set": post}, upsert=True)
+                await core.db.db.posts.update_one(
+                    {"slug": post["slug"]}, {"$set": post}, upsert=True
+                )
         else:
             print("⚠️ posts.json not found. No blog posts upserted.")
 
@@ -125,8 +152,14 @@ async def seed(mode: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--update', action='store_true', help='Update existing posts or insert new ones (default)')
-    group.add_argument('--replace', action='store_true', help='Delete all posts and replace with seed data')
+    group.add_argument(
+        '--update', action='store_true',
+        help='Update existing posts or insert new ones (default)',
+    )
+    group.add_argument(
+        '--replace', action='store_true',
+        help='Delete all posts and replace with seed data',
+    )
     args = parser.parse_args()
     mode = 'replace' if args.replace else 'update'
     asyncio.run(seed(mode))
