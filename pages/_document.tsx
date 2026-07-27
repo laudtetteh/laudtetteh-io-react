@@ -1,17 +1,17 @@
 import NextDocument, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 
 interface DocumentProps {
-  isRedesignRoute: boolean;
+  isNewDesignRoute: boolean;
 }
 
 /**
  * `scroll-smooth` (Tailwind's `scroll-behavior: smooth`) has to live on
  * `<html>` to affect whole-document/anchor-link scrolling, but this file is
- * shared by every route in the pages router — the old homepage, `/blog`,
- * and `/admin` must not pick up smooth-scroll behavior they were never
- * designed around. `getInitialProps` gives us `ctx.pathname` at render time
- * (works for both SSR and the `/redesign` route's SSG build), so the class
- * is only added there. `motion-safe:` keeps it off entirely for
+ * shared by every route in the pages router — `/blog` and `/admin` must not
+ * pick up smooth-scroll behavior they were never designed around.
+ * `getInitialProps` gives us `ctx.pathname` at render time (works for SSR
+ * and SSG alike), so the class is only added on routes rendering the new
+ * design. `motion-safe:` keeps it off entirely for
  * `prefers-reduced-motion: reduce`, matching this project's existing
  * pattern (`ThemeToggle`, tagline rotation) of respecting that preference.
  *
@@ -20,15 +20,23 @@ interface DocumentProps {
  * every route via `_app.tsx`) sets `overflow-x: hidden` on `html`/`body`,
  * which silently breaks `position: sticky` for `Header.tsx`'s sidebar (the
  * browser falls back to treating it as `static`). `styles/globals.css` uses
- * this attribute to restore `overflow` to `visible` on `/redesign` only —
- * see the comment there for the full explanation.
+ * this attribute to restore `overflow` to `visible` wherever the new design
+ * renders — see the comment there for the full explanation.
+ *
+ * `isNewDesignRoute` covers both `/` (the live homepage, post-cutover —
+ * #17) and `/redesign` (kept briefly as a redirect for a verification
+ * window — see `pages/redesign.tsx`). The attribute's VALUE stays the
+ * literal string `"redesign"` regardless of which of those two paths is
+ * active: it means "the new design is active," not "the URL is
+ * `/redesign"` — the CSS in `styles/globals.css` only ever checks for the
+ * attribute's presence/value, never the route itself.
  */
-export default function Document({ isRedesignRoute }: DocumentProps) {
+export default function Document({ isNewDesignRoute }: DocumentProps) {
     return (
       <Html
         lang="en"
-        className={isRedesignRoute ? 'motion-safe:scroll-smooth' : undefined}
-        data-route={isRedesignRoute ? 'redesign' : undefined}
+        className={isNewDesignRoute ? 'motion-safe:scroll-smooth' : undefined}
+        data-route={isNewDesignRoute ? 'redesign' : undefined}
       >
       <Head>
         {/* Blocking inline script: sets the `dark` class on <html> before paint to
@@ -63,5 +71,6 @@ export default function Document({ isRedesignRoute }: DocumentProps) {
 
 Document.getInitialProps = async (ctx: DocumentContext) => {
   const initialProps = await NextDocument.getInitialProps(ctx);
-  return { ...initialProps, isRedesignRoute: ctx.pathname === '/redesign' };
+  const isNewDesignRoute = ctx.pathname === '/' || ctx.pathname === '/redesign';
+  return { ...initialProps, isNewDesignRoute };
 };
