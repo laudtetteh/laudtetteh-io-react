@@ -24,9 +24,9 @@ function toTimestamp(post: PostData): number {
 }
 
 /**
- * Fetches the latest `count` published posts, sorted by `date_published`
- * descending — the real data source for the redesign's Writing section
- * (`docs/rebuild-spike--MASTER.md` §1 decision #10).
+ * Fetches every published post, sorted by `date_published` descending.
+ * Shared by `getLatestPosts` and `getAllPublishedPosts` so the fetch/filter/
+ * sort logic lives in exactly one place.
  *
  * Server-side only (relies on `API_SERVER`, the Docker-internal address).
  * Matches `getSandboxRepos()`'s (`lib/github.ts`) error-handling contract:
@@ -34,7 +34,7 @@ function toTimestamp(post: PostData): number {
  * run this inside their own `getStaticProps` try/catch and fall back to an
  * empty array on failure, deciding their own revalidate behavior.
  */
-export async function getLatestPosts(count: number): Promise<PostData[]> {
+async function fetchPublishedPosts(): Promise<PostData[]> {
   const res = await fetch(POSTS_ENDPOINT);
   if (!res.ok) {
     throw new Error(`Failed to fetch posts: ${res.status}`);
@@ -42,6 +42,23 @@ export async function getLatestPosts(count: number): Promise<PostData[]> {
   const allPosts: PostData[] = await res.json();
   return allPosts
     .filter(post => post.status === 'published')
-    .sort((a, b) => toTimestamp(b) - toTimestamp(a))
-    .slice(0, count);
+    .sort((a, b) => toTimestamp(b) - toTimestamp(a));
+}
+
+/**
+ * Fetches the latest `count` published posts — the real data source for the
+ * redesign's Writing section (`docs/rebuild-spike--MASTER.md` §1 decision #10).
+ */
+export async function getLatestPosts(count: number): Promise<PostData[]> {
+  const posts = await fetchPublishedPosts();
+  return posts.slice(0, count);
+}
+
+/**
+ * Fetches all published posts (no slice) — the data source for `/blog`'s
+ * listing page, so its initial server-rendered HTML contains real post
+ * content instead of relying on a client-only fetch (#16).
+ */
+export async function getAllPublishedPosts(): Promise<PostData[]> {
+  return fetchPublishedPosts();
 }

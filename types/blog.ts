@@ -11,6 +11,8 @@ export interface PostData {
   date_created?: string;
   date_published?: string;
   date_updated?: string;
+  /** Backend's legacy/fallback date field (see `backend/app/models/blog.py`). */
+  date?: string;
 }
 
 export interface BlogPostFormData {
