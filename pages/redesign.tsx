@@ -1,51 +1,24 @@
-import type { GetStaticProps, NextPage } from 'next';
-import Head from 'next/head';
-import RedesignLayout from '@/components/redesign/RedesignLayout';
-import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '@/lib/github';
-import { getLatestPosts } from '@/lib/blog';
-import type { GithubRepo } from '@/types/github';
-import type { PostData } from '@/types/blog';
+import type { GetServerSideProps, NextPage } from 'next';
 
-const LATEST_POSTS_COUNT = 4;
-// Blog content changes more often than GitHub repo topics — a shorter
-// revalidate window keeps the Writing section closer to real-time.
-const POSTS_REVALIDATE_SECONDS = 3600; // 1 hour
+/**
+ * `/redesign` was the side-by-side preview route for the new design while it
+ * was being built (Sprint 1). The cutover (#17) made the same `RedesignLayout`
+ * live at `/` instead. Kept as a thin redirect — rather than deleted outright —
+ * for a short verification window: any bookmarks, in-flight links, or search
+ * index entries pointing at `/redesign` still land on working content, and the
+ * redirect is trivially reversible if the cutover needs to be rolled back.
+ * Safe to delete once `/` has been confirmed stable in production (tracked
+ * alongside the rest of the legacy-template cleanup, #20).
+ */
+const RedesignRedirect: NextPage = () => null;
 
-interface RedesignPageProps {
-  repos: GithubRepo[];
-  posts: PostData[];
-}
-
-const Redesign: NextPage<RedesignPageProps> = ({ repos, posts }) => {
-  return (
-    <>
-      <Head>
-        <title>Laud Tetteh — Redesign Preview</title>
-      </Head>
-      <RedesignLayout repos={repos} posts={posts} />
-    </>
-  );
-};
-
-export const getStaticProps: GetStaticProps<RedesignPageProps> = async () => {
-  const [reposResult, postsResult] = await Promise.allSettled([getSandboxRepos(), getLatestPosts(LATEST_POSTS_COUNT)]);
-
-  if (reposResult.status === 'rejected') {
-    console.error(reposResult.reason);
-  }
-  if (postsResult.status === 'rejected') {
-    console.error(postsResult.reason);
-  }
-
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
-    props: {
-      repos: reposResult.status === 'fulfilled' ? reposResult.value : [],
-      posts: postsResult.status === 'fulfilled' ? postsResult.value : [],
+    redirect: {
+      destination: '/',
+      permanent: false,
     },
-    // Shortest of the two sections' desired freshness windows, since both
-    // props share one page-level revalidate.
-    revalidate: Math.min(SANDBOX_REVALIDATE_SECONDS, POSTS_REVALIDATE_SECONDS),
   };
 };
 
-export default Redesign;
+export default RedesignRedirect;
