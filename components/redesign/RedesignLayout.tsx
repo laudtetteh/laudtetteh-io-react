@@ -25,16 +25,20 @@ interface RedesignLayoutProps {
  * full-width in document order.
  *
  * Also owns the mouse-tracking spotlight cursor effect: `useSpotlight`
- * tracks the raw viewport pointer position and this component paints it as
- * a radial-gradient glow on a `fixed`/`lg:absolute` overlay positioned
- * relative to the outermost `group/spotlight` wrapper, ported like-for-like
- * from the reference (verified live against `https://brittanychiang.com`).
+ * tracks the pointer relative to the overlay's own live bounding rect
+ * (correct whether the overlay is currently `fixed` or `lg:absolute` — see
+ * the hook's own doc comment for why raw viewport coordinates alone drift
+ * off-cursor after scrolling at desktop widths) and this component paints
+ * it as a radial-gradient glow on that overlay, positioned relative to the
+ * outermost `group/spotlight` wrapper.
  */
 export default function RedesignLayout({ repos, posts }: RedesignLayoutProps) {
-  const spotlightBackground = useSpotlight();
+  const { background: spotlightBackground, ref: spotlightRef } = useSpotlight();
 
   return (
-    <div className={`${inter.variable} font-inter group/spotlight relative`}>
+    <div
+      className={`${inter.variable} font-inter group/spotlight relative selection:bg-teal-300 selection:text-teal-900`}
+    >
       <a
         href="#content"
         className="absolute left-0 top-0 z-50 block -translate-x-full rounded bg-teal-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white focus:outline-none focus-visible:translate-x-0 focus-visible:ring-2 focus-visible:ring-teal-300 dark:bg-teal-400 dark:text-slate-900"
@@ -43,6 +47,7 @@ export default function RedesignLayout({ repos, posts }: RedesignLayoutProps) {
       </a>
 
       <div
+        ref={spotlightRef}
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-30 transition duration-300 lg:absolute"
         style={{ background: spotlightBackground }}

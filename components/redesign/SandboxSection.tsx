@@ -130,7 +130,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                       {repo.topics.map(topic => (
                         <li
                           key={topic}
-                          className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-600 dark:border-slate-800 dark:text-slate-400"
+                          className="rounded-full bg-teal-600/10 px-3 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300"
                         >
                           {topic}
                         </li>

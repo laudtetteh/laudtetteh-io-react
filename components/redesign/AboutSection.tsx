@@ -133,7 +133,7 @@ export default function AboutSection() {
                       {row.map(tool => (
                         <span
                           key={tool}
-                          className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400"
+                          className="rounded-full bg-teal-600/10 px-3 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300"
                         >
                           {tool}
                         </span>
