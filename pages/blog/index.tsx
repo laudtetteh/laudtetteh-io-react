@@ -74,13 +74,16 @@ const BlogIndex: NextPage<BlogIndexProps> = ({ posts }) => {
         </div>
 
         {paginatedPosts.length > 0 ? (
-          <div className="mt-10 space-y-8">
+          <div key={`${selectedCategory}-${currentPage}`} className="mt-10 animate-fade-in space-y-8 motion-reduce:animate-none">
             {paginatedPosts.map(post => (
               <PostCard key={post.slug} post={post} loggedIn={loggedIn} />
             ))}
           </div>
         ) : (
-          <p className="mt-10 rounded-lg border border-dashed border-slate-200 px-6 py-10 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+          <p
+            key={`${selectedCategory}-${currentPage}`}
+            className="mt-10 animate-fade-in rounded-lg border border-dashed border-slate-200 px-6 py-10 text-center text-sm text-slate-600 motion-reduce:animate-none dark:border-slate-800 dark:text-slate-400"
+          >
             {selectedCategory === 'All' ? 'No posts available yet.' : `No posts found in "${selectedCategory}" category.`}
           </p>
         )}

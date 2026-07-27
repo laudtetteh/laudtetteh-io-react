@@ -50,6 +50,33 @@ test('sandbox section renders real GitHub repos with a working category filter',
   await expect(sandbox.locator('article').first()).toBeVisible();
 });
 
+test('sandbox filter results fade in on click rather than snapping instantly', async ({ page }) => {
+  await page.goto('/redesign');
+  const sandbox = page.locator('#sandbox');
+  const grid = sandbox.locator('.animate-fade-in').first();
+  await expect(grid).toBeVisible();
+
+  await sandbox.getByRole('button', { name: 'Backend' }).click();
+
+  // Poll opacity immediately after the click — if a real fade-in animation
+  // is running, opacity starts below 1 and rises; an instant swap would
+  // read 1 on every sample. Mirrors the polling approach already used for
+  // the smooth-scroll assertion above, since a fixed-delay sample can land
+  // after a short animation has already finished under CPU contention.
+  const samples: number[] = [];
+  const deadline = Date.now() + 1000;
+  while (Date.now() < deadline) {
+    samples.push(await grid.evaluate(el => parseFloat(getComputedStyle(el).opacity)));
+    await page.waitForTimeout(20);
+  }
+  expect(samples.some(o => o < 0.95)).toBe(true);
+  // `toHaveCSS` auto-retries rather than trusting the sampling loop's last
+  // value, which can land mid-animation (not yet settled at 1) under heavy
+  // parallel-worker CPU contention — same class of timing issue documented
+  // on the spotlight-cursor and scroll-spy tests above.
+  await expect(grid).toHaveCSS('opacity', '1');
+});
+
 test('writing section renders real blog teaser cards in initial HTML', async ({ page }) => {
   await page.goto('/redesign');
   const writing = page.locator('#writing');

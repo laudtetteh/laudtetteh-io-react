@@ -82,7 +82,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                   type="button"
                   onClick={() => setActiveCategory(filter.id)}
                   aria-pressed={activeCategory === filter.id}
-                  className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300 ease-out motion-reduce:transition-none active:scale-95 ${
                     activeCategory === filter.id
                       ? 'border-teal-600 bg-teal-600 text-white dark:border-teal-400 dark:bg-teal-400 dark:text-slate-900'
                       : 'border-slate-200 text-slate-600 hover:border-teal-600/40 hover:text-teal-600 dark:border-slate-800 dark:text-slate-400 dark:hover:border-teal-400/40 dark:hover:text-teal-400'
@@ -94,7 +94,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
             </div>
 
             {filteredRepos.length > 0 ? (
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div key={activeCategory} className="mt-8 grid animate-fade-in gap-6 motion-reduce:animate-none sm:grid-cols-2 lg:grid-cols-3">
                 {filteredRepos.map(repo => (
                   <article
                     key={repo.id}
@@ -140,7 +140,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                 ))}
               </div>
             ) : (
-              <p className="mt-10 text-center text-sm text-slate-600 dark:text-slate-400">
+              <p key={activeCategory} className="mt-10 animate-fade-in text-center text-sm text-slate-600 motion-reduce:animate-none dark:text-slate-400">
                 No repos in this category right now.
               </p>
             )}
