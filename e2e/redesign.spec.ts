@@ -295,16 +295,17 @@ test('active nav indicator uses the neutral palette, not the teal accent (#48)',
   expect(className).toContain('slate');
 });
 
-test('old routes are unaffected by the redesign shell (#48)', async ({ page }) => {
-  for (const route of ['/', '/blog']) {
-    await page.goto(route);
-    const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
-    const hasSpotlight = await page.evaluate(
-      () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
-    );
-    expect(scrollBehavior).toBe('auto');
-    expect(hasSpotlight).toBe(false);
-  }
+test('legacy homepage route is unaffected by the redesign shell (#48)', async ({ page }) => {
+  // `/blog` opted into the redesign shell as of #60 — see e2e/blog.spec.ts for
+  // its equivalent "does have the shell" coverage. `/` (the still-legacy
+  // homepage, pending the #17 cutover) is the only route left to assert here.
+  await page.goto('/');
+  const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+  const hasSpotlight = await page.evaluate(
+    () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
+  );
+  expect(scrollBehavior).toBe('auto');
+  expect(hasSpotlight).toBe(false);
 });
 
 test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
@@ -314,13 +315,12 @@ test('headings use the Inter font, not the legacy Syne theme font (#19)', async 
   expect(h1Family).not.toContain('Syne');
   expect(h2Family).not.toContain('Syne');
 
-  // / and /blog keep the legacy Syne heading font untouched — this fix is
-  // scoped to `[data-route="redesign"]` only.
-  for (const route of ['/', '/blog']) {
-    await page.goto(route);
-    const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
-    expect(dataRoute).toBeNull();
-  }
+  // `/` keeps the legacy Syne heading font untouched — this fix is scoped to
+  // `[data-route="redesign"]`, which `/blog` now opts into as of #60 (see
+  // e2e/blog.spec.ts for its "does get data-route" coverage).
+  await page.goto('/');
+  const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
+  expect(dataRoute).toBeNull();
 });
 
 test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {

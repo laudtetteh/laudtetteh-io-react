@@ -40,9 +40,10 @@
  * `public/css/style.css` is imported *after* this file in `_app.tsx`, so
  * `!important` is required to win the cascade regardless of import order.
  * Scoped to `[data-route="redesign"]` (set on `<html>` by
- * `pages/_document.tsx` only for the `/redesign` route) so the old
- * homepage, `/blog`, and `/admin` keep the legacy theme's overflow
- * behavior unchanged.
+ * `pages/_document.tsx` for every route that has opted into the redesign
+ * system — `/redesign` and, as of #60, `/blog`/`/blog/[slug]`) so the old
+ * homepage and `/admin` keep the legacy theme's overflow behavior
+ * unchanged.
  *
  * Same file's `body{ background-color: #eee; color: #868a9b; }` (a direct
  * element-selector rule, so it beats the Tailwind dark:bg-slate-900 classes
@@ -83,8 +84,8 @@ html[data-route='redesign']:not(.dark) body {
  * `public/css/style.css` is imported *after* this file in `_app.tsx`, so
  * `!important` is required to win the cascade regardless of import order,
  * same as the overflow fix above. Scoped to `[data-route="redesign"]` so
- * the old homepage, `/blog`, and `/admin` keep the legacy Syne heading
- * font unchanged.
+ * the old homepage and `/admin` keep the legacy Syne heading font
+ * unchanged (`/blog`/`/blog/[slug]` are in scope as of #60).
  */
 html[data-route='redesign'] h1,
 html[data-route='redesign'] h2,
