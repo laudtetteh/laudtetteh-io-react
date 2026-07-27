@@ -44,6 +44,32 @@ test('category filter link updates the URL and re-filters', async ({ page }) => 
   await expect(page).toHaveURL(new RegExp(href!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 });
 
+test('switching category filter resets pagination back to page 1', async ({ page }) => {
+  await page.goto('/blog', { waitUntil: 'domcontentloaded' });
+  const nav = page.getByRole('navigation', { name: 'Pagination' });
+  const pageTwoButton = nav.getByRole('button', { name: '2', exact: true });
+  test.skip((await pageTwoButton.count()) === 0, 'fewer than 2 pages of posts available');
+
+  const categoryLinks = page.locator('a[href^="/blog?category="]');
+  const href = await categoryLinks.first().getAttribute('href');
+
+  // Baseline: what this category looks like with no stale pagination state.
+  await page.goto(href!, { waitUntil: 'domcontentloaded' });
+  const baselineArticleCount = await page.locator('article').count();
+  const baselineEmptyState = await page.getByText(/^No posts found in/).count();
+
+  // Regression repro: switching categories while on page 2+ previously left
+  // `currentPage` stale, slicing past the end of the newly-filtered array
+  // and showing "no posts found" even when matching posts existed.
+  await page.goto('/blog', { waitUntil: 'domcontentloaded' });
+  await pageTwoButton.click();
+  await expect(nav.getByRole('button', { name: '2', exact: true })).toHaveAttribute('aria-current', 'page');
+  await categoryLinks.first().click();
+
+  await expect(page.locator('article')).toHaveCount(baselineArticleCount);
+  expect(await page.getByText(/^No posts found in/).count()).toBe(baselineEmptyState);
+});
+
 test('archive results fade in on filter click rather than snapping instantly', async ({ page }) => {
   await page.goto('/blog', { waitUntil: 'domcontentloaded' });
   const categoryLinks = page.locator('a[href^="/blog?category="]');

@@ -32,7 +32,10 @@ const BlogIndex: NextPage<BlogIndexProps> = ({ posts }) => {
   // Get all unique categories from posts
   const allCategories = ['All', ...Array.from(new Set(posts.flatMap(post => post.categories)))];
 
-  // On mount, set category from URL param if present
+  // On mount, set category from URL param if present. Also resets pagination —
+  // otherwise switching to a category with fewer posts while on page 2+ can
+  // slice past the end of the filtered array and show "no posts found" even
+  // though matching posts exist, until the page is manually reset.
   useEffect(() => {
     if (!router.isReady) return;
     const urlCategory = router.query.category;
@@ -41,6 +44,7 @@ const BlogIndex: NextPage<BlogIndexProps> = ({ posts }) => {
     } else {
       setSelectedCategory('All');
     }
+    setCurrentPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.category, posts]);
 

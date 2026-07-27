@@ -24,6 +24,7 @@ export default function CategoryFilter({ categories, selectedCategory }: Categor
             key={category}
             href={category === 'All' ? '/blog' : `/blog?category=${encodeURIComponent(category)}`}
             scroll={false}
+            aria-current={isActive ? 'page' : undefined}
             className={classNames(
               'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-300 ease-out motion-reduce:transition-none active:scale-95',
               isActive

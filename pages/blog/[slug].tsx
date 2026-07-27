@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import BlogLayout from '@/components/redesign/blog/BlogLayout';
 
 interface BlogPost {
-  title: string;
+  /** Typed as a union because the API has historically sent this as an array in edge cases. */
+  title: string | string[];
   slug: string;
   content: { html: string };
   summary?: string;
@@ -66,9 +67,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
   const displayDate = post.date_published || post.date;
   const formattedDate = formatDate(displayDate);
-  // Defensive: the API contract types `title` as a string, but has historically
-  // sent it as an array in edge cases (matches the legacy page's same guard).
-  const displayTitle = Array.isArray(post.title) ? (post.title as string[]).join(' ') : post.title;
+  const displayTitle = Array.isArray(post.title) ? post.title.join(' ') : post.title;
 
   return (
     <BlogLayout title={`${displayTitle} | Laud Tetteh`} description={post.summary ?? ''}>
@@ -130,10 +129,20 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
 
         <h1 className="mt-6 text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">{displayTitle}</h1>
 
-        <div
-          className="prose prose-slate mt-8 max-w-3xl dark:prose-invert prose-a:text-teal-600 dark:prose-a:text-teal-400"
-          dangerouslySetInnerHTML={{ __html: post.content.html }}
-        />
+        {/*
+          `styles/globals.css`'s unscoped `.prose { max-width: 100% !important }`
+          utility always wins over a `max-w-*` class applied to that same
+          `.prose` element (importance beats specificity regardless of
+          layer/order) — every other `.prose` usage in this codebase works
+          around it with `max-w-none` rather than fighting it. The width cap
+          has to live on this wrapping div instead.
+        */}
+        <div className="mt-8 max-w-3xl">
+          <div
+            className="prose prose-slate dark:prose-invert prose-a:text-teal-600 dark:prose-a:text-teal-400"
+            dangerouslySetInnerHTML={{ __html: post.content.html }}
+          />
+        </div>
 
         {loggedIn && (
           <div className="mt-8">
