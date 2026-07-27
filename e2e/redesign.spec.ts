@@ -322,3 +322,19 @@ test('headings use the Inter font, not the legacy Syne theme font (#19)', async 
     expect(dataRoute).toBeNull();
   }
 });
+
+test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  await page.keyboard.press('Tab');
+  const active = await page.evaluate(() => ({
+    tag: document.activeElement?.tagName,
+    href: document.activeElement?.getAttribute('href'),
+    text: document.activeElement?.textContent,
+  }));
+  expect(active.tag).toBe('A');
+  expect(active.href).toBe('#content');
+  expect(active.text).toContain('Skip to Content');
+
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#content$/);
+});
