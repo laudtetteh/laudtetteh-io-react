@@ -5,12 +5,13 @@ Handles token creation and verification using a shared secret.
 Provides OAuth2 bearer token dependency and validates user identity.
 """
 
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
 import os
+from datetime import datetime, timedelta
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from pydantic import BaseModel
 
 # Configuration from environment
 SECRET_KEY = os.getenv("JWT_SECRET", "supersecretkey")
@@ -63,4 +64,4 @@ def verify_token(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError as e:
         print(f"❌ JWTError: {str(e)}")
-        raise credentials_exception
+        raise credentials_exception from e

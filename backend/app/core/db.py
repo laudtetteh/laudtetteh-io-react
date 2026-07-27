@@ -7,11 +7,13 @@ This module:
 - Provides `get_db()` to retrieve the db instance
 - Allows scripts like `seed.py` to use the same connection logic
 
-Note: For FastAPI routes, `posts_collection = db["posts"]` is done separately after `connect_to_mongo()` is called.
+Note: For FastAPI routes, `posts_collection = db["posts"]` is done separately
+after `connect_to_mongo()` is called.
 """
 
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
+
+from motor.motor_asyncio import AsyncIOMotorClient
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "laud_blog")

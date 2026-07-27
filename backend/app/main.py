@@ -9,18 +9,18 @@ Handles:
 - S3 upload
 """
 
-from fastapi import FastAPI, HTTPException, Request, status, Depends
+import os
+
+from api.blog import router as blog_router
+from api.blog import set_categories_collection, set_posts_collection
+from api.contact import router as contact_router
+from api.s3 import router as upload_router
+from core.auth import ADMIN_PASSWORD, ADMIN_USERNAME, Token, create_access_token
+from core.db import connect_to_mongo, get_db
+from core.logging import setup_logging
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from core.auth import Token, create_access_token, verify_token, ADMIN_USERNAME, ADMIN_PASSWORD
-from pydantic import BaseModel, EmailStr
-import os
-from core.logging import setup_logging
-
-from api.blog import router as blog_router, set_posts_collection, set_categories_collection
-from api.s3 import router as upload_router
-from api.contact import router as contact_router
-from core.db import connect_to_mongo, get_db
 
 # ----------------------
 # Logging Configuration
