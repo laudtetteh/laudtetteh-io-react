@@ -325,7 +325,17 @@ test('headings use the Inter font, not the legacy Syne theme font (#19)', async 
 
 test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {
   await page.goto('/redesign');
+  await page.locator('a[href="#content"]').waitFor();
+
+  // Explicitly establish a known focus baseline (`<body>`) before pressing
+  // Tab, rather than relying on the browser's implicit post-load focus
+  // state — under heavy parallel-worker CPU contention a Tab press sent
+  // right after `goto` can otherwise race the browser's own focus-context
+  // setup (the same class of synthetic-input timing issue already
+  // documented on the spotlight-cursor test above).
+  await page.evaluate(() => document.body.focus());
   await page.keyboard.press('Tab');
+
   const active = await page.evaluate(() => ({
     tag: document.activeElement?.tagName,
     href: document.activeElement?.getAttribute('href'),
