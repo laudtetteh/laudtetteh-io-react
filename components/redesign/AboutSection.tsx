@@ -1,4 +1,5 @@
 import React from 'react';
+import MobileSectionTitle from './MobileSectionTitle';
 
 /** A single row in the "About" info table. */
 interface InfoItem {
@@ -95,9 +96,10 @@ export default function AboutSection() {
     <section
       id="about"
       aria-label="About me"
-      className="border-b border-slate-200 bg-slate-50 px-6 py-16 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 sm:px-10 lg:px-16"
+      className="mb-16 scroll-mt-16 border-b border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
-      <div className="mx-auto max-w-3xl">
+      <MobileSectionTitle title="About" />
+      <div className="mx-auto max-w-3xl px-6 sm:px-10 lg:px-16">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
           About
         </h2>

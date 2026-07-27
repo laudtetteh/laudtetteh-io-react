@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import MobileSectionTitle from './MobileSectionTitle';
 
 /**
  * A single curated project card. Structurally mirrors the reference site's
@@ -53,18 +54,19 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="bg-slate-50 py-24 dark:bg-slate-900"
+      className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
+      <MobileSectionTitle title="Projects" />
       <div className="mx-auto max-w-5xl px-6">
         <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">
           Projects
         </h2>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2">
+        <div className="group/list mt-12 grid gap-8 sm:grid-cols-2">
           {projects.map(project => (
             <article
               key={project.image}
-              className="group overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50"
+              className="group overflow-hidden rounded-lg border border-slate-200 bg-white transition-opacity motion-reduce:transition-none dark:border-slate-800 dark:bg-slate-900/50 lg:hover:!opacity-100 lg:group-hover/list:opacity-50"
             >
               <div className="relative aspect-video w-full overflow-hidden border-b border-slate-200 dark:border-slate-800">
                 <Image

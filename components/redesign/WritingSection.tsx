@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { PostData } from '@/types/blog';
+import MobileSectionTitle from './MobileSectionTitle';
 
 interface WritingSectionProps {
   posts: PostData[];
@@ -37,7 +38,11 @@ export default function WritingSection({ posts }: WritingSectionProps) {
   const hasPosts = posts.length > 0;
 
   return (
-    <section id="writing" className="bg-slate-50 py-24 dark:bg-slate-900">
+    <section
+      id="writing"
+      className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+    >
+      <MobileSectionTitle title="Writing" />
       <div className="mx-auto max-w-5xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
