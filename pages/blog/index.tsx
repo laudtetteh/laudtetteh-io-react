@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import type { GetStaticProps, NextPage } from 'next';
 import BlogHeader from '@/components/BlogHeader';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 import { useBodyClass } from '@/lib/useBodyClass';
 import { useRouter } from 'next/router';
+import { getAllPublishedPosts } from '@/lib/blog';
+import type { PostData } from '@/types/blog';
 
-type BlogPost = {
-  title: string;
-  summary: string;
-  date: string;
-  date_published?: string;
-  featuredImage: string;
-  categories: string[];
-  slug: string;
-  status: string;
-  featured?: boolean;
-  weight?: number;
-};
+// Blog content changes more often than a static page but not so often that
+// visitors need second-by-second freshness — matches the precedent set by
+// the redesign's own POSTS_REVALIDATE_SECONDS (`pages/redesign.tsx`).
+const BLOG_INDEX_REVALIDATE_SECONDS = 3600; // 1 hour
 
-const BlogIndex: React.FC = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+interface BlogIndexProps {
+  posts: PostData[];
+}
+
+const BlogIndex: NextPage<BlogIndexProps> = ({ posts }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,13 +28,6 @@ const BlogIndex: React.FC = () => {
   useBodyClass('page-blog');
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setPosts(data);
-        else console.error("❌ Unexpected blog response:", data);
-      });
-
     const token = typeof window !== 'undefined' && localStorage.getItem('token');
     setLoggedIn(Boolean(token));
   }, []);
@@ -64,8 +55,8 @@ const BlogIndex: React.FC = () => {
 
   // Sort by date_published (newest first)
   const sortedPosts = filteredPosts.sort((a, b) => {
-    const aDate = new Date(a.date_published || a.date).getTime();
-    const bDate = new Date(b.date_published || b.date).getTime();
+    const aDate = new Date(a.date_published || a.date || 0).getTime();
+    const bDate = new Date(b.date_published || b.date || 0).getTime();
     return bDate - aDate;
   });
 
@@ -286,6 +277,20 @@ const BlogIndex: React.FC = () => {
       <Footer />
     </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
+  let posts: PostData[] = [];
+  try {
+    posts = await getAllPublishedPosts();
+  } catch (err) {
+    console.error(err);
+  }
+
+  return {
+    props: { posts },
+    revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
+  };
 };
 
 export default BlogIndex;
