@@ -306,3 +306,19 @@ test('old routes are unaffected by the redesign shell (#48)', async ({ page }) =
     expect(hasSpotlight).toBe(false);
   }
 });
+
+test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
+  await page.goto('/redesign');
+  const h1Family = await page.locator('#header h1').evaluate((el) => getComputedStyle(el).fontFamily);
+  const h2Family = await page.locator('#about h2').evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(h1Family).not.toContain('Syne');
+  expect(h2Family).not.toContain('Syne');
+
+  // / and /blog keep the legacy Syne heading font untouched — this fix is
+  // scoped to `[data-route="redesign"]` only.
+  for (const route of ['/', '/blog']) {
+    await page.goto(route);
+    const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
+    expect(dataRoute).toBeNull();
+  }
+});

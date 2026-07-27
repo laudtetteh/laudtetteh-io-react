@@ -49,3 +49,34 @@ html[data-route='redesign'] body {
   overflow-x: visible !important;
   overflow-y: visible !important;
 }
+
+/*
+ * `/redesign` heading font-family fix (#19).
+ *
+ * `public/css/style.css` (the legacy jQuery theme, loaded globally for
+ * every route via `_app.tsx`) sets a *direct* rule on heading elements:
+ * `h1, h2, h3, h4, h5, h6 { font-family: var(--font-syne); ... }`. CSS
+ * inheritance always loses to any directly-matching rule on the element
+ * itself, no matter how specific the ancestor's own rule was — so even
+ * though `RedesignLayout.tsx`'s wrapper `<div>` sets `font-inter`
+ * correctly, none of the redesign's heading elements declare their own
+ * `font-family`, so they fall through to the legacy direct rule instead
+ * of inheriting from the wrapper. (`font-size`/`color` are unaffected:
+ * Tailwind's own classes like `text-3xl`/`text-slate-900` are class
+ * selectors, which win their own specificity fight against the legacy
+ * rule's element-selector declarations for those two properties.)
+ *
+ * `public/css/style.css` is imported *after* this file in `_app.tsx`, so
+ * `!important` is required to win the cascade regardless of import order,
+ * same as the overflow fix above. Scoped to `[data-route="redesign"]` so
+ * the old homepage, `/blog`, and `/admin` keep the legacy Syne heading
+ * font unchanged.
+ */
+html[data-route='redesign'] h1,
+html[data-route='redesign'] h2,
+html[data-route='redesign'] h3,
+html[data-route='redesign'] h4,
+html[data-route='redesign'] h5,
+html[data-route='redesign'] h6 {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif !important;
+}
