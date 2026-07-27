@@ -31,7 +31,6 @@ export default function AdminMedia() {
 
   useEffect(() => {
     fetchImages();
-    // eslint-disable-next-line
   }, []);
 
   const fetchImages = async () => {
@@ -175,7 +174,7 @@ export default function AdminMedia() {
         xhr.send(file);
       });
 
-    } catch (err: unknown) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : "Upload failed";
       updateProgress(file.name, 0, 'error', message);
       throw err;

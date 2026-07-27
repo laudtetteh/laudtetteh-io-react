@@ -57,7 +57,7 @@ def list_uploaded_images():
                     'size': obj['Size'],
                     'last_modified': (
                         obj['LastModified'].isoformat() if 'LastModified' in obj else None
-                    ),
+                    )
                 })
         return images
     except Exception as e:

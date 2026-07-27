@@ -15,8 +15,8 @@ def send_contact_email(name: str, email: str, message: str) -> bool:
 
     if not all([api_key, from_email, to_email]):
         logger.error(
-            "❌ Missing Resend configuration. "
-            "Check RESEND_API_KEY, RESEND_FROM_EMAIL, and RESEND_TO_EMAIL."
+            "❌ Missing Resend configuration. Check RESEND_API_KEY, "
+            "RESEND_FROM_EMAIL, and RESEND_TO_EMAIL."
         )
         return False
 

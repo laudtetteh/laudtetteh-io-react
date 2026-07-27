@@ -67,28 +67,20 @@ posts = [
 # Grouped categories
 categories = [
     {
-        "name": "My Journey",
-        "slug": "my-journey",
-        "group": "My Journey",
-        "createdAt": datetime.utcnow(),
+        "name": "My Journey", "slug": "my-journey",
+        "group": "My Journey", "createdAt": datetime.utcnow(),
     },
     {
-        "name": "Tech & Projects",
-        "slug": "tech-projects",
-        "group": "Tech & Projects",
-        "createdAt": datetime.utcnow(),
+        "name": "Tech & Projects", "slug": "tech-projects",
+        "group": "Tech & Projects", "createdAt": datetime.utcnow(),
     },
     {
-        "name": "Career & Mindset",
-        "slug": "career-mindset",
-        "group": "Career & Mindset",
-        "createdAt": datetime.utcnow(),
+        "name": "Career & Mindset", "slug": "career-mindset",
+        "group": "Career & Mindset", "createdAt": datetime.utcnow(),
     },
     {
-        "name": "Life & Balance",
-        "slug": "life-balance",
-        "group": "Life & Balance",
-        "createdAt": datetime.utcnow(),
+        "name": "Life & Balance", "slug": "life-balance",
+        "group": "Life & Balance", "createdAt": datetime.utcnow(),
     },
 ]
 
@@ -161,13 +153,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
-        '--update',
-        action='store_true',
+        '--update', action='store_true',
         help='Update existing posts or insert new ones (default)',
     )
     group.add_argument(
-        '--replace',
-        action='store_true',
+        '--replace', action='store_true',
         help='Delete all posts and replace with seed data',
     )
     args = parser.parse_args()

@@ -44,7 +44,7 @@ export default function EditPostPage() {
         if (!res.ok) throw new Error('Failed to fetch post');
         const data = await res.json();
         setPost(data);
-      } catch (err: unknown) {
+      } catch (err) {
         console.error(err);
         const message = err instanceof Error ? err.message : 'Unknown error';
         pushMessage(`Error loading post: ${message}`, 'top-center', 'error');
@@ -87,7 +87,7 @@ export default function EditPostPage() {
         const error = await res.json();
         pushMessage(`Failed to update post: ${error.detail || 'Unknown error'}`, 'top-center', 'error');
       }
-    } catch (err: unknown) {
+    } catch (err) {
       console.error('Update failed:', err);
       const message = err instanceof Error ? err.message : 'Unknown error';
       pushMessage(`Network error: ${message}`, 'top-center', 'error');

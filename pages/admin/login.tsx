@@ -6,8 +6,8 @@ import { useFlashMessage } from "@/lib/useFlashMessage";
 import Layout from '@/components/Layout';
 
 export default function AdminLogin() {
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("changeme");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();

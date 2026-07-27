@@ -81,9 +81,7 @@ async def export_posts(filters: dict):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--filter',
-        '-f',
-        action='append',
+        '--filter', '-f', action='append',
         help='Filter in key=value format (can be used multiple times)',
     )
     args = parser.parse_args()

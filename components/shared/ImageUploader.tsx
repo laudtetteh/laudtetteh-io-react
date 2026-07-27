@@ -26,7 +26,7 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
     try {
       const file_url = await uploadImage(file, token);
       onChange(file_url);
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('❌ Upload error:', error);
     } finally {
       setUploading(false);
