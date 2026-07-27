@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
 import Layout from '@/components/Layout';
+import type { PostData } from '@/types/blog';
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function CreatePostPage() {
     if (!token) router.push('/admin/login');
   }, [router]);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: PostData) => {
     const token = localStorage.getItem('token');
     if (!token) return;
 

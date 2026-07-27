@@ -1,19 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useFlashMessage } from "@/lib/useFlashMessage";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 import Layout from '@/components/Layout';
@@ -129,7 +117,6 @@ export default function AdminDashboard() {
   const [bulkStatus, setBulkStatus] = useState("");
   const postsPerPage = 9;
   const router = useRouter();
-  const sensors = useSensors(useSensor(PointerSensor));
   const { redirectWithMessage } = useFlashMessage();
 
   useEffect(() => {
@@ -306,43 +293,6 @@ export default function AdminDashboard() {
       redirectWithMessage('/admin', "Post deleted", "top-center", "push", "success");
     } else {
       alert("Failed to delete post.");
-    }
-  };
-
-  const handleDragEnd = async (event: any) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = filtered.findIndex((p) => p.slug === active.id);
-    const newIndex = filtered.findIndex((p) => p.slug === over.id);
-    const newSorted = arrayMove(filtered, oldIndex, newIndex).map((p, i) => ({
-      ...p,
-      weight: i,
-    }));
-
-    setPosts((prev) =>
-      prev.map((post) => {
-        const updated = newSorted.find((p) => p.slug === post.slug);
-        return updated ? { ...post, weight: updated.weight } : post;
-      })
-    );
-
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/update-weights`, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(
-            newSorted.map((p) => ({ slug: p.slug, weight: p.weight }))
-          ),
-        });
-      } catch (err) {
-        console.error("❌ Failed to update weights:", err);
-      }
     }
   };
 
