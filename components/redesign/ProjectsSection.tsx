@@ -39,7 +39,7 @@ const projects: ProjectEntry[] = [
   },
   {
     title: 'UH Richardson School of Law',
-    url: 'https://www.law.hawaii.edu',
+    url: 'https://law.hawaii.edu',
     description:
       "Drupal-powered site for the University of Hawai'i's law school: class/course database, personnel directory, events calendar, student classifieds, job listings, and password-protected content for @hawaii.edu students. Also led the eventual Drupal-to-WordPress data migration.",
     image: '/images/projects/law-hawaii.png',

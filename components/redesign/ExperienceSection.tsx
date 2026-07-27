@@ -79,7 +79,7 @@ const experience: ExperienceEntry[] = [
     techTags: ['WordPress', 'Drupal', 'PHP', 'Accessibility'],
     relatedLinks: [
       { label: '4culture.org', href: 'https://www.4culture.org' },
-      { label: 'law.hawaii.edu', href: 'https://www.law.hawaii.edu' },
+      { label: 'law.hawaii.edu', href: 'https://law.hawaii.edu' },
       { label: 'ssnocwta.com', href: 'https://ssnocwta.com' },
     ],
   },
