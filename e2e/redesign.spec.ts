@@ -50,6 +50,33 @@ test('sandbox section renders real GitHub repos with a working category filter',
   await expect(sandbox.locator('article').first()).toBeVisible();
 });
 
+test('sandbox filter results fade in on click rather than snapping instantly', async ({ page }) => {
+  await page.goto('/redesign');
+  const sandbox = page.locator('#sandbox');
+  const grid = sandbox.locator('.animate-fade-in').first();
+  await expect(grid).toBeVisible();
+
+  await sandbox.getByRole('button', { name: 'Backend' }).click();
+
+  // Poll opacity immediately after the click — if a real fade-in animation
+  // is running, opacity starts below 1 and rises; an instant swap would
+  // read 1 on every sample. Mirrors the polling approach already used for
+  // the smooth-scroll assertion above, since a fixed-delay sample can land
+  // after a short animation has already finished under CPU contention.
+  const samples: number[] = [];
+  const deadline = Date.now() + 1000;
+  while (Date.now() < deadline) {
+    samples.push(await grid.evaluate(el => parseFloat(getComputedStyle(el).opacity)));
+    await page.waitForTimeout(20);
+  }
+  expect(samples.some(o => o < 0.95)).toBe(true);
+  // `toHaveCSS` auto-retries rather than trusting the sampling loop's last
+  // value, which can land mid-animation (not yet settled at 1) under heavy
+  // parallel-worker CPU contention — same class of timing issue documented
+  // on the spotlight-cursor and scroll-spy tests above.
+  await expect(grid).toHaveCSS('opacity', '1');
+});
+
 test('writing section renders real blog teaser cards in initial HTML', async ({ page }) => {
   await page.goto('/redesign');
   const writing = page.locator('#writing');
@@ -295,16 +322,17 @@ test('active nav indicator uses the neutral palette, not the teal accent (#48)',
   expect(className).toContain('slate');
 });
 
-test('old routes are unaffected by the redesign shell (#48)', async ({ page }) => {
-  for (const route of ['/', '/blog']) {
-    await page.goto(route);
-    const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
-    const hasSpotlight = await page.evaluate(
-      () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
-    );
-    expect(scrollBehavior).toBe('auto');
-    expect(hasSpotlight).toBe(false);
-  }
+test('legacy homepage route is unaffected by the redesign shell (#48)', async ({ page }) => {
+  // `/blog` opted into the redesign shell as of #60 — see e2e/blog.spec.ts for
+  // its equivalent "does have the shell" coverage. `/` (the still-legacy
+  // homepage, pending the #17 cutover) is the only route left to assert here.
+  await page.goto('/');
+  const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+  const hasSpotlight = await page.evaluate(
+    () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
+  );
+  expect(scrollBehavior).toBe('auto');
+  expect(hasSpotlight).toBe(false);
 });
 
 test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
@@ -314,13 +342,12 @@ test('headings use the Inter font, not the legacy Syne theme font (#19)', async 
   expect(h1Family).not.toContain('Syne');
   expect(h2Family).not.toContain('Syne');
 
-  // / and /blog keep the legacy Syne heading font untouched — this fix is
-  // scoped to `[data-route="redesign"]` only.
-  for (const route of ['/', '/blog']) {
-    await page.goto(route);
-    const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
-    expect(dataRoute).toBeNull();
-  }
+  // `/` keeps the legacy Syne heading font untouched — this fix is scoped to
+  // `[data-route="redesign"]`, which `/blog` now opts into as of #60 (see
+  // e2e/blog.spec.ts for its "does get data-route" coverage).
+  await page.goto('/');
+  const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
+  expect(dataRoute).toBeNull();
 });
 
 test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {

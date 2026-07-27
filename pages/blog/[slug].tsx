@@ -3,13 +3,11 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
-import Layout from '@/components/Layout';
-import BlogHeader from '@/components/BlogHeader';
-import Footer from '@/components/Footer';
-import { useBodyClass } from '@/lib/useBodyClass';
+import BlogLayout from '@/components/redesign/blog/BlogLayout';
 
 interface BlogPost {
-  title: string;
+  /** Typed as a union because the API has historically sent this as an array in edge cases. */
+  title: string | string[];
   slug: string;
   content: { html: string };
   summary?: string;
@@ -35,12 +33,6 @@ function truncate(str: string, n: number) {
   return str.length > n ? str.slice(0, n - 1) + '…' : str;
 }
 
-declare global {
-  interface Window {
-    arlo_tm_data_images?: () => void;
-  }
-}
-
 function formatDate(dateString?: string) {
   if (!dateString) return '';
   const date = new Date(dateString);
@@ -57,24 +49,17 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
 
-  useBodyClass('post-single-post');
-
   useEffect(() => {
     const token = typeof window !== 'undefined' && localStorage.getItem('token');
     setLoggedIn(Boolean(token));
   }, []);
 
-  useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      typeof window.arlo_tm_data_images === 'function'
-    ) {
-      window.arlo_tm_data_images();
-    }
-  }, [post]);
-
   if (router.isFallback) {
-    return <p className="p-6 text-center">Loading post...</p>;
+    return (
+      <BlogLayout title="Loading… | Laud Tetteh" description="">
+        <p className="text-slate-600 dark:text-slate-400">Loading post...</p>
+      </BlogLayout>
+    );
   }
 
   const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/img/news/1.jpg';
@@ -82,165 +67,119 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
   const displayDate = post.date_published || post.date;
   const formattedDate = formatDate(displayDate);
+  const displayTitle = Array.isArray(post.title) ? post.title.join(' ') : post.title;
 
   return (
-    <Layout title={`${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh`} description={post.summary ?? ''}>
-      <BlogHeader adminBarOffset={loggedIn} />
-      <main className="arlo_tm_modalbox_page_wrap prose prose-wide" style={{ minHeight: '100vh', background: '#f5f6fa', marginTop: 130 }}>
-        <div className="arlo_tm_modalbox_page" style={{
-          position: 'relative',
-          display: 'block',
-          maxWidth: 900,
-          width: '100%',
-          margin: '40px auto',
-          background: '#fff',
-          borderRadius: 0,
-          boxShadow: '0 0 40px rgba(0,0,0,0.08)'
-        }}>
-          {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" className="w-full pt-8 pb-4 px-6" style={{ padding: '50px 50px 20px' }}>
-            <ul className="flex items-center flex-wrap text-sm text-gray-500 list-none p-0 m-0" style={{ listStyle: 'none'}}>
-              <li className="pl-0" style={{ paddingLeft: 0 }}><Link href="/" className="hover:underline">Home</Link></li>
-              <li className="mx-2">›</li>
-              <li><Link href="/blog" className="hover:underline">Blog</Link></li>
-              <li className="mx-2">›</li>
-              <li>
-                <Link href={`/blog?category=${encodeURIComponent(category)}`} className="hover:underline font-semibold text-gray-700">
-                  {category}
-                </Link>
-              </li>
-              <li className="mx-2">›</li>
-              <li className="truncate max-w-xs text-gray-700" title={post.title}>{post.title}</li>
-            </ul>
-          </nav>
-          <div className="box_inner" style={{ position: 'relative', padding: 0 }}>
-            <div className="" style={{ padding: '50px 50px 20px 50px', background: '#fff', borderRadius: 0 }}>
-              <div className="image" style={{ position: 'relative', overflow: 'hidden', marginBottom: 24 }}>
-                <img src="/img/thumbs/4-2.jpg" alt="" style={{ width: '100%', opacity: 0 }} />
-                <div className="main" data-img-url={imageUrl} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundSize: 'cover', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat', minHeight: 350 }}></div>
-                <span className="date" style={{ position: 'absolute', top: 20, left: 20, background: '#fff', padding: '4px 18px', borderRadius: 3, fontWeight: 500, fontSize: 15, color: '#868a9b', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>{formattedDate}</span>
-              </div>
-              <div className="details_news">
-                <div className="meta-arlo">
-                  <span className="byline-author">
-                    By <span className="byline-link line_effect" style={{ textDecoration: 'none', cursor: 'default' }}>{author}</span>
-                  </span>
-                  <span className="byline-category">
-                    In <Link href={`/blog?category=${encodeURIComponent(category)}`} className="byline-link line_effect hover:underline" style={{ color: '#000' }}>{category}</Link>
-                  </span>
-                </div>
-                <div className="title" style={{ marginBottom: 8 }}>
-                  <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>{post.title}</h1>
-                </div>
-              </div>
-              <div className="">
-                <div dangerouslySetInnerHTML={{ __html: post.content.html }} />
-              </div>
-              {loggedIn && (
-                <div className="pt-6 text-sm space-x-4">
-                  <Link href={`/admin/edit/${post.slug}`} className="text-blue-600 underline">✏️ Edit</Link>
-                </div>
-              )}
-              {/* Previous/Next Navigation */}
-              {(prevPost || nextPost) && (
-                <div className="prev-next-nav">
-                  {prevPost ? (
-                    <Link href={`/blog/${prevPost.slug}`} className="btn-nav">
-                      Previous: {truncate(prevPost.title, 32)}
-                    </Link>
-                  ) : <span />}
-                  {nextPost ? (
-                    <Link href={`/blog/${nextPost.slug}`} className="btn-nav">
-                      Next: {truncate(nextPost.title, 32)}
-                    </Link>
-                  ) : <span />}
-                </div>
-              )}
-            </div>
-          </div>
+    <BlogLayout title={`${displayTitle} | Laud Tetteh`} description={post.summary ?? ''}>
+      <article className="mb-16 md:mb-24">
+        <nav aria-label="Breadcrumb" className="mb-6">
+          <ul className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>
+              <Link href="/" className="hover:text-teal-600 dark:hover:text-teal-400">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden="true">&rsaquo;</li>
+            <li>
+              <Link href="/blog" className="hover:text-teal-600 dark:hover:text-teal-400">
+                Blog
+              </Link>
+            </li>
+            <li aria-hidden="true">&rsaquo;</li>
+            <li>
+              <Link
+                href={`/blog?category=${encodeURIComponent(category)}`}
+                className="font-medium text-slate-700 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400"
+              >
+                {category}
+              </Link>
+            </li>
+            <li aria-hidden="true">&rsaquo;</li>
+            <li className="max-w-[12rem] truncate text-slate-700 dark:text-slate-300" title={displayTitle}>
+              {displayTitle}
+            </li>
+          </ul>
+        </nav>
+
+        <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
+          {/* eslint-disable-next-line @next/next/no-img-element -- external S3 URLs, no configured next/image remote domains */}
+          <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+          {formattedDate && (
+            <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow dark:bg-slate-900 dark:text-slate-300">
+              {formattedDate}
+            </span>
+          )}
         </div>
-        <style jsx>{`
-          @media (max-width: 900px) {
-            .arlo_tm_modalbox_page { max-width: 100vw !important; }
-            .news_popup_informations { padding: 24px 8px 8px 8px !important; }
-          }
-          @media (max-width: 600px) {
-            .arlo_tm_modalbox_page { margin: 10px auto !important; }
-            .box_inner { padding: 0 !important; }
-            .news_popup_informations { padding: 12px 4px 4px 4px !important; }
-            .image .date { font-size: 12px !important; padding: 2px 8px !important; top: 8px !important; left: 8px !important; }
-            .details_news .title h3 { font-size: 18px !important; }
-            .main { min-height: 180px !important; }
-            .prev-next-nav {
-              flex-direction: column;
-              gap: 0.75rem;
-            }
-            .btn-nav {
-              width: 100%;
-              text-align: center;
-              margin: 0;
-            }
-          }
-          .meta-arlo {
-            display: inline-block;
-            border-bottom: 1px solid rgba(0,0,0,.1);
-            padding-bottom: 7px;
-            margin-bottom: 25px;
-            color: #b0b0b0;
-            font-size: 14px;
-            font-weight: 400;
-            position: relative;
-          }
-          .byline-author {
-            position: relative;
-            display: inline-block;
-            padding-right: 15px;
-            margin-right: 10px;
-          }
-          .byline-author::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 50%;
-            width: 6px;
-            height: 6px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 100%;
-            transform: translateY(-50%);
-          }
-          .byline-link {
-            color: #000 !important;
-            text-decoration: none !important;
-            font-weight: 400 !important;
-            display: inline-block;
-            position: relative;
-          }
-          .btn-nav {
-            background: #222;
-            color: #fff;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
-            text-decoration: none;
-            margin: 0 0.5rem;
-            display: inline-block;
-            transition: background 0.2s, color 0.2s;
-            border: none;
-          }
-          .btn-nav:hover {
-            background: #1d4ed8;
-            color: #fff;
-          }
-          .prev-next-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 3rem;
-            gap: 1rem;
-          }
-        `}</style>
-      </main>
-      <Footer />
-    </Layout>
+
+        <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 pb-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+          <span>
+            By <span className="font-medium text-slate-900 dark:text-slate-100">{author}</span>
+          </span>
+          <span aria-hidden="true">&middot;</span>
+          <span>
+            In{' '}
+            <Link
+              href={`/blog?category=${encodeURIComponent(category)}`}
+              className="font-medium text-teal-600 hover:underline dark:text-teal-400"
+            >
+              {category}
+            </Link>
+          </span>
+        </div>
+
+        <h1 className="mt-6 text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">{displayTitle}</h1>
+
+        {/*
+          `styles/globals.css`'s unscoped `.prose { max-width: 100% !important }`
+          utility always wins over a `max-w-*` class applied to that same
+          `.prose` element (importance beats specificity regardless of
+          layer/order) — every other `.prose` usage in this codebase works
+          around it with `max-w-none` rather than fighting it. The width cap
+          has to live on this wrapping div instead.
+        */}
+        <div className="mt-8 max-w-3xl">
+          <div
+            className="prose prose-slate dark:prose-invert prose-a:text-teal-600 dark:prose-a:text-teal-400"
+            dangerouslySetInnerHTML={{ __html: post.content.html }}
+          />
+        </div>
+
+        {loggedIn && (
+          <div className="mt-8">
+            <Link href={`/admin/edit/${post.slug}`} className="text-sm font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400">
+              Edit
+            </Link>
+          </div>
+        )}
+
+        {(prevPost || nextPost) && (
+          <div className="mt-12 grid gap-4 border-t border-slate-200 pt-8 dark:border-slate-800 sm:grid-cols-2">
+            {prevPost ? (
+              <Link
+                href={`/blog/${prevPost.slug}`}
+                className="rounded-lg border border-slate-200 p-4 transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:hover:border-teal-400/40"
+              >
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">Previous</span>
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">{truncate(prevPost.title, 48)}</p>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {nextPost ? (
+              <Link
+                href={`/blog/${nextPost.slug}`}
+                className="rounded-lg border border-slate-200 p-4 text-right transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:hover:border-teal-400/40"
+              >
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">Next</span>
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">{truncate(nextPost.title, 48)}</p>
+              </Link>
+            ) : (
+              <span />
+            )}
+          </div>
+        )}
+      </article>
+    </BlogLayout>
   );
 }
 
