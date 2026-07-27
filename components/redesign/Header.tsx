@@ -78,7 +78,7 @@ export default function Header(): React.ReactElement {
                 <a
                   href={`#${item.id}`}
                   className={classNames(
-                    'group flex items-center py-1 text-sm font-semibold uppercase tracking-widest transition-colors',
+                    'group flex items-center py-1 text-xs font-bold uppercase tracking-widest transition-colors',
                     isActive
                       ? 'active text-slate-900 dark:text-slate-200'
                       : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
