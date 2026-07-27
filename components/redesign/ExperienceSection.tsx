@@ -2,12 +2,8 @@
  * Experience section for the `/redesign` homepage — real work-history and
  * education timelines plus a real client testimonial.
  *
- * Content is real (sourced from `rebuild-spike--live-content-inventory.md`),
- * but the reference design's per-job structure (achievement bullets, tech
- * tags, related links) has no equivalent granularity in Laud's actual
- * inventory. Those sub-fields ship as bracketed placeholders rather than
- * fabricated detail — a content-fill item for Laud later, not a decision
- * made by this component.
+ * All content, including per-job achievement bullets/tech tags/related
+ * links, is sourced from Laud's résumé (`public/docs/cv/Laud-Tetteh-Resume.pdf`).
  *
  * Server-rendered — no client-only gate, no interactivity required beyond
  * the pure-CSS hover-dims-siblings effect on the work-history timeline
@@ -17,13 +13,18 @@
 
 import MobileSectionTitle from './MobileSectionTitle';
 
+interface RelatedLink {
+  label: string;
+  href: string;
+}
+
 interface ExperienceEntry {
   dateRange: string;
   title: string;
   company: string;
   bullets: string[];
   techTags: string[];
-  relatedLinks: string[];
+  relatedLinks: RelatedLink[];
 }
 
 interface EducationEntry {
@@ -44,33 +45,51 @@ const experience: ExperienceEntry[] = [
     dateRange: '2021–Present',
     title: 'Software Eng.',
     company: 'Salesforce',
-    bullets: ['[Achievement bullet]', '[Achievement bullet]'],
-    techTags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
-    relatedLinks: ['[Related link]'],
+    bullets: [
+      "Build custom solutions in PHP, JavaScript, MySQL, and YML for Tableau's marketing sites (tableau.com, on Drupal 10), owning projects from discovery through post-release monitoring across 3 US time zones.",
+      "Lead engineer for a pipeline automating daily extraction of user-submitted assessment data from a Dockerized MariaDB image via GitHub Actions, authenticating with AWS IAM and uploading to S3 for the Decision Science team's analysis.",
+      'Rebuilt authentication-gated Product Download pages with a Drupal-UI-toggleable kill switch, backed by unit tests.',
+    ],
+    techTags: ['PHP', 'Drupal', 'JavaScript', 'MySQL', 'AWS', 'GitHub Actions'],
+    relatedLinks: [{ label: 'tableau.com', href: 'https://www.tableau.com' }],
   },
   {
     dateRange: '2019–2021',
     title: 'Senior Dev.',
     company: 'MethodistCRM',
-    bullets: ['[Achievement bullet]', '[Achievement bullet]'],
-    techTags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
-    relatedLinks: ['[Related link]'],
+    bullets: [
+      'Built a CRM dashboard with authentication for community-based church programs, powered by Laravel & MySQL.',
+      'Shipped reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
+    ],
+    techTags: ['Laravel', 'MySQL', 'PHP'],
+    relatedLinks: [{ label: 'laudtetteh.io/methodistcrm.html', href: 'https://laudtetteh.io/methodistcrm.html' }],
   },
   {
     dateRange: '2014–2021',
     title: 'Senior Dev.',
     company: 'Studio Ten Four, LLC',
-    bullets: ['[Achievement bullet]', '[Achievement bullet]'],
-    techTags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
-    relatedLinks: ['[Related link]'],
+    bullets: [
+      'Webmaster and custom plugin development for King County 4Culture (4culture.org), a Washington State non-profit.',
+      "Built and maintained a Drupal-powered class/course database, personnel directory, events calendar, and password-protected content portal for the University of Hawai'i's William S. Richardson School of Law, then led the data migration when the site rebuilt onto WordPress.",
+      'Redesigned and rebuilt the South Seminole and North Orange County Wastewater Transmission Authority site (ssnocwta.com) to WCAG 2.2 accessibility compliance.',
+    ],
+    techTags: ['WordPress', 'Drupal', 'PHP', 'Accessibility'],
+    relatedLinks: [
+      { label: '4culture.org', href: 'https://www.4culture.org' },
+      { label: 'law.hawaii.edu', href: 'https://www.law.hawaii.edu' },
+      { label: 'ssnocwta.com', href: 'https://ssnocwta.com' },
+    ],
   },
   {
     dateRange: '2016–2017',
     title: 'Front-End Eng.',
     company: 'Moz',
-    bullets: ['[Achievement bullet]', '[Achievement bullet]'],
-    techTags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
-    relatedLinks: ['[Related link]'],
+    bullets: [
+      'Worked with the Inbound Engineering team migrating portions of moz.com from CakePHP to Craft CMS.',
+      'Partnered with the UX team translating comps into marketing pages, and with Business Intelligence to implement page-load and event tracking via Adobe DTM and Segment.',
+    ],
+    techTags: ['CraftCMS', 'PHP', 'Adobe DTM', 'Segment'],
+    relatedLinks: [{ label: 'moz.com', href: 'https://www.moz.com' }],
   },
 ];
 
@@ -161,9 +180,18 @@ export default function ExperienceSection() {
                 ))}
               </div>
               {entry.relatedLinks.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-3 text-xs text-slate-600 dark:text-slate-400">
-                  {entry.relatedLinks.map((link, index) => (
-                    <span key={index}>{link}</span>
+                <div className="mt-3 flex flex-wrap gap-3 text-xs">
+                  {entry.relatedLinks.map(link => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400"
+                    >
+                      <LinkIcon />
+                      {link.label}
+                    </a>
                   ))}
                 </div>
               )}
@@ -205,6 +233,25 @@ export default function ExperienceSection() {
         </figure>
       </div>
     </section>
+  );
+}
+
+function LinkIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3 w-3"
+      aria-hidden="true"
+    >
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
   );
 }
 

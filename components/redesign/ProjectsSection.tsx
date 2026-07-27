@@ -2,10 +2,10 @@ import Image from 'next/image';
 import MobileSectionTitle from './MobileSectionTitle';
 
 /**
- * A single curated project card. Structurally mirrors the reference site's
- * "Projects" case-study format (title+link, description, tech tags,
- * screenshot) — content is bracketed placeholder until Laud has real
- * curated case studies to fill in (see docs/rebuild-spike--MASTER.md §2).
+ * A single curated project card. Content sourced from Laud's résumé
+ * (`public/docs/cv/Laud-Tetteh-Resume.pdf`) — real clients/case studies,
+ * not fabricated. Images are placeholder graphics (generated, not
+ * screenshots) pending real screenshots from Laud.
  */
 interface ProjectEntry {
   title: string;
@@ -17,36 +17,36 @@ interface ProjectEntry {
 
 const projects: ProjectEntry[] = [
   {
-    title: '[Project title]',
-    url: '#',
+    title: 'MethodistCRM',
+    url: 'https://laudtetteh.io/methodistcrm.html',
     description:
-      '[Project description — a short summary of the problem, the approach, and the outcome.]',
-    image: '/images/projects/halcyon.png',
-    tags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
+      'CRM dashboard with authentication for community-based church programs. Reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
+    image: '/images/projects/methodistcrm.png',
+    tags: ['Laravel', 'MySQL', 'PHP'],
   },
   {
-    title: '[Project title]',
-    url: '#',
+    title: 'King County 4Culture',
+    url: 'https://www.4culture.org',
     description:
-      '[Project description — a short summary of the problem, the approach, and the outcome.]',
-    image: '/images/projects/v4.png',
-    tags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
+      'Webmaster and custom plugin development for this Washington State non-profit — ongoing WordPress development and support.',
+    image: '/images/projects/culture4.png',
+    tags: ['WordPress', 'PHP', 'Plugin Development'],
   },
   {
-    title: '[Project title]',
-    url: '#',
+    title: 'UH Richardson School of Law',
+    url: 'https://www.law.hawaii.edu',
     description:
-      '[Project description — a short summary of the problem, the approach, and the outcome.]',
-    image: '/images/projects/spotify-profile.png',
-    tags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
+      "Drupal-powered site for the University of Hawai'i's law school: class/course database, personnel directory, events calendar, student classifieds, job listings, and password-protected content for @hawaii.edu students. Also led the eventual Drupal-to-WordPress data migration.",
+    image: '/images/projects/law-hawaii.png',
+    tags: ['Drupal', 'WordPress', 'MySQL'],
   },
   {
-    title: '[Project title]',
-    url: '#',
+    title: 'SSNOCWTA Accessibility Rebuild',
+    url: 'https://ssnocwta.com',
     description:
-      '[Project description — a short summary of the problem, the approach, and the outcome.]',
-    image: '/images/projects/course-card.png',
-    tags: ['[Tech tag]', '[Tech tag]', '[Tech tag]'],
+      'Redesign and rebuild for South Seminole and North Orange County Wastewater Transmission Authority, focused on WCAG 2.2 accessibility compliance.',
+    image: '/images/projects/ssnocwta.png',
+    tags: ['WordPress', 'Accessibility', 'WCAG 2.2'],
   },
 ];
 
@@ -82,6 +82,8 @@ export default function ProjectsSection() {
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                   <a
                     href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="transition-colors hover:text-teal-600 dark:hover:text-teal-400"
                   >
                     {project.title}
