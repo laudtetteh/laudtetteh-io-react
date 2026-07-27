@@ -40,7 +40,7 @@ const AdminBar = () => {
       const realSlug = Array.isArray(slug) ? slug[0] : slug;
       await import('@/lib/api').then(mod => mod.deletePost(realSlug));
       window.location.href = '/admin';
-    } catch (e) {
+    } catch {
       alert('Failed to delete post');
     }
   };

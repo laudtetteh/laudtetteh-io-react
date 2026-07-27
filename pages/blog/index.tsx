@@ -53,18 +53,6 @@ const BlogIndex: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.category, posts]);
 
-  function formatDate(dateString?: string) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-      timeZone: 'America/Los_Angeles',
-    });
-  }
-
   // Get all unique categories from posts
   const allCategories = ['All', ...Array.from(new Set(posts.flatMap(post => post.categories)))];
 
@@ -146,8 +134,6 @@ const BlogIndex: React.FC = () => {
                 {paginatedPosts.length > 0 ? (
                   <ul>
                     {paginatedPosts.map((post) => {
-                      const displayDate = post.date_published || post.date;
-                      const formattedDate = formatDate(displayDate);
                       return (
                         <li key={post.slug}>
                           <div className="list_inner">

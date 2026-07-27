@@ -1,6 +1,7 @@
-import boto3
 import os
 from uuid import uuid4
+
+import boto3
 
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
@@ -38,7 +39,7 @@ def generate_presigned_upload_url(filename: str, content_type: str):
         full_url = f"https://{S3_BUCKET}.s3.{AWS_REGION}.amazonaws.com/{key}"
         return url, full_url
     except Exception as e:
-        raise RuntimeError(f"Error generating presigned URL: {str(e)}")
+        raise RuntimeError(f"Error generating presigned URL: {str(e)}") from e
 
 # New: List all images in uploads/ directory
 
@@ -54,15 +55,17 @@ def list_uploaded_images():
                     'key': key,
                     'url': url,
                     'size': obj['Size'],
-                    'last_modified': obj['LastModified'].isoformat() if 'LastModified' in obj else None
+                    'last_modified': (
+                        obj['LastModified'].isoformat() if 'LastModified' in obj else None
+                    )
                 })
         return images
     except Exception as e:
-        raise RuntimeError(f"Error listing images: {str(e)}")
+        raise RuntimeError(f"Error listing images: {str(e)}") from e
 
 def delete_image(key: str):
     try:
         s3_client.delete_object(Bucket=S3_BUCKET, Key=key)
         return True
     except Exception as e:
-        raise RuntimeError(f"Error deleting image: {str(e)}")
+        raise RuntimeError(f"Error deleting image: {str(e)}") from e

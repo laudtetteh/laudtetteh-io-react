@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFlashMessage } from '@/lib/useFlashMessage';
 import { uploadImage } from '@/lib/api';
 
 interface ImageUploaderProps {
@@ -12,7 +11,6 @@ interface ImageUploaderProps {
 export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [inputKey, setInputKey] = useState(Date.now());
-  const { pushMessage, confirmPrompt } = useFlashMessage();
 
   // Media library modal state
   const [showLibrary, setShowLibrary] = useState(false);
@@ -28,7 +26,7 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
     try {
       const file_url = await uploadImage(file, token);
       onChange(file_url);
-    } catch (error: any) {
+    } catch (error) {
       console.error('❌ Upload error:', error);
     } finally {
       setUploading(false);

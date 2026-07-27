@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
-import dynamic from 'next/dynamic';
 import Layout from '@/components/Layout';
 
 interface BlogPost {
@@ -26,7 +25,6 @@ export default function EditPostPage() {
   const { redirectWithMessage, pushMessage } = useFlashMessage();
 
   const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!slug || typeof slug !== 'string') return;
@@ -46,11 +44,10 @@ export default function EditPostPage() {
         if (!res.ok) throw new Error('Failed to fetch post');
         const data = await res.json();
         setPost(data);
-      } catch (err: any) {
+      } catch (err) {
         console.error(err);
-        pushMessage(`Error loading post: ${err.message}`, 'top-center', 'error');
-      } finally {
-        setLoading(false);
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        pushMessage(`Error loading post: ${message}`, 'top-center', 'error');
       }
     };
 
@@ -66,7 +63,7 @@ export default function EditPostPage() {
     }
 
     const cleaned = Object.fromEntries(
-      Object.entries(updated).filter(([_, value]) => value !== undefined)
+      Object.entries(updated).filter(([, value]) => value !== undefined)
     );
 
     try {
@@ -90,9 +87,10 @@ export default function EditPostPage() {
         const error = await res.json();
         pushMessage(`Failed to update post: ${error.detail || 'Unknown error'}`, 'top-center', 'error');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Update failed:', err);
-      pushMessage(`Network error: ${err.message}`, 'top-center', 'error');
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      pushMessage(`Network error: ${message}`, 'top-center', 'error');
     }
   };
 

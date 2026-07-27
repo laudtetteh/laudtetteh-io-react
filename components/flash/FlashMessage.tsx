@@ -34,13 +34,6 @@ const POSITIONS: Record<FlashPosition, string> = {
   "bottom-right": "bottom-4 right-4",
 };
 
-const ICONS: Record<FlashType, string> = {
-  success: "✅",
-  error: "❌",
-  info: "ℹ️",
-  confirm: "❓",
-};
-
 /**
  * FlashMessage component
  * Displays flash messages with animation, icons, and actions.

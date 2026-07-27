@@ -10,9 +10,10 @@ This script will:
 """
 
 import asyncio
-import motor.motor_asyncio
-from datetime import datetime
 import os
+from datetime import datetime
+
+import motor.motor_asyncio
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -59,7 +60,10 @@ async def migrate_dates():
                             dt = parse(val)
                         update_data[field] = dt
                     except Exception as e:
-                        print(f"\u26A0\uFE0F  Post {post.get('_id')} has invalid {field} format: {val} ({e})")
+                        print(
+                            f"\u26A0\uFE0F  Post {post.get('_id')} has invalid "
+                            f"{field} format: {val} ({e})"
+                        )
             if update_data:
                 result = await posts_collection.update_one(
                     {"_id": post["_id"]},
@@ -67,12 +71,18 @@ async def migrate_dates():
                 )
                 if result.modified_count > 0:
                     migrated_count += 1
-                    print(f"\u2705 Normalized dates for post: {post.get('title', 'Unknown')} (ID: {post['_id']})")
+                    print(
+                        f"\u2705 Normalized dates for post: "
+                        f"{post.get('title', 'Unknown')} (ID: {post['_id']})"
+                    )
         except Exception as e:
             print(f"\u274C Error normalizing post {post.get('_id')}: {str(e)}")
 
-    print(f"\n\U0001F389 Date normalization complete!")
-    print(f"\U0001F4C8 Successfully normalized {migrated_count} out of {len(posts_to_migrate)} posts")
+    print("\n\U0001F389 Date normalization complete!")
+    print(
+        f"\U0001F4C8 Successfully normalized {migrated_count} out of "
+        f"{len(posts_to_migrate)} posts"
+    )
     
     # Verify migration
     remaining_old_posts = await posts_collection.count_documents({
@@ -84,7 +94,7 @@ async def migrate_dates():
         ]
     })
     
-    print(f"🔍 Verification:")
+    print("🔍 Verification:")
     print(f"   - Posts still needing migration: {remaining_old_posts}")
     
     if remaining_old_posts == 0:

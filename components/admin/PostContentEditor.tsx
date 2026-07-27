@@ -29,7 +29,7 @@ const PostContentEditor: React.FC<PostContentEditorProps> = ({
         <button onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()} type="button" className="btn">H2</button>
         <button onClick={() => editor?.chain().focus().toggleBulletList().run()} type="button" className="btn">• List</button>
         <button onClick={() => editor?.chain().focus().toggleOrderedList().run()} type="button" className="btn">1. List</button>
-        <button onClick={() => editor?.chain().focus().toggleBlockquote().run()} type="button" className="btn">"" Quote</button>
+        <button onClick={() => editor?.chain().focus().toggleBlockquote().run()} type="button" className="btn">&quot;&quot; Quote</button>
         <button onClick={() => editor?.chain().focus().toggleCodeBlock().run()} type="button" className="btn">Code</button>
         <button onClick={() => editor?.chain().focus().setHorizontalRule().run()} type="button" className="btn">— HR</button>
         <button onClick={() => editor?.chain().focus().undo().run()} type="button" className="btn">↶ Undo</button>

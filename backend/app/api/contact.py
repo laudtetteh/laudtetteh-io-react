@@ -1,7 +1,7 @@
+from core.logging import setup_logging
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
 from services.email import send_contact_email
-from core.logging import setup_logging
 
 router = APIRouter()
 logger = setup_logging(name="contact-form")
@@ -35,4 +35,4 @@ async def submit_contact(data: ContactSubmission, request: Request):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred"
-        )
+        ) from e
