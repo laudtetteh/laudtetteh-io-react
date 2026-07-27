@@ -23,3 +23,29 @@
 /* Utilities */
 @import './utilities/typography.css';
 @import './utilities/layout.css';
+
+/*
+ * `/redesign` sticky-header fix (#48).
+ *
+ * `public/css/style.css` (the legacy jQuery theme, loaded globally for
+ * every route via `_app.tsx`) sets `overflow-x: hidden` on `html` and
+ * `body`. Per the CSS overflow spec, a non-`visible` value on one axis
+ * forces the browser to compute the other axis as `auto` rather than
+ * `visible` — so `body` silently becomes its own scroll container even
+ * though it never needs to scroll internally. That's enough to break
+ * `position: sticky` on `Header.tsx`'s sidebar in Chromium: verified live,
+ * `header.getBoundingClientRect().top` moved in lockstep with `-scrollY`
+ * (i.e. behaved as `position: static`) until this override was added.
+ *
+ * `public/css/style.css` is imported *after* this file in `_app.tsx`, so
+ * `!important` is required to win the cascade regardless of import order.
+ * Scoped to `[data-route="redesign"]` (set on `<html>` by
+ * `pages/_document.tsx` only for the `/redesign` route) so the old
+ * homepage, `/blog`, and `/admin` keep the legacy theme's overflow
+ * behavior unchanged.
+ */
+html[data-route='redesign'],
+html[data-route='redesign'] body {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
