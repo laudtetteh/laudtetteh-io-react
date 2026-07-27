@@ -77,7 +77,7 @@ export default function AboutSection() {
           About
         </h2>
 
-        <p className="mt-6 text-base leading-relaxed text-slate-900 dark:text-slate-100 sm:text-lg">
+        <p className="mt-6 text-base leading-normal text-slate-700 dark:text-slate-400">
           I&apos;m Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+
           years of experience building, optimizing, and maintaining web applications for
           clients and employers across the US and Africa. I thrive on learning new

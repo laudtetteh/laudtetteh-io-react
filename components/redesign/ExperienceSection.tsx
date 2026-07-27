@@ -2,13 +2,20 @@
  * Experience section for the `/redesign` homepage — real work-history and
  * education timelines plus a real client testimonial.
  *
- * All content, including per-job achievement bullets/tech tags/related
- * links, is sourced from Laud's résumé (`public/docs/cv/Laud-Tetteh-Resume.pdf`).
+ * Layout/markup (grid date+content columns, hover-highlight overlay,
+ * teal tag pills, arrow-icon title link) mirrors the reference site's
+ * actual rendered structure, ground-truthed against a saved copy of its
+ * HTML — not approximated from screenshots. The reference has no light
+ * mode, so light-mode colors here are this project's own choice, not a
+ * ported value.
  *
- * Server-rendered — no client-only gate, no interactivity required beyond
- * the pure-CSS hover-dims-siblings effect on the work-history timeline
- * (`group/list` on the `<ol>`, `group-hover/list:opacity-50` +
- * `hover:!opacity-100` per entry — ported from the reference, verified live).
+ * All content, including per-job descriptions/tech tags/related links,
+ * is sourced from Laud's résumé (`public/docs/cv/Laud-Tetteh-Resume.pdf`).
+ *
+ * Server-rendered — no client-only gate. The `group/list` +
+ * `lg:group-hover/list:opacity-50` + `lg:hover:!opacity-100` pair on each
+ * `<li>` (not a nested div — see e2e test for #48) drives the
+ * hover-dims-siblings effect via pure CSS.
  */
 
 import MobileSectionTitle from './MobileSectionTitle';
@@ -22,7 +29,8 @@ interface ExperienceEntry {
   dateRange: string;
   title: string;
   company: string;
-  bullets: string[];
+  companyHref: string;
+  description: string;
   techTags: string[];
   relatedLinks: RelatedLink[];
 }
@@ -45,11 +53,9 @@ const experience: ExperienceEntry[] = [
     dateRange: '2021–Present',
     title: 'Software Eng.',
     company: 'Salesforce',
-    bullets: [
-      "Build custom solutions in PHP, JavaScript, MySQL, and YML for Tableau's marketing sites (tableau.com, on Drupal 10), owning projects from discovery through post-release monitoring across 3 US time zones.",
-      "Lead engineer for a pipeline automating daily extraction of user-submitted assessment data from a Dockerized MariaDB image via GitHub Actions, authenticating with AWS IAM and uploading to S3 for the Decision Science team's analysis.",
-      'Rebuilt authentication-gated Product Download pages with a Drupal-UI-toggleable kill switch, backed by unit tests.',
-    ],
+    companyHref: 'https://www.salesforce.com',
+    description:
+      "Build custom solutions in PHP, JavaScript, MySQL, and YML for Tableau's marketing sites (tableau.com, on Drupal 10), owning projects from discovery through post-release monitoring across 3 US time zones. Lead engineer for a pipeline automating daily extraction of user-submitted assessment data via GitHub Actions and AWS, and rebuilt authentication-gated Product Download pages with a Drupal-UI-toggleable kill switch.",
     techTags: ['PHP', 'Drupal', 'JavaScript', 'MySQL', 'AWS', 'GitHub Actions'],
     relatedLinks: [{ label: 'tableau.com', href: 'https://www.tableau.com' }],
   },
@@ -57,22 +63,19 @@ const experience: ExperienceEntry[] = [
     dateRange: '2019–2021',
     title: 'Senior Dev.',
     company: 'MethodistCRM',
-    bullets: [
-      'Built a CRM dashboard with authentication for community-based church programs, powered by Laravel & MySQL.',
-      'Shipped reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
-    ],
+    companyHref: 'https://laudtetteh.io/methodistcrm.html',
+    description:
+      'Built a CRM dashboard with authentication for community-based church programs, powered by Laravel & MySQL. Shipped reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
     techTags: ['Laravel', 'MySQL', 'PHP'],
-    relatedLinks: [{ label: 'laudtetteh.io/methodistcrm.html', href: 'https://laudtetteh.io/methodistcrm.html' }],
+    relatedLinks: [],
   },
   {
     dateRange: '2014–2021',
     title: 'Senior Dev.',
     company: 'Studio Ten Four, LLC',
-    bullets: [
-      'Webmaster and custom plugin development for King County 4Culture (4culture.org), a Washington State non-profit.',
-      "Built and maintained a Drupal-powered class/course database, personnel directory, events calendar, and password-protected content portal for the University of Hawai'i's William S. Richardson School of Law, then led the data migration when the site rebuilt onto WordPress.",
-      'Redesigned and rebuilt the South Seminole and North Orange County Wastewater Transmission Authority site (ssnocwta.com) to WCAG 2.2 accessibility compliance.',
-    ],
+    companyHref: 'https://www.studiotenfour.com',
+    description:
+      "Webmaster and custom plugin development for King County 4Culture, a Washington State non-profit. Built and maintained a Drupal-powered class/course database, personnel directory, events calendar, and password-protected content portal for the University of Hawai'i's William S. Richardson School of Law, then led the data migration when the site rebuilt onto WordPress. Also redesigned the South Seminole and North Orange County Wastewater Transmission Authority site to WCAG 2.2 accessibility compliance.",
     techTags: ['WordPress', 'Drupal', 'PHP', 'Accessibility'],
     relatedLinks: [
       { label: '4culture.org', href: 'https://www.4culture.org' },
@@ -84,12 +87,11 @@ const experience: ExperienceEntry[] = [
     dateRange: '2016–2017',
     title: 'Front-End Eng.',
     company: 'Moz',
-    bullets: [
-      'Worked with the Inbound Engineering team migrating portions of moz.com from CakePHP to Craft CMS.',
-      'Partnered with the UX team translating comps into marketing pages, and with Business Intelligence to implement page-load and event tracking via Adobe DTM and Segment.',
-    ],
+    companyHref: 'https://www.moz.com',
+    description:
+      'Worked with the Inbound Engineering team migrating portions of moz.com from CakePHP to Craft CMS. Partnered with the UX team translating comps into marketing pages, and with Business Intelligence to implement page-load and event tracking via Adobe DTM and Segment.',
     techTags: ['CraftCMS', 'PHP', 'Adobe DTM', 'Segment'],
-    relatedLinks: [{ label: 'moz.com', href: 'https://www.moz.com' }],
+    relatedLinks: [],
   },
 ];
 
@@ -144,57 +146,68 @@ export default function ExperienceSection() {
         </div>
 
         {/* Work history timeline */}
-        <ol className="group/list mt-12 space-y-10 border-l border-slate-200 pl-8 dark:border-slate-800">
-          {experience.map((entry) => (
+        <ol className="group/list mt-12">
+          {experience.map(entry => (
             <li
               key={`${entry.company}-${entry.dateRange}`}
-              className="group relative transition-opacity motion-reduce:transition-none lg:hover:!opacity-100 lg:group-hover/list:opacity-50"
+              className="group relative mb-12 transition-opacity motion-reduce:transition-none lg:hover:!opacity-100 lg:group-hover/list:opacity-50"
             >
-              <span
+              <div
                 aria-hidden="true"
-                className="absolute -left-[2.15rem] top-1.5 h-3 w-3 rounded-full border-2 border-teal-600 bg-slate-50 dark:border-teal-400 dark:bg-slate-900"
+                className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(15,23,42,0.06)] lg:group-hover:drop-shadow-lg dark:lg:group-hover:bg-slate-800/50 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]"
               />
-              <p className="text-sm font-medium text-teal-600 dark:text-teal-400">
-                {entry.dateRange}
-              </p>
-              <h3 className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {entry.title}{' '}
-                <span className="text-slate-600 dark:text-slate-400">@ {entry.company}</span>
-              </h3>
-              <ul className="mt-3 space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
-                {entry.bullets.map((bullet, index) => (
-                  <li key={index} className="flex gap-2">
-                    <span aria-hidden="true">–</span>
-                    <span>{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {entry.techTags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs text-slate-600 dark:border-slate-800 dark:text-slate-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              {entry.relatedLinks.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-3 text-xs">
-                  {entry.relatedLinks.map(link => (
+              <div className="relative grid gap-1 pb-1 sm:grid-cols-8 sm:gap-8 md:gap-4">
+                <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2">
+                  {entry.dateRange}
+                </header>
+                <div className="z-10 sm:col-span-6">
+                  <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
                     <a
-                      key={link.href}
-                      href={link.href}
+                      href={entry.companyHref}
                       target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400"
+                      rel="noreferrer noopener"
+                      className="group/link inline-flex items-baseline text-base font-medium leading-tight text-slate-900 dark:text-slate-200"
                     >
-                      <LinkIcon />
-                      {link.label}
+                      <span>
+                        {entry.title}{' '}
+                        <span className="inline-flex items-center">
+                          @ {entry.company}
+                          <ExternalLinkIcon className="ml-1 h-4 w-4 shrink-0 translate-y-px transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 motion-reduce:transition-none" />
+                        </span>
+                      </span>
                     </a>
-                  ))}
+                  </h3>
+                  <p className="mt-2 text-sm leading-normal text-slate-700 dark:text-slate-400">
+                    {entry.description}
+                  </p>
+                  <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+                    {entry.techTags.map(tag => (
+                      <li key={tag} className="mr-1.5 mt-2">
+                        <div className="flex items-center rounded-full bg-teal-600/10 px-3 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300">
+                          {tag}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  {entry.relatedLinks.length > 0 && (
+                    <ul className="mt-2 flex flex-wrap" aria-label="Related links">
+                      {entry.relatedLinks.map(link => (
+                        <li key={link.href} className="mr-4">
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="relative mt-2 inline-flex items-center text-sm font-medium text-slate-600 dark:text-slate-300"
+                          >
+                            <LinkIcon />
+                            {link.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              )}
+              </div>
             </li>
           ))}
         </ol>
@@ -203,7 +216,7 @@ export default function ExperienceSection() {
         <div className="mt-16">
           <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Education</h3>
           <ol className="mt-6 space-y-6 border-l border-slate-200 pl-8 dark:border-slate-800">
-            {education.map((entry) => (
+            {education.map(entry => (
               <li key={`${entry.institution}-${entry.year}`} className="relative">
                 <span
                   aria-hidden="true"
@@ -240,37 +253,31 @@ function LinkIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-3 w-3"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className="mr-1 h-3 w-3"
       aria-hidden="true"
     >
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z" />
+      <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
     </svg>
   );
 }
 
-function ExternalLinkIcon() {
+function ExternalLinkIcon({ className = 'h-3.5 w-3.5' }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-3.5 w-3.5"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      className={className}
       aria-hidden="true"
     >
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
+      <path
+        fillRule="evenodd"
+        d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+        clipRule="evenodd"
+      />
     </svg>
   );
 }

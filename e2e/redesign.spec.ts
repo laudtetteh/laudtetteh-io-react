@@ -33,10 +33,10 @@ test('experience section renders real work history in initial HTML', async ({ pa
   await expect(experience).toContainText('Brittani Dinsmore');
 });
 
-test('projects section renders placeholder case-study cards in initial HTML', async ({ page }) => {
+test('projects section renders real case-study cards in initial HTML', async ({ page }) => {
   await page.goto('/redesign');
   const projects = page.locator('#projects');
-  await expect(projects).toContainText('[Project title]');
+  await expect(projects).toContainText('MethodistCRM');
   await expect(projects.getByRole('img').first()).toBeVisible();
 });
 
