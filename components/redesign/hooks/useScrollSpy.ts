@@ -29,7 +29,17 @@ export function useScrollSpy(sectionIds: string[]): string | null {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+          // `entry.isIntersecting` can be `true` while `entry.intersectionRatio`
+          // is exactly 0 -- happens when a section's edge lands precisely on
+          // the rootMargin-shrunk band's boundary (e.g. jumping straight to a
+          // section via an in-page nav click rather than scrolling smoothly
+          // past it). A truly-intersecting section reporting ratio 0 would
+          // otherwise tie with every genuinely non-intersecting section
+          // (also forced to 0 below), and the strict `ratio > topRatio`
+          // comparison never lets a 0 beat another 0 -- so the previously
+          // active section could get stuck highlighted forever. A tiny
+          // epsilon floor lets a real intersection always win that tie.
+          ratios.set(entry.target.id, entry.isIntersecting ? Math.max(entry.intersectionRatio, 0.0001) : 0);
         });
 
         let topId: string | null = null;
