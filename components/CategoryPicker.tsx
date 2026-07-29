@@ -61,12 +61,12 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
   }, [groupedCategories]);
 
   if (loading) {
-    return <p className="text-sm text-gray-500">Loading categories…</p>;
+    return <p className="text-sm text-slate-500">Loading categories…</p>;
   }
 
   return (
     <div>
-      <label className="font-semibold">Categories</label>
+      <label className="mb-1.5 block text-sm font-medium text-slate-900">Categories</label>
       <CreatableSelect
         isMulti
         value={selectedOptions}
@@ -78,6 +78,15 @@ export default function CategoryPicker({ selected, onChange }: CategoryPickerPro
         }}
         options={groupedOptions}
         className="mt-1"
+        theme={(theme) => ({
+          ...theme,
+          colors: {
+            ...theme.colors,
+            primary: '#0d9488', // teal-600
+            primary25: '#ccfbf1', // teal-100
+            primary50: '#99f6e4', // teal-200
+          },
+        })}
       />
     </div>
   );

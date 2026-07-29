@@ -1,4 +1,5 @@
 import React from 'react';
+import { inputClasses, labelClasses } from './adminStyles';
 
 interface PostMetaFieldsProps {
   title: string;
@@ -13,42 +14,42 @@ interface PostMetaFieldsProps {
 const PostMetaFields: React.FC<PostMetaFieldsProps> = ({ title, slug, summary, errors, onChange, slugReadOnly = false, onSlugEditClick }) => (
   <>
     <div>
-      <label className="font-semibold">Title</label>
+      <label className={labelClasses}>Title</label>
       <input
         type="text"
-        className="w-full border rounded px-3 py-2"
+        className={inputClasses}
         value={title}
         onChange={(e) => onChange('title', e.target.value)}
       />
-      {errors.title && <p className="text-red-600 text-sm">{errors.title}</p>}
+      {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
     </div>
     <div>
-      <label className="font-semibold">Slug</label>
+      <label className={labelClasses}>Slug</label>
       <div className="flex items-center gap-2">
         <input
           type="text"
-          className="w-full border rounded px-3 py-2 lowercase"
+          className={`${inputClasses} lowercase`}
           value={slug}
           onChange={(e) => onChange('slug', e.target.value.toLowerCase())}
           readOnly={slugReadOnly}
         />
         {slugReadOnly && (
-          <button type="button" className="text-xs px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200" onClick={onSlugEditClick}>
+          <button type="button" className="shrink-0 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50" onClick={onSlugEditClick}>
             Edit
           </button>
         )}
       </div>
-      {errors.slug && <p className="text-red-600 text-sm">{errors.slug}</p>}
+      {errors.slug && <p className="text-red-600 text-sm mt-1">{errors.slug}</p>}
     </div>
     <div>
-      <label className="font-semibold">Summary</label>
+      <label className={labelClasses}>Summary</label>
       <textarea
         rows={3}
-        className="w-full border rounded px-3 py-2"
+        className={inputClasses}
         value={summary}
         onChange={(e) => onChange('summary', e.target.value)}
       />
-      {errors.summary && <p className="text-red-600 text-sm">{errors.summary}</p>}
+      {errors.summary && <p className="text-red-600 text-sm mt-1">{errors.summary}</p>}
     </div>
   </>
 );
