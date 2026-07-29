@@ -4,6 +4,8 @@ import Link from "next/link";
 import { API_BASE_URL } from "@/utils/api";
 import { useFlashMessage } from "@/lib/useFlashMessage";
 import Layout from '@/components/Layout';
+import { inter } from '@/lib/fonts';
+import { inputClasses, labelClasses, primaryButtonClasses } from '@/components/admin/adminStyles';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -89,16 +91,24 @@ export default function AdminLogin() {
 
   return (
     <Layout title="Admin Login | Laud Tetteh" description="Admin login page for Laud Tetteh's site.">
-      <div className="min-h-screen flex flex-col justify-center items-center px-4">
+      <div className={`${inter.variable} font-inter min-h-screen flex flex-col justify-center items-center bg-slate-50 px-4`}>
         <form
           onSubmit={handleLogin}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md"
+          className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
         >
-          <h1 className="text-2xl font-bold mb-4 text-center">Admin Login</h1>
-          {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+          <h1 className="font-inter mb-1 text-center text-2xl font-semibold text-slate-900">Admin Login</h1>
+          <p className="mb-6 text-center text-sm text-slate-500">Laud Tetteh</p>
+          {error && (
+            <div
+              role="alert"
+              className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-center text-sm text-red-700"
+            >
+              {error}
+            </div>
+          )}
 
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
+            <label htmlFor="username" className={labelClasses}>
               Username
             </label>
             <input
@@ -107,12 +117,12 @@ export default function AdminLogin() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              className={inputClasses}
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+            <label htmlFor="password" className={labelClasses}>
               Password
             </label>
             <input
@@ -120,20 +130,20 @@ export default function AdminLogin() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              className={inputClasses}
             />
           </div>
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full flex justify-center items-center"
+            className={`${primaryButtonClasses} w-full`}
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
           <div className="mt-4 text-center">
-            <Link href="/" className="text-sm text-blue-600 underline hover:text-blue-800">
+            <Link href="/" className="text-sm text-teal-600 underline hover:text-teal-700">
               ← Back to site
             </Link>
           </div>

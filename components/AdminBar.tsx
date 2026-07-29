@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FlashMessage from './flash/FlashMessage';
+import { inter } from '@/lib/fonts';
 
 const AdminBar = () => {
   const router = useRouter();
@@ -48,37 +49,37 @@ const AdminBar = () => {
   return (
     <>
       <FlashMessage />
-      <div className="fixed top-0 inset-x-0 bg-black text-white text-sm py-2 px-4 flex justify-between items-center z-50 shadow border-b border-gray-800">
-        <div className="space-x-4 flex items-center">
-          <Link href="/admin" className="underline hover:text-gray-300 font-semibold">
-            🏠 Dashboard
+      <div className={`${inter.variable} font-inter fixed top-0 inset-x-0 z-50 flex items-center justify-between border-b border-slate-800 bg-slate-900 px-4 py-2.5 text-sm text-slate-100 shadow-sm`}>
+        <div className="flex items-center space-x-5">
+          <Link href="/admin" className="font-semibold text-slate-100 hover:text-teal-400">
+            Dashboard
           </Link>
-          <Link href="/admin/create" className="underline hover:text-gray-300 font-semibold">
-            ➕ New Post
+          <Link href="/admin/create" className="font-semibold text-slate-100 hover:text-teal-400">
+            + New Post
           </Link>
           {isEditPage && slug && (
             <>
-              <a href={`/blog/${slug}`} target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-300 font-semibold">🔎 View</a>
-              <button onClick={handleDelete} className="underline hover:text-red-400 font-semibold ml-2">🗑️ Delete</button>
+              <a href={`/blog/${slug}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-100 hover:text-teal-400">View</a>
+              <button onClick={handleDelete} className="font-semibold text-slate-100 hover:text-red-400">Delete</button>
             </>
           )}
           {isViewablePostPage && (
-            <Link href={`/admin/edit/${slug}`} className="underline hover:text-yellow-300 font-semibold">
-              ✏️ Edit Post
+            <Link href={`/admin/edit/${slug}`} className="font-semibold text-slate-100 hover:text-teal-400">
+              Edit Post
             </Link>
           )}
         </div>
         <div className="relative">
-          <button onClick={() => setShowDropdown(!showDropdown)} className="hover:text-gray-300">
-            ⚙️ Admin
+          <button onClick={() => setShowDropdown(!showDropdown)} className="font-semibold text-slate-100 hover:text-teal-400">
+            Admin ▾
           </button>
           {showDropdown && (
-            <div className="absolute right-0 mt-2 bg-white text-black rounded shadow p-2 space-y-2 w-48">
-              <Link href="/admin" className="block hover:bg-gray-100 px-2 py-1 rounded">
-                📂 My Posts
+            <div className="absolute right-0 mt-2 w-48 space-y-1 rounded-md border border-slate-200 bg-white p-2 text-slate-900 shadow-md">
+              <Link href="/admin" className="block rounded px-2 py-1 hover:bg-slate-50">
+                My Posts
               </Link>
-              <Link href="/logout" className="block hover:bg-gray-100 px-2 py-1 rounded">
-                🚪 Log out
+              <Link href="/logout" className="block rounded px-2 py-1 hover:bg-slate-50">
+                Log out
               </Link>
             </div>
           )}
