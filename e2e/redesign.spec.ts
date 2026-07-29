@@ -105,15 +105,13 @@ test('contact section renders the real form shell in initial HTML', async ({ pag
   await expect(contact.locator('#send_message')).toBeVisible();
 });
 
-test('contact form rejects submission when the security code is wrong', async ({ page }) => {
+test('contact form honeypot field is present but hidden from real users', async ({ page }) => {
   await page.goto('/redesign');
   const contact = page.locator('#contact');
-  await contact.locator('#contact_name').fill('Test User');
-  await contact.locator('#contact_email').fill('test@example.com');
-  await contact.locator('#contact_message').fill('Hello there');
-  await contact.locator('#txtInput').fill('00000');
-  await contact.locator('#send_message').click();
-  await expect(contact.getByRole('alert')).toContainText('Security code does not match');
+  const honeypot = contact.locator('input[name="website"]');
+  await expect(honeypot).toHaveAttribute('aria-hidden', 'true');
+  await expect(honeypot).toHaveAttribute('tabindex', '-1');
+  await expect(honeypot).toHaveValue('');
 });
 
 test('footer renders real copyright and contact links in initial HTML', async ({ page }) => {
