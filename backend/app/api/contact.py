@@ -1,10 +1,9 @@
 import time
 from collections import defaultdict
 
+from core.logging import setup_logging
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr
-
-from core.logging import setup_logging
 from services.email import send_contact_email
 
 router = APIRouter()
