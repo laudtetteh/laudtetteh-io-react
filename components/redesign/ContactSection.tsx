@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import MobileSectionTitle from './MobileSectionTitle';
-
-const MAP_SRC =
-  'https://maps.google.com/maps?q=11335%20NE%20122nd%20Way%2C%20Suite%20105%2C%20Kirkland%2C%20WA%2098034&t=&z=15&ie=UTF8&iwloc=&output=embed';
 
 const initialForm = {
   contact_name: '',
   contact_email: '',
   contact_message: '',
-  contact_question: '',
+  website: '', // honeypot -- real users never see/fill this field
 };
-
-function generateCaptcha() {
-  return Array.from({ length: 5 }, () => Math.floor(Math.random() * 9) + 1).join('');
-}
 
 const inputClasses =
   'w-full rounded-md border border-slate-200 bg-slate-50 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 transition-colors focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-teal-400 dark:focus:ring-teal-400/30';
@@ -23,28 +16,15 @@ const labelClasses = 'mb-1.5 block text-sm font-medium text-slate-900 dark:text-
 /**
  * Re-skinned Contact section for the `/redesign` route (renders under `#contact`).
  *
- * This is a visual re-skin only — the captcha, validation, and submit logic are
- * ported verbatim from `components/sections/ContactSection.tsx` (the current,
- * production contact form) so behavior is unchanged. That includes a known,
- * pre-existing bug: it reads `NEXT_PUBLIC_API_URL` rather than the project's
- * `NEXT_PUBLIC_API_BROWSER`/`API_SERVER` convention. That bug is intentionally
- * left as-is here — it's tracked and fixed as its own, separate ticket.
- *
- * One SSR-only fix, needed here because this is the first time this captcha
- * logic runs through a real server-rendered page: `generateCaptcha()` uses
- * `Math.random()`, so seeding it directly in `useState`'s initializer produces
- * a different value on the server vs. the client, causing a hydration
- * mismatch. The captcha is generated client-side only, after mount, instead.
+ * Note: this reads `NEXT_PUBLIC_API_URL` rather than the project's
+ * `NEXT_PUBLIC_API_BROWSER`/`API_SERVER` convention. That's a known,
+ * pre-existing bug, intentionally left as-is here — tracked and fixed as its
+ * own, separate ticket.
  */
 const ContactSection: React.FC = () => {
   const [form, setForm] = useState(initialForm);
-  const [captcha, setCaptcha] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCaptcha(generateCaptcha());
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,10 +37,6 @@ const ContactSection: React.FC = () => {
     }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.contact_email)) {
       setErrorMsg('Please enter a valid email address. Exp. example@gmail.com');
-      return false;
-    }
-    if (form.contact_question !== captcha) {
-      setErrorMsg('Security code does not match!');
       return false;
     }
     return true;
@@ -80,16 +56,15 @@ const ContactSection: React.FC = () => {
           name: form.contact_name,
           email: form.contact_email,
           message: form.contact_message,
+          website: form.website,
         }),
       });
       if (!res.ok) throw new Error('Failed to send contact form');
       setStatus('success');
       setForm(initialForm);
-      setCaptcha(generateCaptcha());
     } catch (err: unknown) {
       setStatus('error');
       setErrorMsg(err instanceof Error ? err.message : 'Unknown error');
-      setCaptcha(generateCaptcha());
     }
   };
 
@@ -105,20 +80,6 @@ const ContactSection: React.FC = () => {
           <p className="mt-3 text-slate-600 dark:text-slate-400">
             Have a project in mind, or just want to say hello? Send a message below.
           </p>
-        </div>
-
-        <div className="mb-10 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-          <iframe
-            width="100%"
-            height="300"
-            src={MAP_SRC}
-            frameBorder="0"
-            scrolling="no"
-            marginHeight={0}
-            marginWidth={0}
-            title="Google Map"
-            className="block"
-          ></iframe>
         </div>
 
         <form id="contactForm" onSubmit={handleSubmit} autoComplete="off" className="space-y-5">
@@ -184,22 +145,18 @@ const ContactSection: React.FC = () => {
             ></textarea>
           </div>
 
-          <div>
-            <label htmlFor="txtInput" className={labelClasses}>
-              Enter the code: <span className="font-mono font-semibold tracking-widest text-teal-600 dark:text-teal-400">{captcha}</span>
-            </label>
-            <input
-              type="text"
-              className={inputClasses}
-              name="contact_question"
-              id="txtInput"
-              autoComplete="off"
-              placeholder="Security code *"
-              value={form.contact_question}
-              onChange={handleChange}
-            />
-            <input type="hidden" id="txtCaptcha" value={captcha} />
-          </div>
+          {/* Honeypot: hidden from real users, invisible to screen readers, but a
+              plain form field a naive bot's autofill will still populate. */}
+          <input
+            type="text"
+            name="website"
+            value={form.website}
+            onChange={handleChange}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="absolute -left-[9999px] h-px w-px overflow-hidden"
+          />
 
           <div className="pt-2">
             <button

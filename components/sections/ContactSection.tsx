@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 
-const MAP_SRC =
-  'https://maps.google.com/maps?q=11335%20NE%20122nd%20Way%2C%20Suite%20105%2C%20Kirkland%2C%20WA%2098034&t=&z=15&ie=UTF8&iwloc=&output=embed';
-
 const initialForm = {
   contact_name: '',
   contact_email: '',
   contact_message: '',
-  contact_question: '',
+  website: '', // honeypot -- real users never see/fill this field
 };
-
-function generateCaptcha() {
-  return Array.from({ length: 5 }, () => Math.floor(Math.random() * 9) + 1).join('');
-}
 
 const ContactSection: React.FC = () => {
   const [form, setForm] = useState(initialForm);
-  const [captcha, setCaptcha] = useState(generateCaptcha());
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -31,10 +23,6 @@ const ContactSection: React.FC = () => {
     }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.contact_email)) {
       setErrorMsg('Please enter a valid email address. Exp. example@gmail.com');
-      return false;
-    }
-    if (form.contact_question !== captcha) {
-      setErrorMsg('Security code does not match!');
       return false;
     }
     return true;
@@ -54,17 +42,16 @@ const ContactSection: React.FC = () => {
           name: form.contact_name,
           email: form.contact_email,
           message: form.contact_message,
+          website: form.website,
         }),
       });
       if (!res.ok) throw new Error('Failed to send contact form');
       setStatus('success');
       setForm(initialForm);
-      setCaptcha(generateCaptcha());
     } catch (err) {
       setStatus('error');
       const message = err instanceof Error ? err.message : 'Unknown error';
       setErrorMsg(message);
-      setCaptcha(generateCaptcha());
     }
   };
 
@@ -74,23 +61,7 @@ const ContactSection: React.FC = () => {
         <div className="arlo_tm_contact">
           <div className="contact_inner">
             <div className="arlo_tm_title"><h3>Get in Touch</h3></div>
-            <div className="my_map">
-              <div className="mapouter">
-                <div className="gmap_canvas">
-                  <iframe
-                    width="100%"
-                    height="350"
-                    id="gmap_canvas"
-                    src={MAP_SRC}
-                    frameBorder="0"
-                    scrolling="no"
-                    marginHeight={0}
-                    marginWidth={0}
-                    title="Google Map"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
+            <div className="text"><p>Based in Seattle, WA</p></div>
             <div className="form_wrapper">
               <form id="contactForm" onSubmit={handleSubmit} autoComplete="off">
                 {errorMsg && <div className="error_box" style={{ display: 'block' }}><p>{errorMsg}</p></div>}
@@ -107,12 +78,19 @@ const ContactSection: React.FC = () => {
                   <li id="text-area-w">
                     <textarea placeholder="Message" name="contact_message" className="cf-form-control" value={form.contact_message} onChange={handleChange}></textarea>
                   </li>
-                  <li id="enter_code">
-                    <span id="txtCaptchaSpan">{captcha}</span>
-                    <input type="text" className="cf-form-control" name="contact_question" id="txtInput" autoComplete="off" placeholder="Please Enter Code *" value={form.contact_question} onChange={handleChange} />
-                    <input type="hidden" id="txtCaptcha" value={captcha} />
-                  </li>
                 </ul>
+                {/* Honeypot: hidden from real users, invisible to screen readers, but a
+                    plain form field a naive bot's autofill will still populate. */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+                />
                 <div className="arlo_tm_button">
                   <button type="submit" id="send_message" disabled={status === 'loading'}>
                     <span className="back">{status === 'loading' ? 'Sending…' : 'Send Message'}</span>
