@@ -21,6 +21,10 @@ import PostImageUploader from './admin/PostImageUploader';
 import PostActions from './admin/PostActions';
 import CodeBlock from '@tiptap/extension-code-block';
 import HardBreak from '@tiptap/extension-hard-break';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
 import sanitizeHtml from 'sanitize-html';
 import { generateJSON } from '@tiptap/html';
 
@@ -136,6 +140,10 @@ export default function AdminPostForm({
         CharacterCount.configure(),
         CodeBlock,
         HardBreak,
+        Table.configure({ resizable: true }),
+        TableRow,
+        TableHeader,
+        TableCell,
       ]) as JSONContent;
     } catch {
       // If generateJSON fails, use empty string - editor will handle it gracefully
@@ -155,6 +163,10 @@ export default function AdminPostForm({
       CharacterCount.configure(),
       CodeBlock,
       HardBreak,
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
       Extension.create({
         name: 'imagePasteHandler',
         addProseMirrorPlugins() {
