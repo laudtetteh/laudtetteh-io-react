@@ -15,11 +15,6 @@ const labelClasses = 'mb-1.5 block text-sm font-medium text-slate-900 dark:text-
 
 /**
  * Re-skinned Contact section for the `/redesign` route (renders under `#contact`).
- *
- * Note: this reads `NEXT_PUBLIC_API_URL` rather than the project's
- * `NEXT_PUBLIC_API_BROWSER`/`API_SERVER` convention. That's a known,
- * pre-existing bug, intentionally left as-is here — tracked and fixed as its
- * own, separate ticket.
  */
 const ContactSection: React.FC = () => {
   const [form, setForm] = useState(initialForm);
@@ -48,7 +43,7 @@ const ContactSection: React.FC = () => {
     if (!validate()) return;
     setStatus('loading');
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const backendUrl = process.env.NEXT_PUBLIC_API_BROWSER || 'http://localhost:8000';
       const res = await fetch(`${backendUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
