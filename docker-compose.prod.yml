@@ -1,0 +1,72 @@
+# Production stack for the OVH VPS pilot (#76). Requires a `.env` provisioned by hand
+# on the VPS itself before first run — this repo has no `.env.example` (use `.env.local`
+# as the key-name reference). It holds the 16 app secrets plus CLOUDFLARE_API_TOKEN, is
+# excluded from the deploy workflow's rsync, and is never committed or passed through
+# CI — so nothing sensitive is baked into an image or travels through GitHub Actions.
+#
+# Differs from docker-compose.yml (dev): no source bind mounts (images are
+# self-contained), restart policies, no host ports on web/api (only Caddy is
+# internet-facing), and a new `caddy` service that terminates TLS and reverse-proxies
+# by subdomain: one hostname to web:3000, another to api:8000. This app is cross-origin
+# (the browser calls the API's own hostname directly, not same-origin through a path
+# prefix), unlike the zap/Beacon Essentials path-based pattern, which is why this needs
+# two Caddy site blocks instead of one with a path-trim rule. NOTE: caddy/Caddyfile
+# currently points at throwaway *test* subdomains, not production hostnames — see that
+# file for the cutover swap.
+#
+# Bring up with: docker compose -f docker-compose.prod.yml up -d --build
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        API_SERVER: ${API_SERVER}
+        NEXT_PUBLIC_API_BROWSER: ${NEXT_PUBLIC_API_BROWSER}
+        NEXT_PUBLIC_AWS_S3_BUCKET: ${NEXT_PUBLIC_AWS_S3_BUCKET}
+    env_file:
+      - path: .env
+        required: true
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./backend
+    env_file:
+      - path: .env
+        required: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  caddy:
+    build: ./caddy
+    env_file:
+      # CLOUDFLARE_API_TOKEN — needed for the ACME DNS-01 challenge (see Caddyfile).
+      # Required because production DNS stays proxied (orange-cloud) through Cloudflare,
+      # which blocks the HTTP-01 challenge from ever reaching this origin directly.
+      - path: .env
+        required: true
+    depends_on:
+      web:
+        condition: service_started
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persists Caddy's issued Let's Encrypt certs across container recreates (every
+      # deploy rebuilds this image) — without it, each deploy re-requests fresh certs
+      # and risks Let's Encrypt's per-domain rate limit.
+      - caddy_data:/data
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
