@@ -10,9 +10,9 @@
 # by subdomain: one hostname to web:3000, another to api:8000. This app is cross-origin
 # (the browser calls the API's own hostname directly, not same-origin through a path
 # prefix), unlike the zap/Beacon Essentials path-based pattern, which is why this needs
-# two Caddy site blocks instead of one with a path-trim rule. NOTE: caddy/Caddyfile
-# currently points at throwaway *test* subdomains, not production hostnames — see that
-# file for the cutover swap.
+# two Caddy site blocks instead of one with a path-trim rule. caddy/Caddyfile serves
+# the production hostnames plus the original test subdomains (kept until post-cutover
+# cleanup) — see that file.
 #
 # Bring up with: docker compose -f docker-compose.prod.yml up -d --build
 
