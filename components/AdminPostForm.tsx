@@ -3,17 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFlashMessage } from '@/lib/useFlashMessage';
-import {
-  useEditor,
-  type Editor,
-} from '@tiptap/react';
+import { useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
-import { Extension } from '@tiptap/core';
+import { Extension, type JSONContent } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 import { uploadImage, getPost } from '@/lib/api';
 import type { PostData } from '@/types/blog';
@@ -24,6 +21,10 @@ import PostImageUploader from './admin/PostImageUploader';
 import PostActions from './admin/PostActions';
 import CodeBlock from '@tiptap/extension-code-block';
 import HardBreak from '@tiptap/extension-hard-break';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
 import sanitizeHtml from 'sanitize-html';
 import { generateJSON } from '@tiptap/html';
 
@@ -126,7 +127,7 @@ export default function AdminPostForm({
   });
   
   // For editor initialization, convert HTML to ProseMirror JSON
-  let initialContent: string | Record<string, unknown> = '';
+  let initialContent: string | JSONContent = '';
   if (initialData && sanitizedHtml) {
     try {
       // Use generateJSON to parse HTML to ProseMirror JSON for editor initialization
@@ -139,7 +140,11 @@ export default function AdminPostForm({
         CharacterCount.configure(),
         CodeBlock,
         HardBreak,
-      ]);
+        Table.configure({ resizable: true }),
+        TableRow,
+        TableHeader,
+        TableCell,
+      ]) as JSONContent;
     } catch {
       // If generateJSON fails, use empty string - editor will handle it gracefully
       initialContent = '';
@@ -158,6 +163,10 @@ export default function AdminPostForm({
       CharacterCount.configure(),
       CodeBlock,
       HardBreak,
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
       Extension.create({
         name: 'imagePasteHandler',
         addProseMirrorPlugins() {

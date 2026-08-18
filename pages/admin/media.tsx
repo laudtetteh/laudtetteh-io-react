@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import { useFlashMessage } from "@/lib/useFlashMessage";
+import { inter } from '@/lib/fonts';
+import { inputClasses, primaryButtonClasses, dangerButtonClasses, cardClasses } from '@/components/admin/adminStyles';
 
 interface S3Image {
   key: string;
@@ -207,20 +209,20 @@ export default function AdminMedia() {
 
   return (
     <Layout title="Media Library | Laud Tetteh" description="Admin media library for managing uploads.">
-      <div className="max-w-6xl mx-auto py-12 px-6">
+      <div className={`${inter.variable} font-inter max-w-6xl mx-auto py-12 px-6 bg-slate-50`}>
         <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-          <h1 className="text-3xl font-bold">🖼️ Media Library</h1>
+          <h1 className="font-inter text-3xl font-semibold text-slate-900">Media Library</h1>
           <div className="flex gap-2 items-center">
             <input
               type="text"
               placeholder="Search by name..."
               value={search}
               onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-              className="border rounded px-3 py-2 text-sm"
+              className={`${inputClasses} text-sm w-auto`}
             />
             <button
               onClick={handleUploadClick}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm flex items-center gap-2"
+              className={`${primaryButtonClasses} text-sm gap-2`}
               disabled={uploading}
             >
               {uploading ? (
@@ -232,7 +234,7 @@ export default function AdminMedia() {
                   <span>Uploading...</span>
                 </>
               ) : (
-                <>📤 Upload</>
+                <>Upload</>
               )}
             </button>
             <input
@@ -246,7 +248,7 @@ export default function AdminMedia() {
             {selected.length > 0 && (
               <button
                 onClick={handleBulkDelete}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition text-sm"
+                className={`${dangerButtonClasses} text-sm`}
               >
                 Delete Selected ({selected.length})
               </button>
@@ -258,17 +260,17 @@ export default function AdminMedia() {
         {uploadProgress.length > 0 && (
           <div className="mb-6 space-y-2">
             {uploadProgress.map(({ filename, progress, status, error }) => (
-              <div key={filename} className="bg-gray-50 p-2 rounded text-sm flex items-center gap-2">
+              <div key={filename} className="bg-white border border-slate-200 p-2 rounded-md text-sm flex items-center gap-2">
                 <div className="flex-1">
-                  <div className="flex justify-between mb-1">
+                  <div className="flex justify-between mb-1 text-slate-700">
                     <span className="truncate">{filename}</span>
                     <span>{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                  <div className="w-full bg-slate-200 rounded-full h-1.5">
                     <div
                       className={`h-1.5 rounded-full ${
                         status === 'error' ? 'bg-red-600' :
-                        status === 'success' ? 'bg-green-600' : 'bg-blue-600'
+                        status === 'success' ? 'bg-teal-600' : 'bg-slate-400'
                       }`}
                       style={{ width: `${progress}%` }}
                     />
@@ -289,23 +291,23 @@ export default function AdminMedia() {
               if (el) el.indeterminate = !allCurrentSelected && someCurrentSelected;
             }}
             onChange={toggleSelectAll}
-            className="h-5 w-5"
+            className="h-5 w-5 accent-teal-600"
           />
-          <span className="text-sm">Select all on this page</span>
+          <span className="text-sm text-slate-700">Select all on this page</span>
         </div>
 
         {loading ? (
-          <div className="text-center py-12">Loading images...</div>
+          <div className="text-center py-12 text-slate-600">Loading images...</div>
         ) : (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {paginatedImages.map((img) => (
-                <div key={img.key} className="relative border rounded shadow bg-white p-2 flex flex-col items-center cursor-pointer group">
+                <div key={img.key} className={`${cardClasses} relative flex flex-col items-center p-2 cursor-pointer group`}>
                   <input
                     type="checkbox"
                     checked={selected.includes(img.key)}
                     onChange={e => { e.stopPropagation(); toggleSelect(img.key); }}
-                    className="absolute top-2 left-2 z-10 h-5 w-5"
+                    className="absolute top-2 left-2 z-10 h-5 w-5 accent-teal-600"
                   />
                   <img
                     src={img.url}
@@ -313,12 +315,12 @@ export default function AdminMedia() {
                     className="object-cover w-full h-32 rounded mb-2 group-hover:opacity-80"
                     onClick={() => setPreview(img)}
                   />
-                  <div className="text-xs break-all mb-1">{img.key.replace(/^uploads\//, "")}</div>
-                  <div className="text-xs text-gray-500 mb-1">{(img.size / 1024).toFixed(1)} KB</div>
-                  <div className="text-xs text-gray-400 mb-2">{img.last_modified ? new Date(img.last_modified).toLocaleString() : ""}</div>
+                  <div className="text-xs break-all mb-1 text-slate-700">{img.key.replace(/^uploads\//, "")}</div>
+                  <div className="text-xs text-slate-500 mb-1">{(img.size / 1024).toFixed(1)} KB</div>
+                  <div className="text-xs text-slate-400 mb-2">{img.last_modified ? new Date(img.last_modified).toLocaleString() : ""}</div>
                   <button
                     onClick={e => { e.stopPropagation(); handleDelete(img.key); }}
-                    className="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700"
+                    className="bg-red-600 text-white px-2 py-1 rounded-md text-xs hover:bg-red-700"
                   >
                     Delete
                   </button>
@@ -329,7 +331,7 @@ export default function AdminMedia() {
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
                 <button
-                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 disabled:opacity-50"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                 >
@@ -338,14 +340,14 @@ export default function AdminMedia() {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i + 1}
-                    className={`px-3 py-1 rounded border ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-white'}`}
+                    className={`rounded-md border px-3 py-1 ${currentPage === i + 1 ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-200 bg-white text-slate-700'}`}
                     onClick={() => setCurrentPage(i + 1)}
                   >
                     {i + 1}
                   </button>
                 ))}
                 <button
-                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 disabled:opacity-50"
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
                 >
@@ -358,19 +360,19 @@ export default function AdminMedia() {
         {/* Image Preview Modal */}
         {preview && (
           <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative">
+            <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full relative">
               <button
                 onClick={closeModal}
-                className="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl"
+                className="absolute top-2 right-2 text-slate-500 hover:text-slate-900 text-2xl"
                 aria-label="Close"
               >
                 &times;
               </button>
-              <img src={preview.url} alt={preview.key} className="w-full max-h-96 object-contain mb-4 rounded" />
-              <div className="text-sm break-all mb-2"><strong>Key:</strong> {preview.key}</div>
-              <div className="text-sm text-gray-500 mb-2"><strong>Size:</strong> {(preview.size / 1024).toFixed(1)} KB</div>
-              <div className="text-sm text-gray-400 mb-2"><strong>Last Modified:</strong> {preview.last_modified ? new Date(preview.last_modified).toLocaleString() : ""}</div>
-              <a href={preview.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">Open in new tab</a>
+              <img src={preview.url} alt={preview.key} className="w-full max-h-96 object-contain mb-4 rounded-md" />
+              <div className="text-sm break-all mb-2 text-slate-700"><strong>Key:</strong> {preview.key}</div>
+              <div className="text-sm text-slate-500 mb-2"><strong>Size:</strong> {(preview.size / 1024).toFixed(1)} KB</div>
+              <div className="text-sm text-slate-400 mb-2"><strong>Last Modified:</strong> {preview.last_modified ? new Date(preview.last_modified).toLocaleString() : ""}</div>
+              <a href={preview.url} target="_blank" rel="noopener noreferrer" className="text-teal-600 underline text-sm hover:text-teal-700">Open in new tab</a>
             </div>
           </div>
         )}

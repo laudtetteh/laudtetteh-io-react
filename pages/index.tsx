@@ -1,47 +1,55 @@
 import React from 'react';
-import PortfolioLayout from '../components/PortfolioLayout';
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
+import RedesignLayout from '../components/redesign/RedesignLayout';
 import { GithubRepo } from '../types/github';
-import Layout from '../components/Layout';
+import { PostData } from '../types/blog';
+import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '../lib/github';
+import { getLatestPosts } from '../lib/blog';
+
+const LATEST_POSTS_COUNT = 4;
+// Blog content changes more often than GitHub repo topics — a shorter
+// revalidate window keeps the Writing section closer to real-time.
+const POSTS_REVALIDATE_SECONDS = 3600; // 1 hour
 
 interface HomePageProps {
   repos: GithubRepo[];
+  posts: PostData[];
 }
 
-const HomePage: React.FC<HomePageProps> = ({ repos }) => (
-  <Layout title="Laud Tetteh | Full Stack Developer" description="Personal site and portfolio of Laud Tetteh.">
-    <PortfolioLayout repos={repos} />
-  </Layout>
+// Deliberately does NOT use `components/Layout.tsx` — that wrapper renders
+// the legacy jQuery-theme `MobileMenu` (`.arlo_tm_topbar` markup) whenever
+// `pathname === '/'`, which would inject old-theme DOM into the new design.
+// `pages/redesign.tsx` never used `Layout` either; this mirrors that.
+const HomePage: React.FC<HomePageProps> = ({ repos, posts }) => (
+  <>
+    <Head>
+      <title>Laud Tetteh | Full Stack Developer</title>
+      <meta name="description" content="Personal site and portfolio of Laud Tetteh." />
+    </Head>
+    <RedesignLayout repos={repos} posts={posts} />
+  </>
 );
 
-export const getStaticProps: GetStaticProps = async () => {
-  try {
-    const res = await fetch('https://api.github.com/users/laudtetteh/repos?sort=pushed&per_page=100');
-    if (!res.ok) {
-      throw new Error(`Failed to fetch repos: ${res.status}`);
-    }
-    const allRepos: GithubRepo[] = await res.json();
+export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+  const [reposResult, postsResult] = await Promise.allSettled([getSandboxRepos(), getLatestPosts(LATEST_POSTS_COUNT)]);
 
-    const allowedTopics = new Set(['frontend', 'backend', 'devops', 'ci-cd']);
-    const filteredRepos = allRepos.filter(repo => 
-      repo.topics.some(topic => allowedTopics.has(topic))
-    );
-
-    return {
-      props: {
-        repos: filteredRepos,
-      },
-      // Re-generate the page every 6 hours to fetch new repo data
-      revalidate: 21600, 
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {
-        repos: [],
-      },
-    };
+  if (reposResult.status === 'rejected') {
+    console.error(reposResult.reason);
   }
+  if (postsResult.status === 'rejected') {
+    console.error(postsResult.reason);
+  }
+
+  return {
+    props: {
+      repos: reposResult.status === 'fulfilled' ? reposResult.value : [],
+      posts: postsResult.status === 'fulfilled' ? postsResult.value : [],
+    },
+    // Shortest of the two sections' desired freshness windows, since both
+    // props share one page-level revalidate.
+    revalidate: Math.min(SANDBOX_REVALIDATE_SECONDS, POSTS_REVALIDATE_SECONDS),
+  };
 };
 
 export default HomePage;

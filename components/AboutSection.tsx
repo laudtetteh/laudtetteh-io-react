@@ -36,16 +36,16 @@ const AboutSection: React.FC = () => (
             <div className="left">
               <div className="skills_title"><h3>Server Side</h3></div>
               <div className="arlo_progress">
-                <div className="progress_inner" data-value="80" data-color="#999">
-                  <span><span className="label">PHP | Node.js</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="80" data-color="#333333">
+                  <span><span className="label">PHP | Node.js</span><span className="number">80%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="85" data-color="#999">
-                  <span><span className="label">Laravel | WordPress | Drupal</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="85" data-color="#333333">
+                  <span><span className="label">Laravel | WordPress | Drupal</span><span className="number">85%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="65" data-color="#999">
-                  <span><span className="label">MySQL | MariaDB | MongoDB</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="65" data-color="#333333">
+                  <span><span className="label">MySQL | MariaDB | MongoDB</span><span className="number">65%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
               </div>
@@ -53,16 +53,16 @@ const AboutSection: React.FC = () => (
             <div className="right">
               <div className="skills_title"><h3>Client Side</h3></div>
               <div className="arlo_progress">
-                <div className="progress_inner" data-value="70" data-color="#999">
-                  <span><span className="label">ReactJS</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="70" data-color="#333333">
+                  <span><span className="label">ReactJS</span><span className="number">70%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="80" data-color="#999">
-                  <span><span className="label">Bootstrap | TailwindCSS</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="80" data-color="#333333">
+                  <span><span className="label">Bootstrap | TailwindCSS</span><span className="number">80%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="95" data-color="#999">
-                  <span><span className="label">HTML | CSS | SASS</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="95" data-color="#333333">
+                  <span><span className="label">HTML | CSS | SASS</span><span className="number">95%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
               </div>
@@ -72,16 +72,16 @@ const AboutSection: React.FC = () => (
             <div className="left">
               <div className="skills_title"><h3>Dev-Ops & CI/CD</h3></div>
               <div className="arlo_progress">
-                <div className="progress_inner" data-value="85" data-color="#999">
-                  <span><span className="label">GitHub Actions</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="85" data-color="#333333">
+                  <span><span className="label">GitHub Actions</span><span className="number">85%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="75" data-color="#999">
-                  <span><span className="label">Cypress | PHPUnit | Playwright</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="75" data-color="#333333">
+                  <span><span className="label">Cypress | PHPUnit | Playwright</span><span className="number">75%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="95" data-color="#999">
-                  <span><span className="label">Docker | AWS | Heroku | Netlify</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="95" data-color="#333333">
+                  <span><span className="label">Docker | AWS | Heroku | Netlify</span><span className="number">95%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
               </div>
@@ -89,16 +89,16 @@ const AboutSection: React.FC = () => (
             <div className="right">
               <div className="skills_title"><h3>Others</h3></div>
               <div className="arlo_progress">
-                <div className="progress_inner" data-value="100" data-color="#999">
-                  <span><span className="label">Agile | Jira | GUS | Asana</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="100" data-color="#333333">
+                  <span><span className="label">Agile | Jira | GUS | Asana</span><span className="number">100%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="80" data-color="#999">
-                  <span><span className="label">New Relic | Google Analytics</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="80" data-color="#333333">
+                  <span><span className="label">New Relic | Google Analytics</span><span className="number">80%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
-                <div className="progress_inner" data-value="90" data-color="#999">
-                  <span><span className="label">Figma | Sketch</span><span className="number"></span></span>
+                <div className="progress_inner" data-value="90" data-color="#333333">
+                  <span><span className="label">Figma | Sketch</span><span className="number">90%</span></span>
                   <div className="background"><div className="bar"><div className="bar_in"></div></div></div>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
 import Layout from '@/components/Layout';
+import { inter } from '@/lib/fonts';
 
 interface BlogPost {
   title: string;
@@ -96,12 +97,12 @@ export default function EditPostPage() {
 
   return (
     <Layout title={post ? `Edit: ${Array.isArray(post.title) ? post.title.join(' ') : post.title} | Laud Tetteh` : 'Edit Post | Laud Tetteh'} description={post ? `Edit the post '${Array.isArray(post.title) ? post.title.join(' ') : post.title}' as an admin.` : 'Edit a blog post as an admin.'}>
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-6">✏️ Edit Post</h1>
+      <div className={`${inter.variable} font-inter max-w-4xl mx-auto py-12 px-4 bg-slate-50`}>
+        <h1 className="font-inter text-3xl font-semibold text-slate-900 mb-6">Edit Post</h1>
         {post ? (
           <AdminPostForm initialData={post} onSubmit={handleUpdate} isEdit />
         ) : (
-          <p className="text-gray-500">Loading post data…</p>
+          <p className="text-slate-500">Loading post data…</p>
         )}
       </div>
     </Layout>

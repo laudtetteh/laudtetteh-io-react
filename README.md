@@ -95,11 +95,11 @@ laudtetteh-io-react/
 
 ## 🧪 **Testing**
 
-### End-to-End (E2E) — real, wired up on `redesign/site-refresh` only
+### End-to-End (E2E) — real, wired up
 
-- [Playwright](https://playwright.dev/) is installed and configured (`playwright.config.ts`, specs in `e2e/`) — currently only on the `redesign/site-refresh` branch, not yet backported to `main`.
-- Run: `npm run test:e2e` (or `npx playwright test e2e/<file>.spec.ts` for one spec) — requires being on a branch with `playwright.config.ts` present.
-- CI-enforced on every push touching frontend paths (`.github/workflows/e2e.yml`) on `redesign/site-refresh`. `main` doesn't run this yet.
+- [Playwright](https://playwright.dev/) is installed and configured (`playwright.config.ts`, specs in `e2e/`).
+- Run: `npm run test:e2e` (or `npx playwright test e2e/<file>.spec.ts` for one spec).
+- CI-enforced on every push touching frontend paths (`.github/workflows/e2e.yml`).
 
 ### Unit/Integration — not yet installed
 
@@ -144,7 +144,7 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a delibe
 ## 🏗️ **CI/CD (GitHub Actions)**
 
 - `lint.yml` — ESLint + Ruff, on every push, every branch.
-- `e2e.yml` — Playwright, on every push touching frontend paths — `redesign/site-refresh` only for now, not yet on `main`.
+- `e2e.yml` — Playwright, on every push touching frontend paths.
 - `deploy.yml` — deploys to DigitalOcean using Docker Compose on push to `main`.
 
 ---

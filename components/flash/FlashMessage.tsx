@@ -98,7 +98,7 @@ export default function FlashMessage() {
   const { message, position, type = "info", action } = current;
 
   const baseClasses = classNames(
-    "fixed z-50 px-5 py-4 rounded shadow-md text-white transition-all duration-300 transform flex flex-col items-center justify-between gap-4 w-[90vw] max-w-sm",
+    "fixed z-50 px-5 py-4 rounded shadow-md text-white transition-all duration-300 transform flex flex-col items-stretch gap-2 w-[90vw] max-w-sm",
     POSITIONS[position] || POSITIONS["top-center"],
     {
       "bg-green-600": type === "success",
@@ -110,18 +110,33 @@ export default function FlashMessage() {
     }
   );
 
+  const showActionsRow = type === "confirm" || Boolean(action);
+
   return (
     <div role="alert" aria-live="assertive" className={baseClasses}>
       <div className="flex items-start gap-2 w-full">
         <FlashIcon type={type} />
         <span className="flex-1 text-left">{message}</span>
+        {type !== "confirm" && (
+          <button
+            onClick={handleClose}
+            aria-label="Dismiss"
+            title="Dismiss"
+            className="shrink-0 -mr-1 -mt-0.5 p-1 text-white/80 hover:text-white"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="w-4 h-4">
+              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+            </svg>
+          </button>
+        )}
       </div>
-      <FlashActions
-        type={type}
-        action={action}
-        onClose={handleClose}
-        onConfirm={type === 'confirm' ? resolveConfirm : undefined}
-      />
+      {showActionsRow && (
+        <FlashActions
+          type={type}
+          action={action}
+          onConfirm={type === 'confirm' ? resolveConfirm : undefined}
+        />
+      )}
     </div>
   );
 }

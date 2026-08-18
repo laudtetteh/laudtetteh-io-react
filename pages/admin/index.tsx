@@ -7,6 +7,8 @@ import UseAuthRedirect from "@/lib/UseAuthRedirect";
 import Layout from '@/components/Layout';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import { inter } from '@/lib/fonts';
+import { inputClasses, primaryButtonClasses, dangerButtonClasses, cardClasses } from '@/components/admin/adminStyles';
 
 interface BlogPost {
   title: string;
@@ -38,7 +40,7 @@ function SortablePost({
     <li
       ref={setNodeRef}
       style={style}
-      className="border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-white"
+      className={`${cardClasses} overflow-hidden`}
     >
       {post.featuredImage && (
         <img
@@ -49,20 +51,19 @@ function SortablePost({
       )}
       <div className="p-4 space-y-2">
         <div className="flex flex-wrap items-center justify-between">
-          <h2 className="text-xl font-semibold">{post.title}</h2>
+          <h2 className="font-inter text-xl font-semibold text-slate-900">{post.title}</h2>
           <div className="flex items-center gap-2">
             <span
               className={`text-xs px-2 py-1 rounded-full ${
                 post.status === "published"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
+                  ? "bg-teal-100 text-teal-800"
+                  : "bg-amber-100 text-amber-800"
               }`}
             >
               {post.status}
             </span>
-            {/* ✅ Apply drag handle only here */}
             <span
-              className="cursor-move text-gray-400 text-lg"
+              className="cursor-move text-slate-400 text-lg"
               title="Drag to reorder"
               {...attributes}
               {...listeners}
@@ -72,7 +73,7 @@ function SortablePost({
           </div>
         </div>
 
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-slate-500">
           {post.date_published
             ? `Published: ${format(toZonedTime(new Date(post.date_published), 'America/Los_Angeles'), 'MM/dd/yyyy')}`
             : "Not published"}
@@ -83,7 +84,7 @@ function SortablePost({
             {post.categories.map((cat) => (
               <span
                 key={cat}
-                className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded"
+                className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded"
               >
                 {cat}
               </span>
@@ -91,10 +92,10 @@ function SortablePost({
           </div>
         )}
 
-        <div className="flex gap-4 mt-4">
-          <button onClick={onEdit} className="text-blue-600 hover:underline">✏️ Edit</button>
-          <button onClick={onView} className="text-green-600 hover:underline">🔍 View</button>
-          <button onClick={onDelete} className="text-red-600 hover:underline">🗑️ Delete</button>
+        <div className="flex gap-4 mt-4 text-sm font-medium">
+          <button onClick={onEdit} className="text-teal-600 hover:underline">Edit</button>
+          <button onClick={onView} className="text-slate-600 hover:underline">View</button>
+          <button onClick={onDelete} className="text-red-600 hover:underline">Delete</button>
         </div>
       </div>
     </li>
@@ -303,7 +304,7 @@ export default function AdminDashboard() {
     return (
       <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
         <div className="max-w-6xl mx-auto py-12 px-6 flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600" />
         </div>
       </Layout>
     );
@@ -311,36 +312,36 @@ export default function AdminDashboard() {
 
   return (
     <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
-      <div className="max-w-6xl mx-auto py-12 px-6">
+      <div className={`${inter.variable} font-inter max-w-6xl mx-auto py-12 px-6 bg-slate-50`}>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">🛠️ Admin Dashboard</h1>
+          <h1 className="font-inter text-3xl font-semibold text-slate-900">Admin Dashboard</h1>
           <button
             onClick={() => router.push("/admin/create")}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            className={primaryButtonClasses}
           >
-            ➕ New Post
+            + New Post
           </button>
         </div>
 
         {/* Bulk Actions Bar */}
         {selected.length > 0 && (
-          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded flex flex-wrap items-center gap-4">
-            <span className="font-semibold">{selected.length} selected</span>
-            <button onClick={handleBulkDelete} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Delete</button>
-            <select value={bulkCategory} onChange={e => setBulkCategory(e.target.value)} className="border rounded px-2 py-1">
+          <div className="mb-4 p-4 bg-teal-50 border border-teal-200 rounded-md flex flex-wrap items-center gap-4">
+            <span className="font-semibold text-slate-900">{selected.length} selected</span>
+            <button onClick={handleBulkDelete} className={dangerButtonClasses}>Delete</button>
+            <select value={bulkCategory} onChange={e => setBulkCategory(e.target.value)} className="rounded-md border border-slate-200 px-2 py-1.5 text-slate-900">
               <option value="">Change Category</option>
               {allCategories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <button onClick={handleBulkCategory} className="bg-gray-200 px-2 py-1 rounded">Apply</button>
-            <select value={bulkStatus} onChange={e => setBulkStatus(e.target.value)} className="border rounded px-2 py-1">
+            <button onClick={handleBulkCategory} className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Apply</button>
+            <select value={bulkStatus} onChange={e => setBulkStatus(e.target.value)} className="rounded-md border border-slate-200 px-2 py-1.5 text-slate-900">
               <option value="">Change Status</option>
               <option value="draft">Draft</option>
               <option value="published">Published</option>
             </select>
-            <button onClick={handleBulkStatus} className="bg-gray-200 px-2 py-1 rounded">Apply</button>
-            <button onClick={() => setSelected([])} className="ml-auto text-blue-600 underline">Clear</button>
+            <button onClick={handleBulkStatus} className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Apply</button>
+            <button onClick={() => setSelected([])} className="ml-auto text-teal-600 underline">Clear</button>
           </div>
         )}
 
@@ -350,23 +351,23 @@ export default function AdminDashboard() {
             checked={allSelected}
             ref={el => { if (el) el.indeterminate = !allSelected && someSelected; }}
             onChange={toggleSelectAll}
-            className="mr-2"
+            className="mr-2 accent-teal-600"
           />
-          <span className="text-sm">Select All</span>
+          <span className="text-sm text-slate-700">Select All</span>
         </div>
 
         <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           <input
             type="text"
-            placeholder="🔍 Search title..."
+            placeholder="Search title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border rounded px-3 py-2"
+            className={inputClasses}
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border rounded px-3 py-2"
+            className={inputClasses}
           >
             <option value="">All Statuses</option>
             <option value="draft">Draft</option>
@@ -375,7 +376,7 @@ export default function AdminDashboard() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border rounded px-3 py-2"
+            className={inputClasses}
           >
             <option value="">All Categories</option>
             {allCategories.map((cat) => (
@@ -388,7 +389,7 @@ export default function AdminDashboard() {
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="border rounded px-3 py-2"
+            className={inputClasses}
           />
         </div>
 
@@ -397,8 +398,8 @@ export default function AdminDashboard() {
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading posts...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+              <p className="text-slate-600">Loading posts...</p>
             </div>
           </div>
         ) : (
@@ -425,7 +426,7 @@ export default function AdminDashboard() {
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
                 <button
-                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 disabled:opacity-50"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                 >
@@ -434,14 +435,14 @@ export default function AdminDashboard() {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i + 1}
-                    className={`px-3 py-1 rounded border ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-white'}`}
+                    className={`rounded-md border px-3 py-1 ${currentPage === i + 1 ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-200 bg-white text-slate-700'}`}
                     onClick={() => setCurrentPage(i + 1)}
                   >
                     {i + 1}
                   </button>
                 ))}
                 <button
-                  className="px-3 py-1 rounded border bg-white disabled:opacity-50"
+                  className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 disabled:opacity-50"
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
                 >

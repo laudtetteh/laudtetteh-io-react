@@ -1,0 +1,93 @@
+name: Task
+description: A bug, feature, chore, security fix, or improvement
+title: "type(scope): short description"
+labels: []
+assignees:
+  - laudtetteh
+
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - bug
+        - feat
+        - security
+        - chore
+        - devops
+        - docs
+        - content
+        - refactor
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - "P0: blocks-launch"
+        - "P1: pre-launch"
+        - "P2: 30-day-window"
+        - "P3: backlog"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - backend
+        - frontend
+        - infra
+        - content
+        - repo
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: What needs to change? Be specific — file paths and line numbers if known.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Why does it need to change? What breaks or looks bad without this fix?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know this is done? List the verifiable outcomes.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: effort
+    attributes:
+      label: Effort estimate
+      description: Rough hours for a senior engineer working alone.
+      placeholder: "e.g. 30 min"
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Any issues that must be resolved before this one can start.
+      placeholder: "e.g. Blocked by #3"
+    validations:
+      required: false

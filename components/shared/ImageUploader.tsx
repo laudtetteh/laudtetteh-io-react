@@ -80,28 +80,28 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
 
   return (
     <div suppressHydrationWarning>
-      <label className="font-semibold">Featured Image</label>
+      <label className="mb-1.5 block text-sm font-medium text-slate-900">Featured Image</label>
       <input
         key={inputKey}
         type="file"
         accept="image/*"
         onChange={handleImageChange}
-        className="block mt-1"
+        className="block mt-1 text-sm text-slate-700"
       />
       <button
         type="button"
-        className="text-blue-600 text-sm mt-2 mr-2 underline"
+        className="text-teal-600 text-sm mt-2 mr-2 underline hover:text-teal-700"
         onClick={() => setShowLibrary(true)}
       >
         Choose from Library
       </button>
-      {uploading && <p className="text-sm text-gray-500 mt-1">Uploading image…</p>}
+      {uploading && <p className="text-sm text-slate-500 mt-1">Uploading image…</p>}
       {imageUrl && (
         <div className="mt-2">
-          <img src={imageUrl} alt="Featured" className="w-full max-w-md rounded" />
+          <img src={imageUrl} alt="Featured" className="w-full max-w-md rounded-md" />
           <button
             type="button"
-            className="text-red-500 mt-1 text-sm hover:underline"
+            className="text-red-600 mt-1 text-sm hover:underline"
             onClick={handleRemoveImage}
           >
             Remove image
@@ -111,24 +111,24 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
       {/* Media Library Modal */}
       {showLibrary && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white p-6 rounded shadow-lg max-w-2xl w-full relative">
+          <div className="bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full relative">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl"
+              className="absolute top-2 right-2 text-slate-500 hover:text-slate-900 text-2xl"
               onClick={() => setShowLibrary(false)}
               aria-label="Close"
             >
               ×
             </button>
-            <h2 className="text-lg font-bold mb-4">Media Library</h2>
+            <h2 className="font-inter text-lg font-semibold text-slate-900 mb-4">Media Library</h2>
             <input
               type="text"
               placeholder="Search by filename..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="border px-3 py-2 mb-4 w-full rounded"
+              className="w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 mb-4 text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
             />
             {loadingLibrary ? (
-              <p>Loading images…</p>
+              <p className="text-slate-600">Loading images…</p>
             ) : (
               <div className="grid grid-cols-3 gap-4 max-h-96 overflow-y-auto">
                 {[...libraryImages]
@@ -141,17 +141,17 @@ export default function ImageUploader({ imageUrl, onChange }: ImageUploaderProps
                   .map(img => (
                     <button
                       key={img.key}
-                      className="border hover:border-blue-500 p-1 bg-gray-50"
+                      className="border border-slate-200 hover:border-teal-600 p-1 bg-slate-50 rounded-md"
                       onClick={() => {
                         onChange(img.url);
                         setShowLibrary(false);
                       }}
                     >
-                      <img src={img.url} alt={img.key} className="w-full h-32 object-cover" />
-                      <div className="truncate text-xs mt-1">{img.key.split('/').pop()}</div>
+                      <img src={img.url} alt={img.key} className="w-full h-32 object-cover rounded" />
+                      <div className="truncate text-xs mt-1 text-slate-600">{img.key.split('/').pop()}</div>
                     </button>
                   ))}
-                {libraryImages.length === 0 && <p className="col-span-3 text-gray-400">No images found.</p>}
+                {libraryImages.length === 0 && <p className="col-span-3 text-slate-400">No images found.</p>}
               </div>
             )}
           </div>

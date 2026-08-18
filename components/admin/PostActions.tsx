@@ -1,4 +1,5 @@
 import React from 'react';
+import { primaryButtonClasses, secondaryButtonClasses, dangerButtonClasses } from './adminStyles';
 
 interface PostActionsProps {
   isEdit: boolean;
@@ -13,7 +14,7 @@ const PostActions: React.FC<PostActionsProps> = ({ isEdit, slug, onDelete }) => 
         href={`/blog/${slug}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition border border-gray-300"
+        className={secondaryButtonClasses}
       >
         View
       </a>
@@ -24,14 +25,14 @@ const PostActions: React.FC<PostActionsProps> = ({ isEdit, slug, onDelete }) => 
         onClick={() => {
           if (window.confirm('Are you sure you want to delete this post?')) onDelete();
         }}
-        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+        className={dangerButtonClasses}
       >
         Delete
       </button>
     )}
     <button
       type="submit"
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      className={primaryButtonClasses}
     >
       {isEdit ? 'Update Post' : 'Create Post'}
     </button>

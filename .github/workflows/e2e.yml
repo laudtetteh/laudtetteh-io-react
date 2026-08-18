@@ -1,0 +1,47 @@
+# Runs the Playwright e2e suite on every push that touches frontend code.
+# Tool/testing conventions live in this project's external Rig docs
+# (BROWSER_INTERACTIONS.md, testing-conventions.md) - see rules/verification.md.
+name: E2E tests
+
+on:
+  push:
+    paths:
+      - "pages/**"
+      - "components/**"
+      - "lib/**"
+      - "styles/**"
+      - "e2e/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

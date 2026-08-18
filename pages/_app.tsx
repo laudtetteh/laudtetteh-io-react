@@ -8,22 +8,35 @@ import '../public/css/plugins.css';
 import '../public/css/modalboxes.css';
 import '../public/css/style.css';
 
-/** Minimal shape of the legacy jQuery global + `textition` plugin loaded via <script> tags. */
-type ArloJQueryElement = {
+/** Options accepted by the legacy `textition` jQuery plugin (loaded via /js/plugins.js). */
+interface TextitionOptions {
+  speed: number;
+  animation: string;
+  map: { x: number; y: number; z: number };
+  autoplay: boolean;
+  interval: number;
+}
+
+/** Minimal shape of the jQuery-wrapped element the legacy plugin scripts attach to `window`. */
+interface LegacyJQueryElement {
   length: number;
-  textition?: (opts: Record<string, unknown>) => void;
-};
-type ArloJQueryStatic = {
-  (el: Element): ArloJQueryElement;
-  fn: { textition?: unknown };
-};
+  textition: (options: TextitionOptions) => LegacyJQueryElement;
+}
+
+/** Minimal shape of the global `jQuery`/`$` the legacy plugin scripts expect. */
+interface LegacyJQueryStatic {
+  (el: Element): LegacyJQueryElement;
+  fn: {
+    textition?: (options: TextitionOptions) => LegacyJQueryElement;
+  };
+}
 
 declare global {
   interface Window {
     arlo_tm_background_effects?: () => void;
     arlo_tm_init_all?: () => void;
     __arloScriptsLoaded?: boolean;
-    jQuery?: ArloJQueryStatic;
+    jQuery?: LegacyJQueryStatic;
   }
 }
 
@@ -84,8 +97,8 @@ export default function App({ Component, pageProps }: AppProps) {
             }
             // Initialize plugin
             const $ = window.jQuery;
-            const $el = $?.(animateTextDiv);
-            if ($el?.length && $el.textition) {
+            const $el = $(animateTextDiv);
+            if ($el.length && $.fn.textition) {
               $el.textition({
                 speed: 1.2,
                 animation: 'ease-out',
@@ -141,8 +154,8 @@ export default function App({ Component, pageProps }: AppProps) {
               }
               // Initialize plugin
               const $ = window.jQuery;
-              const $el = $?.(animateTextDiv);
-              if ($el?.length && $el.textition) {
+              const $el = $(animateTextDiv);
+              if ($el.length && $.fn.textition) {
                 $el.textition({
                   speed: 1.2,
                   animation: 'ease-out',

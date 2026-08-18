@@ -6,6 +6,7 @@ import AdminPostForm from '@/components/AdminPostForm';
 import { useFlashMessage } from '@/lib/useFlashMessage';
 import Layout from '@/components/Layout';
 import type { PostData } from '@/types/blog';
+import { inter } from '@/lib/fonts';
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -40,8 +41,8 @@ export default function CreatePostPage() {
 
   return (
     <Layout title="Create Post | Laud Tetteh" description="Create a new blog post as an admin.">
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold mb-6">➕ Create New Post</h1>
+      <div className={`${inter.variable} font-inter max-w-4xl mx-auto py-12 px-4 bg-slate-50`}>
+        <h1 className="font-inter text-3xl font-semibold text-slate-900 mb-6">Create New Post</h1>
         <AdminPostForm onSubmit={handleCreate} />
       </div>
     </Layout>
