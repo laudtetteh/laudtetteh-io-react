@@ -64,10 +64,19 @@ export default function RedesignLayout({ repos, posts }: RedesignLayoutProps) {
             <SandboxSection repos={repos} />
             <WritingSection posts={posts} />
             <ContactSection />
-            <Footer />
           </main>
         </div>
       </div>
+
+      {/*
+        Deliberately a sibling of the two-column grid, not a child of <main>.
+        Footer is styled as a full-bleed band (top border + background), so
+        nesting it inside the `lg:w-[52%]` main column made it stop halfway
+        across the page at desktop widths and squeezed its contents into a
+        narrow strip (#83). Outside the grid it spans the viewport, and
+        <footer> as a sibling of <main> is also the more correct semantics.
+      */}
+      <Footer />
     </div>
   );
 }

@@ -52,10 +52,14 @@ export default function BlogLayout({ title, description, children }: BlogLayoutP
 
           <main id="content" className="pt-24 lg:w-[52%] lg:py-24">
             {children}
-            <Footer />
           </main>
         </div>
       </div>
+
+      {/* Sibling of the grid, not a child of <main> — see the same note in
+          RedesignLayout (#83). Nested inside the `lg:w-[52%]` column, this
+          full-bleed footer stopped partway across the page. */}
+      <Footer />
     </div>
   );
 }
