@@ -1,0 +1,84 @@
+# OVH deploy pipeline (#76 pilot). Same overall shape as deploy.yml (the existing DO
+# pipeline: sync source, SSH in, rebuild, restart) but rsync instead of scp-action, and
+# it never touches .env — that's provisioned by hand directly on the VPS and excluded
+# from the sync, unlike the DO pipeline's ENV_PRODUCTION-secret-to-file approach.
+# Deliberately workflow_dispatch-only: no branch trigger, and it does NOT replace
+# deploy.yml, so the live DO deploy path is completely unaffected until the pilot is
+# proven and the owner explicitly decides to cut over.
+name: Deploy to OVH (pilot)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ovh
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.OVH_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.OVH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Sync code to the VPS
+        # Exclude list proven during the pilot's manual bootstrap — keeps local tooling
+        # dirs and caches off the VPS, and never touches the hand-provisioned .env.
+        run: |
+          rsync -az --delete \
+            --exclude='.git' \
+            --exclude='.claude' \
+            --exclude='.agents' \
+            --exclude='.codex' \
+            --exclude='.mypy_cache' \
+            --exclude='.rig-backup' \
+            --exclude='.rigpath' \
+            --exclude='.DS_Store' \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='__pycache__' \
+            --exclude='backend/app/__pycache__' \
+            --exclude='.venv' \
+            --exclude='.env*' \
+            --exclude='.pytest_cache' \
+            --exclude='.ruff_cache' \
+            --exclude='.playwright-mcp' \
+            --exclude='test-results' \
+            --exclude='playwright-report' \
+            --exclude='tsconfig.tsbuildinfo' \
+            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+            ./ "${{ secrets.OVH_USER }}@${{ secrets.OVH_HOST }}:~/laudtetteh-io/"
+
+      - name: Build and restart the stack
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.OVH_USER }}@${{ secrets.OVH_HOST }}" '
+            set -e
+            cd ~/laudtetteh-io
+            sudo docker compose -f docker-compose.prod.yml build
+            sudo docker compose -f docker-compose.prod.yml up -d
+            sudo docker image prune -f
+          '
+
+      - name: Health check
+        # api isn't host-mapped in prod (only Caddy is internet-facing), so check
+        # through a one-off exec into the api container itself rather than the VPS's
+        # own :8000.
+        run: |
+          for i in $(seq 1 15); do
+            if ssh -i ~/.ssh/id_ed25519 "${{ secrets.OVH_USER }}@${{ secrets.OVH_HOST }}" '
+              sudo docker compose -f ~/laudtetteh-io/docker-compose.prod.yml exec -T api curl -sf http://localhost:8000/healthz
+            ' >/dev/null 2>&1; then
+              echo "Health check passed on attempt $i"
+              exit 0
+            fi
+            echo "Waiting for health check... ($i/15)"
+            sleep 5
+          done
+          echo "::error::Health check FAILED after 15 retries."
+          exit 1
