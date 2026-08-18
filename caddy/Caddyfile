@@ -1,13 +1,41 @@
 # Subdomain-based routing, not path-based (unlike zap/Beacon Essentials) — this app's
-# frontend and backend talk cross-origin (browser calls NEXT_PUBLIC_API_BROWSER
-# directly), so there's no single origin to path-trim /api/* off of. Two site blocks,
-# each terminating its own TLS cert via DNS-01 (see caddy/Dockerfile for why).
+# frontend and backend talk cross-origin (the browser calls NEXT_PUBLIC_API_BROWSER
+# directly), so there's no single origin to path-trim /api/* off of. Each site block
+# terminates its own TLS cert via the ACME DNS-01 challenge (see caddy/Dockerfile for
+# why DNS-01 and not HTTP-01).
 #
-# Currently pointed at throwaway test subdomains, deliberately: the migration plan
-# requires proving real TLS issuance + routing before production DNS is touched at all.
-# At cutover, swap these two host lines to laudtetteh.io + www.laudtetteh.io (web) and
-# api.laudtetteh.io (api). Full plan and rationale live in this project's internal
-# planning notes (external Rig dir), not in-repo — see issue #76.
+# The production blocks below are deliberately added ALONGSIDE the original test
+# subdomains rather than replacing them. Two reasons:
+#   1. Caddy issues the production certs on the next deploy, while DNS still points at
+#      DigitalOcean — so at cutover the cert already exists and there's no ACME
+#      cold-start window where requests fail.
+#   2. The test subdomains stay live as an independent way to reach this VPS directly,
+#      bypassing Cloudflare, if anything looks wrong mid-cutover.
+# The test blocks get removed in the post-cutover cleanup, not here.
+
+# ---------------------------------------------------------------------------
+# Production
+# ---------------------------------------------------------------------------
+
+laudtetteh.io, www.laudtetteh.io {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+
+	reverse_proxy web:3000
+}
+
+api.laudtetteh.io {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+
+	reverse_proxy api:8000
+}
+
+# ---------------------------------------------------------------------------
+# Test subdomains — retained through cutover, removed in cleanup
+# ---------------------------------------------------------------------------
 
 ovh-test.laudtetteh.io {
 	tls {
