@@ -19,14 +19,16 @@ const Footer: React.FC = () => {
     <footer
       id="footer"
       data-redesign-section="footer"
-      className="scroll-mt-16 border-t border-slate-200 bg-slate-50 px-6 py-10 dark:border-slate-800 dark:bg-slate-900 lg:scroll-mt-24"
+      className="scroll-mt-16 border-t border-slate-200 bg-slate-50 px-6 py-10 dark:border-slate-800 dark:bg-slate-900 md:px-12 lg:scroll-mt-24"
     >
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
+      {/* max-w-screen-xl + matching gutters line the footer's contents up with
+          the page grid above it, rather than sitting on a narrower rail. */}
+      <div className="mx-auto flex max-w-screen-xl flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
         <p className="text-sm text-slate-600 dark:text-slate-400">
           Copyright &copy; {year} by Laud Tetteh
           <br className="sm:hidden" />
           <span className="hidden sm:inline"> &mdash; </span>
-          All rights are reserved
+          All rights reserved
         </p>
 
         <div className="flex items-center gap-6">
