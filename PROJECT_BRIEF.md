@@ -109,7 +109,7 @@ These will not be built:
 
 ## Open questions
 
-- [ ] API routing in production: subdomain (`api.laudtetteh.io`) or path prefix (`laudtetteh.io/api`)? Affects `NEXT_PUBLIC_API_BROWSER` and Caddy config.
+- [x] API routing in production: **subdomain** (`api.laudtetteh.io`), decided 2026-08-18 as part of #76 (OVH migration pilot) — matches the app's existing cross-origin architecture (`API_SERVER`/`NEXT_PUBLIC_API_BROWSER` split), already built and verified via Caddy DNS-01 on a test subdomain. Full rationale in #76.
 - [ ] Droplet size: confirm ≥2GB RAM before first deploy attempt (Next.js build OOMs on 1GB).
 - [ ] Resend domain verification: is `laudtetteh.io` verified in the Resend dashboard for sending?
 - [ ] MongoDB Atlas IP allowlist: does the DigitalOcean droplet's public IP need to be added?
