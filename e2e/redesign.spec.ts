@@ -12,14 +12,14 @@ test('redesign renders with zero console errors', async ({ page }) => {
   });
   page.on('pageerror', (err) => consoleErrors.push(err.message));
 
-  await page.goto('/redesign');
+  await page.goto('/');
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
   expect(consoleErrors).toEqual([]);
 });
 
 test('about section renders real bio content in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const about = page.locator('#about');
   await expect(about).toContainText('Laud Tetteh');
   await expect(about).toContainText('Download CV');
@@ -27,21 +27,21 @@ test('about section renders real bio content in initial HTML', async ({ page }) 
 });
 
 test('experience section renders real work history in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const experience = page.locator('#experience');
   await expect(experience).toContainText('Salesforce');
   await expect(experience).toContainText('Brittani Dinsmore');
 });
 
 test('projects section renders real case-study cards in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const projects = page.locator('#projects');
   await expect(projects).toContainText('MethodistCRM');
   await expect(projects.getByRole('img').first()).toBeVisible();
 });
 
 test('sandbox section renders real GitHub repos with a working category filter', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const sandbox = page.locator('#sandbox');
   await expect(sandbox.getByRole('button', { name: 'All' })).toBeVisible();
   const initialCardCount = await sandbox.locator('article').count();
@@ -51,7 +51,7 @@ test('sandbox section renders real GitHub repos with a working category filter',
 });
 
 test('sandbox filter results fade in on click rather than snapping instantly', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const sandbox = page.locator('#sandbox');
   const grid = sandbox.locator('.animate-fade-in').first();
   await expect(grid).toBeVisible();
@@ -78,7 +78,7 @@ test('sandbox filter results fade in on click rather than snapping instantly', a
 });
 
 test('writing section renders real blog teaser cards in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const writing = page.locator('#writing');
   await expect(writing.getByRole('link', { name: /Read the blog/ })).toBeVisible();
   // The blog API is only reachable inside the Docker network (API_SERVER
@@ -97,7 +97,7 @@ test('writing section renders real blog teaser cards in initial HTML', async ({ 
 });
 
 test('contact section renders the real form shell in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const contact = page.locator('#contact');
   await expect(contact.locator('#contact_name')).toBeVisible();
   await expect(contact.locator('#contact_email')).toBeVisible();
@@ -106,7 +106,7 @@ test('contact section renders the real form shell in initial HTML', async ({ pag
 });
 
 test('contact form honeypot field is present but hidden from real users', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const contact = page.locator('#contact');
   const honeypot = contact.locator('input[name="website"]');
   await expect(honeypot).toHaveAttribute('aria-hidden', 'true');
@@ -115,7 +115,7 @@ test('contact form honeypot field is present but hidden from real users', async 
 });
 
 test('footer renders real copyright and contact links in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const footer = page.locator('#footer');
   await expect(footer).toContainText(`Copyright © ${new Date().getFullYear()} by Laud Tetteh`);
   await expect(footer.locator('a[href="mailto:hello@laudtetteh.io"]')).toBeVisible();
@@ -124,7 +124,7 @@ test('footer renders real copyright and contact links in initial HTML', async ({
 });
 
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const header = page.locator('#header');
   await expect(header).toContainText('Laud Tetteh');
   await expect(header).toContainText('Software Engineer');
@@ -134,7 +134,7 @@ test('header renders name/role/nav/social in initial HTML', async ({ page }) => 
 });
 
 test('header tagline rotates over time', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const tagline = page.locator('#header p[aria-live="polite"]');
   const first = await tagline.textContent();
   // Interval is 4000ms + a 200ms fade before the swap; pad generously so
@@ -145,7 +145,7 @@ test('header tagline rotates over time', async ({ page }) => {
 });
 
 test('header scroll-spy marks the active nav link', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   // Give #about real height so IntersectionObserver has something to
   // report a nonzero ratio against, isolating useScrollSpy's own logic.
   await page.locator('#about').evaluate(el => {
@@ -165,7 +165,7 @@ test('header scroll-spy marks the active nav link', async ({ page }) => {
 });
 
 test('header theme toggle switches dark class on html element', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const html = page.locator('html');
   const initiallyDark = (await html.getAttribute('class'))?.includes('dark') ?? false;
   await page.locator('#header button[aria-label*="Switch to"]:visible').first().click();
@@ -175,7 +175,7 @@ test('header theme toggle switches dark class on html element', async ({ page })
 
 test('header stacks within viewport width on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/redesign');
+  await page.goto('/');
   const header = page.locator('#header');
   await expect(header).toBeVisible();
   const box = await header.boundingBox();
@@ -192,7 +192,7 @@ test('header stacks within viewport width on mobile', async ({ page }) => {
 
 test('two-column shell splits header and main side by side at desktop width (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
   await expect(page.locator('#header')).toBeVisible();
   await expect(page.locator('#content')).toBeVisible();
   const headerBox = await page.locator('#header').boundingBox();
@@ -209,7 +209,7 @@ test('two-column shell splits header and main side by side at desktop width (#48
 
 test('header stays visually pinned while scrolling at desktop width (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
   for (const y of [0, 300, 800, 1500, 3000]) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
     // Let the sticky recalculation settle — scroll listeners aren't
@@ -226,7 +226,7 @@ test('header stays visually pinned while scrolling at desktop width (#48)', asyn
 
 test('smooth scroll animates gradually on in-page nav click, not an instant jump (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
 
   const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
   expect(scrollBehavior).toBe('smooth');
@@ -256,7 +256,7 @@ test('smooth scroll animates gradually on in-page nav click, not an instant jump
 
 test('spotlight cursor glow follows the mouse (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
   const spotlight = page.locator('div.pointer-events-none.fixed.inset-0.z-30');
 
   // A single-jump `mouse.move()` right after `goto` is occasionally missed
@@ -282,7 +282,7 @@ test('spotlight cursor glow follows the mouse (#48)', async ({ page }) => {
 
 test('hovering an experience entry dims its siblings, not itself (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
   const items = page.locator('#experience ol.group\\/list > li');
   await expect(items.first()).toBeVisible();
 
@@ -298,7 +298,7 @@ test('hovering an experience entry dims its siblings, not itself (#48)', async (
 
 test('mobile-only sticky section-title bar shows on mobile, hidden at desktop width (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/redesign');
+  await page.goto('/');
   const mobileTitle = page.locator('#about div[aria-hidden="true"]').first();
   await expect(mobileTitle).toBeVisible();
   await expect(mobileTitle).toContainText('About');
@@ -309,7 +309,7 @@ test('mobile-only sticky section-title bar shows on mobile, hidden at desktop wi
 
 test('active nav indicator uses the neutral palette, not the teal accent (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/redesign');
+  await page.goto('/');
   await page.locator('#about').evaluate((el) => {
     (el as HTMLElement).style.minHeight = '150vh';
   });
@@ -320,36 +320,38 @@ test('active nav indicator uses the neutral palette, not the teal accent (#48)',
   expect(className).toContain('slate');
 });
 
-test('legacy homepage route is unaffected by the redesign shell (#48)', async ({ page }) => {
-  // `/blog` opted into the redesign shell as of #60 — see e2e/blog.spec.ts for
-  // its equivalent "does have the shell" coverage. `/` (the still-legacy
-  // homepage, pending the #17 cutover) is the only route left to assert here.
+test('homepage opts into the redesign shell after the #17 cutover', async ({ page }) => {
+  // Inverted as of #17: `/` used to be the last legacy route and asserted the
+  // ABSENCE of the redesign shell. The cutover made `/` render RedesignLayout,
+  // so the meaningful invariant is now the opposite — `/` must opt in, exactly
+  // like `/redesign` did and like `/blog` does (#60, see e2e/blog.spec.ts).
   await page.goto('/');
   const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
   const hasSpotlight = await page.evaluate(
     () => !!document.querySelector('div.pointer-events-none.fixed.inset-0.z-30')
   );
-  expect(scrollBehavior).toBe('auto');
-  expect(hasSpotlight).toBe(false);
+  expect(scrollBehavior).toBe('smooth');
+  expect(hasSpotlight).toBe(true);
 });
 
 test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
-  await page.goto('/redesign');
+  // Reads `/` directly as of #17 — the redesign now lives there, and
+  // `/redesign` is only a redirect to it (see pages/redesign.tsx).
+  await page.goto('/');
   const h1Family = await page.locator('#header h1').evaluate((el) => getComputedStyle(el).fontFamily);
   const h2Family = await page.locator('#about h2').evaluate((el) => getComputedStyle(el).fontFamily);
   expect(h1Family).not.toContain('Syne');
   expect(h2Family).not.toContain('Syne');
 
-  // `/` keeps the legacy Syne heading font untouched — this fix is scoped to
-  // `[data-route="redesign"]`, which `/blog` now opts into as of #60 (see
-  // e2e/blog.spec.ts for its "does get data-route" coverage).
-  await page.goto('/');
+  // The Inter fix is scoped to `[data-route="redesign"]`, so `/` must carry
+  // that marker post-cutover (it previously asserted the opposite, back when
+  // `/` was still the legacy theme).
   const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
-  expect(dataRoute).toBeNull();
+  expect(dataRoute).toBe('redesign');
 });
 
 test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   await page.locator('a[href="#content"]').waitFor();
 
   // Explicitly establish a known focus baseline (`<body>`) before pressing
@@ -375,7 +377,7 @@ test('skip-to-content link is the first focusable element and targets #content (
 });
 
 test('contact form text inputs render rounded corners and the intended border color, not the legacy square/grey plugins.css style (#19)', async ({ page }) => {
-  await page.goto('/redesign');
+  await page.goto('/');
   const nameInput = page.locator('#contact_name');
   const messageTextarea = page.locator('#contact_message');
 
@@ -388,4 +390,16 @@ test('contact form text inputs render rounded corners and the intended border co
 
   const inputBorderColor = await nameInput.evaluate((el) => getComputedStyle(el).borderTopColor);
   expect(inputBorderColor).toBe('rgb(226, 232, 240)'); // slate-200, not the legacy #eee
+});
+
+test('/redesign redirects to the homepage after the #17 cutover', async ({ page }) => {
+  // `/redesign` was the side-by-side preview route while the redesign was
+  // built; #17 moved the same layout to `/` and reduced this to a redirect,
+  // kept so old links/bookmarks still land on working content. Every other
+  // test in this file now navigates to `/` directly rather than relying on
+  // this hop — so when the redirect is finally deleted (#20 legacy cleanup),
+  // only this one test should fail, not the whole suite.
+  const res = await page.goto('/redesign');
+  expect(res?.status()).toBe(200);
+  expect(new URL(page.url()).pathname).toBe('/');
 });
