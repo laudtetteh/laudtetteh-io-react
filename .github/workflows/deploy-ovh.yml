@@ -1,11 +1,8 @@
-# OVH deploy pipeline (#76 pilot). Same overall shape as deploy.yml (the existing DO
-# pipeline: sync source, SSH in, rebuild, restart) but rsync instead of scp-action, and
-# it never touches .env — that's provisioned by hand directly on the VPS and excluded
-# from the sync, unlike the DO pipeline's ENV_PRODUCTION-secret-to-file approach.
-# Deliberately workflow_dispatch-only: no branch trigger, and it does NOT replace
-# deploy.yml, so the live DO deploy path is completely unaffected until the pilot is
-# proven and the owner explicitly decides to cut over.
-name: Deploy to OVH (pilot)
+# Production deploy pipeline for laudtetteh.io on OVH.
+# Manual by design: deploy.yml still targets the DigitalOcean staging droplet on push
+# to main until #85 retires or migrates dev.laudtetteh.io.
+# The VPS owns its .env file; this workflow rsyncs code only and never writes secrets.
+name: Deploy to OVH production
 
 on:
   workflow_dispatch:

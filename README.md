@@ -1,10 +1,11 @@
 # Laud Tetteh IO - Full Stack Monorepo
 
-A modern, production-ready monorepo with:
+Production portfolio/blog for https://laudtetteh.io, with:
 
 - **Frontend:** Next.js (React, TypeScript, Tailwind CSS)
 - **Backend:** FastAPI (Python 3.11+)
-- **Dev Workflow:** Docker, ESLint (frontend), Ruff (backend), Playwright (e2e), GitHub Actions CI/CD
+- **Dev Workflow:** Docker, ESLint (frontend), Ruff (backend), Playwright (e2e), GitHub Actions
+- **Production:** OVH VPS, Docker Compose, Caddy TLS via Cloudflare DNS-01
 
 ---
 
@@ -53,7 +54,8 @@ docker compose up --build
 ```
 
 - Frontend: [http://localhost:3000](http://localhost:3000)
-- Backend: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Backend API: [http://localhost:8004/docs](http://localhost:8004/docs)
+- Backend health: [http://localhost:8004/healthz](http://localhost:8004/healthz)
 
 ---
 
@@ -80,10 +82,13 @@ laudtetteh-io-react/
 │   ├── app/           # FastAPI app code
 │   ├── requirements.txt
 │   └── Dockerfile
+├── caddy/             # Production Caddy image/config for OVH
 ├── components/        # React components
+├── e2e/               # Playwright specs
 ├── pages/             # Next.js pages
 ├── styles/            # Tailwind & custom CSS
 ├── public/
+├── docker-compose.prod.yml
 ├── .venv/             # Python virtualenv (gitignored)
 ├── docker-compose.yml
 ├── Dockerfile         # Frontend Dockerfile
@@ -103,22 +108,29 @@ laudtetteh-io-react/
 
 ### Unit/Integration — not yet installed
 
-No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a deliberate follow-up, deferred until the in-progress frontend redesign lands and stabilizes.
+No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as #26; the redesign has shipped, so this is no longer blocked by cutover.
 
 ---
 
 ## 🚀 **Deployment Details**
 
-- **Production deploys** are handled by GitHub Actions and Docker Compose.
-- **DigitalOcean** is used as the deployment target (see `.github/workflows/deploy.yml`).
+- **Production deploys** are handled by `.github/workflows/deploy-ovh.yml`, Docker Compose, and Caddy on the OVH VPS.
+- **Production deploys are manual** (`workflow_dispatch`) and target `laudtetteh.io`, `www.laudtetteh.io`, and `api.laudtetteh.io`.
+- **DigitalOcean is staging-only** for `dev.laudtetteh.io` / `api.dev.laudtetteh.io` until #85 decides whether to migrate or retire it. `.github/workflows/deploy.yml` still points there and should not be mistaken for production.
 - **Secrets** (env vars, SSH keys) are managed via GitHub Secrets.
-- **Zero-downtime deploy:**
-  - CI/CD brings up new containers, then swaps them in place.
+- **Production stack:**
+  - `docker-compose.prod.yml` builds `web`, `api`, and `caddy`.
+  - Caddy terminates TLS and reverse-proxies apex/`www` to `web:3000` and `api.laudtetteh.io` to `api:8000`.
+  - `API_SERVER` and `NEXT_PUBLIC_API_BROWSER` are build-time args. In production builds they must be public HTTPS URLs, not Docker-internal `http://api:8000`.
 - **Manual deploy:**
-  - SSH into your server and run:
+  - Dispatch the workflow:
     ```sh
-    docker compose -f docker-compose.yml pull
-    docker compose -f docker-compose.yml up -d --build
+    gh workflow run deploy-ovh.yml --ref main
+    ```
+  - Or SSH to the OVH VPS and run:
+    ```sh
+    docker compose -f docker-compose.prod.yml build --no-cache web
+    docker compose -f docker-compose.prod.yml up -d
     ```
 
 ---
@@ -145,7 +157,8 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a delibe
 
 - `lint.yml` — ESLint + Ruff, on every push, every branch.
 - `e2e.yml` — Playwright, on every push touching frontend paths.
-- `deploy.yml` — deploys to DigitalOcean using Docker Compose on push to `main`.
+- `deploy-ovh.yml` — manual production deploy to OVH.
+- `deploy.yml` — legacy/staging deploy to the DigitalOcean droplet on push to `main`; do not treat it as production.
 
 ---
 
@@ -153,7 +166,7 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a delibe
 
 - Always activate your Python virtualenv: `source .venv/bin/activate`
 - Run `npm run lint` and `ruff check backend/app` before pushing code.
-- Keep `requirements.txt` up to date: `pip freeze > backend/requirements.txt`
+- Keep `requirements.txt` up to date deliberately; do not overwrite it with a full local `pip freeze`.
 - Never commit `.venv/` or other environment-specific files.
 
 ---
@@ -166,5 +179,3 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as a delibe
 - [Ruff](https://docs.astral.sh/ruff/), [Black](https://black.readthedocs.io/en/stable/), [mypy](https://mypy-lang.org/)
 
 ---
-
-**Happy coding!** 🎉

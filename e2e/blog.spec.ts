@@ -77,20 +77,17 @@ test('archive results fade in on filter click rather than snapping instantly', a
   test.skip(count === 0, 'no categories available without a live backend');
 
   const results = page.locator('main .animate-fade-in').first();
+  await expect(results).toBeVisible();
+  const previousResults = await results.elementHandle();
+  expect(previousResults).not.toBeNull();
   await categoryLinks.first().click();
 
-  // Same polling approach as the sandbox filter's equivalent assertion —
-  // proves a real animation runs rather than an instant class swap.
-  const samples: number[] = [];
-  const deadline = Date.now() + 1000;
-  while (Date.now() < deadline) {
-    samples.push(await results.evaluate(el => parseFloat(getComputedStyle(el).opacity)));
-    await page.waitForTimeout(20);
-  }
-  expect(samples.some(o => o < 0.95)).toBe(true);
-  // `toHaveCSS` auto-retries rather than trusting the sampling loop's last
-  // value, which can land mid-animation under heavy parallel-worker CPU
-  // contention (see the equivalent sandbox test's comment).
+  await expect
+    .poll(async () => previousResults?.evaluate(el => !el.isConnected), {
+      message: 'category click should remount the animated results container',
+    })
+    .toBe(true);
+  await expect(results).toHaveClass(/animate-fade-in/);
   await expect(results).toHaveCSS('opacity', '1');
 });
 

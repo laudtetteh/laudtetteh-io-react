@@ -1,9 +1,11 @@
-# GitHub Actions workflow for deploying the app to DigitalOcean
-name: Deploy to DigitalOcean
+# Legacy staging deploy for dev.laudtetteh.io / api.dev.laudtetteh.io.
+# Production is OVH and deploys only via deploy-ovh.yml workflow_dispatch.
+# This workflow remains active until #85 decides whether to migrate or retire staging.
+name: Deploy to DigitalOcean staging
 
 on:
   push:
-    branches: [main]  # Trigger deployment only on pushes to main branch
+    branches: [main]
 
 jobs:
   deploy:
@@ -18,8 +20,8 @@ jobs:
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
-      - name: Copy app files to DigitalOcean
-        # Securely copy all app files to the target DigitalOcean droplet
+      - name: Copy app files to DigitalOcean staging
+        # Securely copy all app files to the staging DigitalOcean droplet.
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DO_HOST }}  # DigitalOcean droplet IP/hostname

@@ -1,26 +1,24 @@
 ## Summary
-<!-- What changed and why. 1–3 bullets. -->
+<!-- What does this PR do and why? 1-3 sentences. -->
 
+## Changes
+<!-- Bullet list of what changed. -->
 -
 
-## Related issue
+## Closes
 Closes #
 
-## Type
-- [ ] bug
-- [ ] feat
-- [ ] security
-- [ ] chore
-- [ ] devops
-- [ ] docs
-- [ ] content
-- [ ] refactor
+## Test plan
+<!-- How was this verified? What did you check? -->
 
 ## Pre-merge checklist
 - [ ] No `console.log`, `print()`, or debug statements in diff
 - [ ] No secrets or credentials in diff
-- [ ] `npm run lint` passes (frontend changes), `ruff check backend/app` passes (backend changes) — both CI-enforced on every push (#30)
-- [ ] Tested locally with `docker compose up` (if backend or Docker changes)
-- [ ] `npx playwright test` passes, and a spec was added/updated per the testing conventions doc (external — see `rules/verification.md`) (if this PR touches a rendered route/component)
+- [ ] `npm run lint` (frontend) / `ruff check backend/app` (backend) pass — both CI-enforced (#30)
+- [ ] Verified in-container with `docker compose up` (if backend, Docker, or dependency changes)
+- [ ] `npx playwright test` passes (if this PR touches a rendered route/component)
 - [ ] Self-reviewed diff
 - [ ] Commit message follows `type(scope): description [#N]`
+
+## Notes
+<!-- Trade-offs, follow-ups, known gaps. Delete if empty. -->

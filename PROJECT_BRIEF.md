@@ -68,17 +68,17 @@ These will not be built:
 | Auth | JWT — `python-jose` | Single admin; token in localStorage |
 | Rich text | Tiptap | Client-side only; sanitized with `bleach` before DB write |
 | Infra | Docker + Docker Compose | `docker-compose.override.yml` for dev hot reload |
-| CI/CD | GitHub Actions → DigitalOcean droplet (SSH + SCP) | Deploys on push to `main` |
+| CI/CD | GitHub Actions → OVH VPS (SSH + rsync) | Production deploy is manual via `.github/workflows/deploy-ovh.yml`; old DigitalOcean workflow is staging-only until #85 |
 | Linting | ESLint (frontend) + ruff (backend), wired up (#30) | `npm run lint`, `ruff check backend/app`. Required locally before committing anything either covers; CI-enforced on every push (`.github/workflows/lint.yml`). ~28 pre-existing violations temporarily downgraded/ignored, tracked in #31 |
-| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on every push touching frontend paths. Run locally for changes e2e would actually catch (new/changed routes or components), not every edit. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26) |
+| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on every push touching frontend paths. Run locally for changes e2e would actually catch (new/changed routes or components), not every edit. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26, now unblocked by the shipped redesign) |
 
 ---
 
 ## Constraints
 
-**Timeline:** No hard deadline. Launch when quality bar is met.
+**Timeline:** Production launched on OVH on 2026-08-18. Current work is post-launch hardening, content cleanup, and staging/rollback decommission planning.
 
-**Budget:** Free tier where possible. MongoDB Atlas M0, AWS S3 pay-per-use, GitHub Actions free tier, DigitalOcean droplet ($12/mo for 2GB RAM minimum).
+**Budget:** Free tier where possible. MongoDB Atlas M0, AWS S3 pay-per-use, GitHub Actions free tier, OVH VPS for production. DigitalOcean remains only for `dev.*` staging until #85 decides its fate.
 
 **Must integrate with:**
 - MongoDB Atlas (cloud-hosted)
@@ -90,27 +90,29 @@ These will not be built:
 - Port 8000 on the Docker host — permanently held by `laudbot-backend-1` on this machine
 - `NEXT_PUBLIC_API_URL` — that var doesn't exist; use `NEXT_PUBLIC_API_BROWSER` for browser-side API calls
 
-**Existing code:** Full working codebase at `/Users/beaconavenue/code/laudtetteh-io-react`. Never launched. Pre-launch hardening in progress.
+**Existing code:** Full working codebase at `/Users/beaconavenue/code/laudtetteh-io-react`. Production is live at `https://laudtetteh.io`; branch new work from `main`.
 
 ---
 
 ## Success criteria (launch)
 
-- [ ] Contact form delivers submissions to hello@laudtetteh.io in production
-- [ ] Blog posts render correctly with featured images
-- [ ] Admin can create, edit, publish, and delete posts via the admin panel
-- [ ] Site loads on HTTPS at https://laudtetteh.io with valid TLS cert
-- [ ] Site restarts automatically after a droplet reboot
-- [ ] `/api/healthz` returns `{"status": "ok", "db": "ok"}` in production
-- [ ] No draft posts visible on public routes
-- [ ] All secrets are post-rotation values (not the ones from the June 2026 session)
+- [x] Contact form delivers submissions to hello@laudtetteh.io in production
+- [x] Blog posts render correctly with featured images
+- [x] Admin can create, edit, publish, and delete posts via the admin panel
+- [x] Site loads on HTTPS at https://laudtetteh.io with valid TLS cert
+- [x] Site restarts automatically through the production Docker Compose stack
+- [x] `/healthz` returns `{"status": "ok"}` on `https://api.laudtetteh.io`
+- [x] No draft posts visible on public routes
+- [x] Production secrets are provisioned on the OVH VPS, not generated from the old DigitalOcean `ENV_PRODUCTION` workflow
 
 ---
 
 ## Open questions
 
-- [ ] API routing in production: subdomain (`api.laudtetteh.io`) or path prefix (`laudtetteh.io/api`)? Affects `NEXT_PUBLIC_API_BROWSER` and Caddy config.
-- [ ] Droplet size: confirm ≥2GB RAM before first deploy attempt (Next.js build OOMs on 1GB).
+- [x] API routing in production: subdomain (`api.laudtetteh.io`) via Caddy.
+- [x] OVH VPS has enough memory for the production build.
 - [ ] Resend domain verification: is `laudtetteh.io` verified in the Resend dashboard for sending?
-- [ ] MongoDB Atlas IP allowlist: does the DigitalOcean droplet's public IP need to be added?
+- [ ] MongoDB Atlas IP allowlist: confirm the OVH VPS IP remains allowed.
 - [ ] `react-quill` in `package.json` — is this a dead dependency (Tiptap is the actual editor)?
+- [ ] Decide whether to migrate or retire `dev.laudtetteh.io` before decommissioning the DigitalOcean droplet (#85).
+- [ ] Retire Opalstack only after the OVH rollback window is no longer needed (#84).
