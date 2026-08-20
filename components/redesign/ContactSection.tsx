@@ -70,14 +70,21 @@ const ContactSection: React.FC = () => {
     >
       <MobileSectionTitle title="Contact" />
       <div className="mx-auto max-w-3xl px-6">
-        <div className="mb-10 text-center sm:mb-14">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">Get in Touch</h2>
-          <p className="mt-3 text-slate-600 dark:text-slate-400">
+        <div className="mb-10 sm:mb-12">
+          <p className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">Contact</p>
+          <h2 className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">Get in Touch</h2>
+          <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
             Have a project in mind, or just want to say hello? Send a message below.
           </p>
         </div>
 
-        <form id="contactForm" onSubmit={handleSubmit} autoComplete="off" className="space-y-5">
+        <form
+          id="contactForm"
+          onSubmit={handleSubmit}
+          autoComplete="off"
+          className="rounded-md border border-slate-200 bg-white/70 p-5 shadow-sm shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-900/50 dark:shadow-black/10 sm:p-6"
+        >
+          <div className="space-y-5">
           {errorMsg && (
             <div
               role="alert"
@@ -139,6 +146,7 @@ const ContactSection: React.FC = () => {
               onChange={handleChange}
             ></textarea>
           </div>
+          </div>
 
           {/* Honeypot: hidden from real users, invisible to screen readers, but a
               plain form field a naive bot's autofill will still populate. */}
@@ -153,7 +161,7 @@ const ContactSection: React.FC = () => {
             className="absolute -left-[9999px] h-px w-px overflow-hidden"
           />
 
-          <div className="pt-2">
+          <div className="pt-6">
             <button
               type="submit"
               id="send_message"

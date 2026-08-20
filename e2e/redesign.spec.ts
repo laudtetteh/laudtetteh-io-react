@@ -119,7 +119,8 @@ test('writing section renders real blog teaser cards in initial HTML', async ({ 
   if (cardCount > 0) {
     await expect(writing.locator('article').first()).toBeVisible();
   } else {
-    await expect(writing).toContainText('No posts published yet');
+    await expect(writing).toContainText('Writing is being refreshed.');
+    await expect(writing.getByRole('link', { name: 'Open the blog' })).toBeVisible();
   }
 });
 

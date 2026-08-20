@@ -23,7 +23,7 @@ interface ProjectEntry {
 const projects: ProjectEntry[] = [
   {
     title: 'MethodistCRM',
-    url: 'https://laudtetteh.io/methodistcrm.html',
+    url: '/blog/methodistcrm',
     description:
       'CRM dashboard with authentication for community-based church programs. Reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
     image: '/images/projects/methodistcrm.png',
@@ -68,15 +68,24 @@ export default function ProjectsSection() {
           Projects
         </h2>
 
-        <ul className="group/list mt-12">
+        <ul className="group/list mt-10 space-y-5">
           {projects.map(project => (
-            <li key={project.image} className="mb-12">
-              <div className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                <div
-                  aria-hidden="true"
-                  className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(15,23,42,0.06)] lg:group-hover:drop-shadow-lg dark:lg:group-hover:bg-slate-800/50 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]"
-                />
-                <div className="z-10 sm:order-2 sm:col-span-6">
+            <li
+              key={project.image}
+              className="group rounded-md border border-slate-200 bg-white/80 p-4 shadow-sm shadow-slate-200/40 transition-colors lg:hover:!opacity-100 lg:group-hover/list:opacity-50 dark:border-slate-800 dark:bg-slate-900/50 dark:shadow-black/10"
+            >
+              <div className="grid gap-5 sm:grid-cols-8 sm:items-start">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded border border-slate-200 bg-slate-100 transition dark:border-slate-800 dark:bg-slate-950 sm:col-span-3">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} screenshot`}
+                    fill
+                    sizes="(min-width: 640px) 20vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="sm:col-span-5">
                   <h3>
                     <a
                       href={project.url}
@@ -104,16 +113,6 @@ export default function ProjectsSection() {
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                <div className="relative z-10 aspect-video w-full overflow-hidden rounded border-2 border-slate-200 transition sm:order-1 sm:col-span-2 sm:translate-y-1 dark:border-slate-200/10 group-hover:border-teal-600/40 dark:group-hover:border-slate-200/30">
-                  <Image
-                    src={project.image}
-                    alt={`${project.title} screenshot`}
-                    fill
-                    sizes="(min-width: 640px) 25vw, 100vw"
-                    className="object-cover"
-                  />
                 </div>
               </div>
             </li>

@@ -63,7 +63,7 @@ const experience: ExperienceEntry[] = [
     dateRange: '2019–2021',
     title: 'Senior Dev.',
     company: 'MethodistCRM',
-    companyHref: 'https://laudtetteh.io/methodistcrm.html',
+    companyHref: '/blog/methodistcrm',
     description:
       'Built a CRM dashboard with authentication for community-based church programs, powered by Laravel & MySQL. Shipped reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
     techTags: ['Laravel', 'MySQL', 'PHP'],
