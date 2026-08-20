@@ -23,7 +23,7 @@ interface ProjectEntry {
 const projects: ProjectEntry[] = [
   {
     title: 'MethodistCRM',
-    url: 'https://laudtetteh.io/methodistcrm.html',
+    url: '/blog/methodistcrm',
     description:
       'CRM dashboard with authentication for community-based church programs. Reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
     image: '/images/projects/methodistcrm.png',
