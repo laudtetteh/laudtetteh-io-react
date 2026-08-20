@@ -113,16 +113,18 @@ export default function WritingSection({ posts }: WritingSectionProps) {
             })}
           </div>
         ) : (
-          <p className="mt-10 rounded-lg border border-dashed border-slate-200 px-6 py-10 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
-            No posts published yet. Check back soon, or visit{' '}
+          <div className="mt-10 rounded-md border border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center dark:border-slate-800 dark:bg-slate-900/40">
+            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Writing is being refreshed.</p>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
+              New posts will appear here once the blog content pass is published. The archive is still available.
+            </p>
             <Link
               href="/blog"
-              className="font-medium text-teal-600 underline underline-offset-2 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
+              className="mt-5 inline-flex items-center justify-center rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-600 hover:text-white dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
             >
-              the blog
-            </Link>{' '}
-            directly.
-          </p>
+              Open the blog
+            </Link>
+          </div>
         )}
       </div>
     </section>
