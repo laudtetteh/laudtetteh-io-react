@@ -16,9 +16,57 @@ const CATEGORY_FILTERS: { id: SandboxCategory; label: string }[] = [
   { id: 'ci-cd', label: 'CI/CD' },
 ];
 
+const TOPIC_LABELS: Record<string, string> = {
+  api: 'API',
+  backend: 'Backend',
+  'ci-cd': 'CI/CD',
+  devops: 'DevOps',
+  frontend: 'Frontend',
+  html: 'HTML',
+  javascript: 'JavaScript',
+  mongodb: 'MongoDB',
+  php: 'PHP',
+  scss: 'SCSS',
+  'shell-scripting': 'Shell',
+  typescript: 'TypeScript',
+};
+
+const TITLE_LABELS: Record<string, string> = {
+  '4culture': '4Culture',
+  api: 'API',
+  backend: 'Backend',
+  ci: 'CI',
+  cd: 'CD',
+  crm: 'CRM',
+  frontend: 'Frontend',
+  methodistcrm: 'MethodistCRM',
+  paystack: 'Paystack',
+  wfhu: 'WFHU',
+  w9: 'W9',
+  wp: 'WP',
+};
+
 /** Turns a repo slug like `4culture-wp-glossary-pagination` into a readable title. */
 function formatRepoName(name: string): string {
-  return name.replace(/[-_]/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+  return name
+    .split(/[-_]/g)
+    .map(part => TITLE_LABELS[part.toLowerCase()] || part.replace(/\b\w/g, char => char.toUpperCase()))
+    .join(' ');
+}
+
+function formatTopic(topic: string): string {
+  return TOPIC_LABELS[topic] || topic.replace(/[-_]/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function getPrimaryTopic(repo: GithubRepo): string {
+  const topic = CATEGORY_FILTERS.find(filter => filter.id !== 'all' && repo.topics.includes(filter.id))?.id;
+  return topic ? formatTopic(topic) : repo.language || 'Repo';
+}
+
+function formatUpdatedDate(dateString: string): string {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
 function ExternalLinkIcon() {
@@ -67,11 +115,19 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
     >
       <MobileSectionTitle title="Sandbox" />
       <div className="mx-auto max-w-5xl px-6">
-        <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Sandbox</h2>
-        <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
-          A live grid of real, public repos from my GitHub — pulled directly from the API, not a curated
-          portfolio.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Sandbox</h2>
+            <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
+              Public repos from GitHub, grouped by the kind of problem they solve.
+            </p>
+          </div>
+          {hasRepos && (
+            <p className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:border-slate-800 dark:text-slate-400">
+              {repos.length} repos
+            </p>
+          )}
+        </div>
 
         {hasRepos ? (
           <>
@@ -94,14 +150,19 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
             </div>
 
             {filteredRepos.length > 0 ? (
-              <div key={activeCategory} className="mt-8 grid animate-fade-in gap-6 motion-reduce:animate-none sm:grid-cols-2 lg:grid-cols-3">
+              <div key={activeCategory} className="mt-8 grid animate-fade-in gap-4 motion-reduce:animate-none sm:grid-cols-2">
                 {filteredRepos.map(repo => (
                   <article
                     key={repo.id}
-                    className="group flex flex-col rounded-lg border border-slate-200 bg-white p-6 transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-teal-400/40"
+                    className="group flex min-h-56 flex-col rounded-md border border-slate-200 bg-white/80 p-5 shadow-sm shadow-slate-200/40 transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:bg-slate-900/50 dark:shadow-black/10 dark:hover:border-teal-400/40"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                    <div className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">
+                      <span>{getPrimaryTopic(repo)}</span>
+                      <span>{repo.language || formatUpdatedDate(repo.updated_at)}</span>
+                    </div>
+
+                    <div className="mt-4 flex items-start justify-between gap-3">
+                      <h3 className="text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100">
                         <a
                           href={repo.html_url}
                           target="_blank"
@@ -122,19 +183,24 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                       </a>
                     </div>
 
-                    <p className="mt-2 flex-1 text-sm text-slate-600 dark:text-slate-400">
+                    <p className="mt-3 line-clamp-3 flex-1 text-sm leading-6 text-slate-600 dark:text-slate-400">
                       {repo.description || 'No description available.'}
                     </p>
 
-                    <ul className="mt-4 flex flex-wrap gap-2">
-                      {repo.topics.map(topic => (
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {repo.topics.slice(0, 3).map(topic => (
                         <li
                           key={topic}
-                          className="rounded-full bg-teal-600/10 px-3 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300"
+                          className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium leading-5 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
                         >
-                          {topic}
+                          {formatTopic(topic)}
                         </li>
                       ))}
+                      {repo.topics.length > 3 && (
+                        <li className="rounded-full bg-teal-600/10 px-2.5 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300">
+                          +{repo.topics.length - 3}
+                        </li>
+                      )}
                     </ul>
                   </article>
                 ))}
