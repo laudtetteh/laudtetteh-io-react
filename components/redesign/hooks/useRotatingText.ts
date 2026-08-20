@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
  * CSS fade transition (fade out, swap text, fade in) without any animation
  * library.
  *
- * Recreates the old jQuery `textition` hero tagline idiomatically: plain
- * `useState`/`useEffect` + `setInterval`, cleaned up on unmount. Starts from
- * the first string so the pre-hydration/server-rendered markup always shows
- * `strings[0]` — rotation is a client-only enhancement layered on top.
+ * Uses plain `useState`/`useEffect` + `setInterval`, cleaned up on unmount.
+ * Starts from the first string so the pre-hydration/server-rendered markup
+ * always shows `strings[0]`; rotation is a client-only enhancement layered
+ * on top.
  */
 export function useRotatingText(strings: string[], intervalMs: number): { text: string; visible: boolean } {
   const [index, setIndex] = useState(0);

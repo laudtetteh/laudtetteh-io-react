@@ -6,7 +6,7 @@ interface PostCardProps {
   loggedIn: boolean;
 }
 
-const FALLBACK_IMAGE = '/img/news/1.jpg';
+const FALLBACK_IMAGE = '/images/writing/headless.jpeg';
 
 /** Matches `WritingSection.tsx`'s date formatting so the archive reads consistently with the homepage teaser. */
 function formatDate(dateString: string | undefined): string {

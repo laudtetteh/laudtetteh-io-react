@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+const LEGACY_ASSET_PATH = /^\/(?:css|js|img)\//;
+
+function normalizeFontFamily(value: string): string {
+  return value.replace(/["']/g, '').trim();
+}
+
 /**
  * Placeholder-shell check for #7 (redesign-scaffold). All 8 Sprint 1
  * sections now render real content as of #13 (redesign-writing-section) —
@@ -16,6 +22,27 @@ test('redesign renders with zero console errors', async ({ page }) => {
 
   await expect(page).toHaveTitle(/Laud Tetteh/);
   expect(consoleErrors).toEqual([]);
+});
+
+test('redesign routes do not request deleted legacy template assets', async ({ page }) => {
+  const legacyRequests: string[] = [];
+
+  page.on('request', request => {
+    const url = new URL(request.url());
+    if (LEGACY_ASSET_PATH.test(url.pathname)) {
+      legacyRequests.push(url.pathname);
+    }
+  });
+
+  for (const route of ['/', '/blog', '/blog/does-not-exist-e2e']) {
+    await page.goto(route, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {
+      // The dev server can keep HMR/network bookkeeping alive; the request
+      // listener above still captures the legacy asset regression signal.
+    });
+  }
+
+  expect(legacyRequests).toEqual([]);
 });
 
 test('about section renders real bio content in initial HTML', async ({ page }) => {
@@ -94,6 +121,12 @@ test('writing section renders real blog teaser cards in initial HTML', async ({ 
   } else {
     await expect(writing).toContainText('No posts published yet');
   }
+});
+
+test('writing fallback image asset is available after legacy image cleanup', async ({ page }) => {
+  const response = await page.goto('/images/writing/headless.jpeg');
+  expect(response?.ok()).toBe(true);
+  expect(response?.headers()['content-type']).toContain('image/');
 });
 
 test('contact section renders the real form shell in initial HTML', async ({ page }) => {
@@ -334,14 +367,22 @@ test('homepage opts into the redesign shell after the #17 cutover', async ({ pag
   expect(hasSpotlight).toBe(true);
 });
 
-test('headings use the Inter font, not the legacy Syne theme font (#19)', async ({ page }) => {
+test('headings use the Inter font (#19)', async ({ page }) => {
   // Reads `/` directly as of #17 — the redesign now lives there, and
   // `/redesign` is only a redirect to it (see pages/redesign.tsx).
   await page.goto('/');
-  const h1Family = await page.locator('#header h1').evaluate((el) => getComputedStyle(el).fontFamily);
-  const h2Family = await page.locator('#about h2').evaluate((el) => getComputedStyle(el).fontFamily);
-  expect(h1Family).not.toContain('Syne');
-  expect(h2Family).not.toContain('Syne');
+  const fontState = await page.locator('.font-inter').first().evaluate((el) => {
+    const interVariable = getComputedStyle(el).getPropertyValue('--font-inter').trim();
+    return {
+      interVariable,
+      h1Family: getComputedStyle(document.querySelector('#header h1')!).fontFamily,
+      h2Family: getComputedStyle(document.querySelector('#about h2')!).fontFamily,
+    };
+  });
+  const expectedInterFamily = normalizeFontFamily(fontState.interVariable.split(',')[0]);
+  expect(expectedInterFamily.toLowerCase()).toContain('inter');
+  expect(normalizeFontFamily(fontState.h1Family)).toContain(expectedInterFamily);
+  expect(normalizeFontFamily(fontState.h2Family)).toContain(expectedInterFamily);
 
   // The Inter fix is scoped to `[data-route="redesign"]`, so `/` must carry
   // that marker post-cutover (it previously asserted the opposite, back when
@@ -352,7 +393,7 @@ test('headings use the Inter font, not the legacy Syne theme font (#19)', async 
 
 test('skip-to-content link is the first focusable element and targets #content (#19)', async ({ page }) => {
   await page.goto('/');
-  await page.locator('a[href="#content"]').waitFor();
+  await page.locator('a[href="#content"]').waitFor({ state: 'attached' });
 
   // Explicitly establish a known focus baseline (`<body>`) before pressing
   // Tab, rather than relying on the browser's implicit post-load focus
@@ -376,16 +417,15 @@ test('skip-to-content link is the first focusable element and targets #content (
   await expect(page).toHaveURL(/#content$/);
 });
 
-test('contact form text inputs render rounded corners and the intended border color, not the legacy square/grey plugins.css style (#19)', async ({ page }) => {
+test('contact form text inputs render rounded corners and the intended border color (#19)', async ({ page }) => {
   await page.goto('/');
   const nameInput = page.locator('#contact_name');
   const messageTextarea = page.locator('#contact_message');
 
   const inputRadius = await nameInput.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
   const textareaRadius = await messageTextarea.evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
-  // The legacy `input[type="text"]` rule in `public/css/plugins.css` doesn't
-  // match `<textarea>`, so the textarea's rounded-md corners are a reliable
-  // "what it should look like" reference to compare the input against.
+  // The textarea's rounded-md corners are a reliable "what it should look
+  // like" reference to compare the input against.
   expect(inputRadius).toBe(textareaRadius);
 
   const inputBorderColor = await nameInput.evaluate((el) => getComputedStyle(el).borderTopColor);

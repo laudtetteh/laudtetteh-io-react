@@ -62,7 +62,8 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
     );
   }
 
-  const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/img/news/1.jpg';
+  const imageUrl =
+    post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/images/writing/headless.jpeg';
   const author = 'Laud Tetteh';
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
   const displayDate = post.date_published || post.date;

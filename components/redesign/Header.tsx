@@ -35,11 +35,9 @@ const SOCIAL_LINKS = [
  * hero tagline, in-page scroll-spy nav, social icons, and the theme toggle.
  *
  * Behaves as a sticky left column on large screens (`lg:` breakpoint up) and
- * a stacked block at the top of the page below it — self-contained
- * responsive stacking, no dependency on the old `Layout.tsx`'s
- * `MobileMenu`. Name/role/nav/social markup is present in the initial
- * server-rendered HTML; only the nav's `.active` highlight depends on the
- * client-side `useScrollSpy` hook.
+ * a stacked block at the top of the page below it. Name/role/nav/social
+ * markup is present in the initial server-rendered HTML; only the nav's
+ * `.active` highlight depends on the client-side `useScrollSpy` hook.
  */
 export default function Header(): React.ReactElement {
   const { text: tagline, visible: taglineVisible } = useRotatingText(TAGLINES, TAGLINE_INTERVAL_MS);

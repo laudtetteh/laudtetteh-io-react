@@ -6,9 +6,9 @@ interface WritingSectionProps {
   posts: PostData[];
 }
 
-const FALLBACK_IMAGE = '/img/news/1.jpg';
+const FALLBACK_IMAGE = '/images/writing/headless.jpeg';
 
-/** Matches `BlogSection.tsx`'s date formatting so teasers read consistently across the old and new homepages. */
+/** Matches the blog archive date format so teasers read consistently across the site. */
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return '';
   const date = new Date(dateString);
@@ -26,8 +26,7 @@ function formatDate(dateString: string | undefined): string {
  * `posts` are fetched server-side via `getLatestPosts()` (`lib/blog.ts`)
  * inside `pages/redesign.tsx`'s `getStaticProps` and passed down as a prop,
  * so the cards are genuinely present in the initial SSR/SSG HTML — this is
- * what satisfies the redesign's SSR requirement for this section, unlike
- * the old homepage's client-fetched `BlogSection.tsx`.
+ * what satisfies the redesign's SSR requirement for this section.
  *
  * Featured images use a plain `<img>`, matching the existing convention in
  * `BlogSection.tsx` / `pages/blog/index.tsx` / `pages/blog/[slug].tsx` —

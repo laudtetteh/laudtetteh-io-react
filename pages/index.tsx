@@ -17,10 +17,8 @@ interface HomePageProps {
   posts: PostData[];
 }
 
-// Deliberately does NOT use `components/Layout.tsx` — that wrapper renders
-// the legacy jQuery-theme `MobileMenu` (`.arlo_tm_topbar` markup) whenever
-// `pathname === '/'`, which would inject old-theme DOM into the new design.
-// `pages/redesign.tsx` never used `Layout` either; this mirrors that.
+// Deliberately does NOT use `components/Layout.tsx`; the redesign owns its
+// page shell directly, matching the original side-by-side `/redesign` route.
 const HomePage: React.FC<HomePageProps> = ({ repos, posts }) => (
   <>
     <Head>
