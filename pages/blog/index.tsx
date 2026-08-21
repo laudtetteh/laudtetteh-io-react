@@ -66,7 +66,11 @@ const BlogIndex: NextPage<BlogIndexProps> = ({ posts }) => {
   const paginatedPosts = sortedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
   return (
-    <BlogLayout title="Blog | Laud Tetteh" description="Read the latest posts from Laud Tetteh on software, tech, and more.">
+    <BlogLayout
+      title="Blog | Laud Tetteh"
+      description="Read the latest posts from Laud Tetteh on software, tech, and more."
+      path="/blog"
+    >
       <div className="mb-16 md:mb-24">
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Blog</h1>
         <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">

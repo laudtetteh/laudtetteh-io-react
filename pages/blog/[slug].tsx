@@ -55,8 +55,14 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
   }, []);
 
   if (router.isFallback) {
+    const fallbackSlug = Array.isArray(router.query.slug) ? router.query.slug[0] : router.query.slug;
+
     return (
-      <BlogLayout title="Loading… | Laud Tetteh" description="">
+      <BlogLayout
+        title="Loading… | Laud Tetteh"
+        description="Loading a blog post from Laud Tetteh."
+        path={`/blog/${fallbackSlug ?? ''}`}
+      >
         <p className="text-slate-600 dark:text-slate-400">Loading post...</p>
       </BlogLayout>
     );
@@ -64,6 +70,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
 
   const imageUrl =
     post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/images/writing/headless.jpeg';
+  const socialImageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : undefined;
   const author = 'Laud Tetteh';
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
   const displayDate = post.date_published || post.date;
@@ -71,7 +78,14 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
   const displayTitle = Array.isArray(post.title) ? post.title.join(' ') : post.title;
 
   return (
-    <BlogLayout title={`${displayTitle} | Laud Tetteh`} description={post.summary ?? ''}>
+    <BlogLayout
+      title={`${displayTitle} | Laud Tetteh`}
+      description={post.summary ?? ''}
+      path={`/blog/${post.slug}`}
+      type="article"
+      imagePath={socialImageUrl}
+      imageAlt={socialImageUrl ? `${displayTitle} featured image` : undefined}
+    >
       <article className="mb-16 md:mb-24">
         <nav aria-label="Breadcrumb" className="mb-6">
           <ul className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">

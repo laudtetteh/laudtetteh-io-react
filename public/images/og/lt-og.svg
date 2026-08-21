@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="1" y="1" width="1198" height="628" stroke="#1e293b" stroke-width="2"/>
+  <circle cx="1020" cy="108" r="220" fill="#14b8a6" fill-opacity="0.12"/>
+  <circle cx="198" cy="528" r="180" fill="#38bdf8" fill-opacity="0.08"/>
+  <path d="M120 122H1080" stroke="#334155" stroke-width="1"/>
+  <path d="M120 508H1080" stroke="#334155" stroke-width="1"/>
+  <g transform="translate(120 146)">
+    <rect x="0" y="0" width="338" height="338" rx="38" fill="#020617"/>
+    <rect x="1.5" y="1.5" width="335" height="335" rx="36.5" stroke="#14b8a6" stroke-width="3"/>
+    <path d="M78 76V262H202" stroke="#e2e8f0" stroke-width="38" stroke-linecap="square" stroke-linejoin="miter"/>
+    <path d="M146 76H268" stroke="#14b8a6" stroke-width="38" stroke-linecap="square"/>
+    <path d="M207 76V262" stroke="#14b8a6" stroke-width="38" stroke-linecap="square"/>
+  </g>
+  <g transform="translate(522 164)">
+    <text x="0" y="78" fill="#f8fafc" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="66" font-weight="760" letter-spacing="0">Laud Tetteh</text>
+    <text x="0" y="132" fill="#5eead4" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="30" font-weight="650" letter-spacing="0">Software Engineer</text>
+    <text x="0" y="218" fill="#cbd5e1" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="34" font-weight="450" letter-spacing="0">Portfolio, projects, and writing</text>
+    <text x="0" y="300" fill="#94a3b8" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="27" font-weight="520" letter-spacing="0.08em">LAUDTETTEH.IO</text>
+  </g>
+</svg>
