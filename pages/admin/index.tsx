@@ -1,7 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useFlashMessage } from "@/lib/useFlashMessage";
-import { useSortable } from "@dnd-kit/sortable";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 import Layout from '@/components/Layout';
@@ -22,6 +37,22 @@ interface BlogPost {
   weight?: number;
 }
 
+const getPostSortValue = (post: BlogPost, index: number) => post.weight ?? index;
+
+const sortPostsByWeight = (postsToSort: BlogPost[]) => (
+  postsToSort
+    .map((post, index) => ({ post, index }))
+    .sort((a, b) => {
+      const weightDiff = getPostSortValue(a.post, a.index) - getPostSortValue(b.post, b.index);
+      if (weightDiff !== 0) return weightDiff;
+
+      const aDate = a.post.date_published ? new Date(a.post.date_published).getTime() : 0;
+      const bDate = b.post.date_published ? new Date(b.post.date_published).getTime() : 0;
+      return bDate - aDate;
+    })
+    .map(({ post }, index) => ({ ...post, weight: index }))
+);
+
 function SortablePost({
   post,
   onEdit,
@@ -33,14 +64,14 @@ function SortablePost({
   onView: () => void;
   onDelete: () => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: post.slug });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: post.slug });
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <li
+    <article
       ref={setNodeRef}
       style={style}
-      className={`${cardClasses} overflow-hidden`}
+      className={`${cardClasses} overflow-hidden ${isDragging ? "relative z-20 shadow-lg" : ""}`}
     >
       {post.featuredImage && (
         <img
@@ -65,6 +96,7 @@ function SortablePost({
             <span
               className="cursor-move text-slate-400 text-lg"
               title="Drag to reorder"
+              aria-label={`Drag ${post.title} to reorder`}
               {...attributes}
               {...listeners}
             >
@@ -98,7 +130,7 @@ function SortablePost({
           <button onClick={onDelete} className="text-red-600 hover:underline">Delete</button>
         </div>
       </div>
-    </li>
+    </article>
   );
 }
 
@@ -119,6 +151,12 @@ export default function AdminDashboard() {
   const postsPerPage = 9;
   const router = useRouter();
   const { redirectWithMessage } = useFlashMessage();
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -144,11 +182,7 @@ export default function AdminDashboard() {
         }
 
         const fetchedPosts = await res.json();
-        const withWeights = fetchedPosts.map((p: BlogPost, i: number) => ({
-          ...p,
-          weight: p.weight ?? i,
-        }));
-        setPosts(withWeights);
+        setPosts(sortPostsByWeight(fetchedPosts));
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -176,11 +210,6 @@ export default function AdminDashboard() {
         !dateFilter ||
         new Date(p.date).toDateString() === new Date(dateFilter).toDateString()
       )
-      .sort((a, b) => {
-        const aDate = a.date_published ? new Date(a.date_published).getTime() : 0;
-        const bDate = b.date_published ? new Date(b.date_published).getTime() : 0;
-        return bDate - aDate;
-      })
   ), [posts, search, statusFilter, categoryFilter, dateFilter]);
 
   // Pagination logic
@@ -202,6 +231,57 @@ export default function AdminDashboard() {
 
   const toggleSelect = (slug: string) => {
     setSelected((prev) => prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]);
+  };
+
+  const persistWeights = async (orderedPosts: BlogPost[]) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Missing auth token");
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/update-weights`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderedPosts.map((post, index) => ({
+        slug: post.slug,
+        weight: index,
+      }))),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to save post order");
+    }
+  };
+
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const activeSlug = String(active.id);
+    const overSlug = String(over.id);
+    const oldIndex = posts.findIndex((post) => post.slug === activeSlug);
+    const newIndex = posts.findIndex((post) => post.slug === overSlug);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const previousPosts = posts;
+    const nextPosts = arrayMove(posts, oldIndex, newIndex).map((post, index) => ({
+      ...post,
+      weight: index,
+    }));
+
+    setPosts(nextPosts);
+    setError("");
+
+    try {
+      await persistWeights(nextPosts);
+    } catch (err) {
+      console.error(err);
+      setPosts(previousPosts);
+      setError("Failed to save post order. Please try again.");
+    }
   };
 
   // Bulk delete handler
@@ -404,24 +484,32 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {paginatedPosts.map((post) => (
-                <div key={post.slug} className="relative">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(post.slug)}
-                    onChange={() => toggleSelect(post.slug)}
-                    className="absolute top-2 left-2 z-10 h-5 w-5"
-                  />
-                  <SortablePost
-                    post={post}
-                    onEdit={() => router.push(`/admin/edit/${post.slug}`)}
-                    onView={() => router.push(`/blog/${post.slug}`)}
-                    onDelete={() => handleDelete(post.slug)}
-                  />
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext items={paginatedPosts.map((post) => post.slug)} strategy={rectSortingStrategy}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {paginatedPosts.map((post) => (
+                    <div key={post.slug} className="relative">
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(post.slug)}
+                        onChange={() => toggleSelect(post.slug)}
+                        className="absolute top-2 left-2 z-10 h-5 w-5"
+                      />
+                      <SortablePost
+                        post={post}
+                        onEdit={() => router.push(`/admin/edit/${post.slug}`)}
+                        onView={() => router.push(`/blog/${post.slug}`)}
+                        onDelete={() => handleDelete(post.slug)}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
