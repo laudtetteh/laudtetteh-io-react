@@ -31,17 +31,23 @@ pip install mypy types-requests types-bleach
 
 ### 3. **Run Everything (Dev Mode)**
 
-- **Frontend:**
-  ```sh
-  npm run dev
-  # Open http://localhost:3000
-  ```
-- **Backend:**
-  ```sh
-  cd backend
-  uvicorn main:app --reload --host 0.0.0.0 --port 8000
-  # Open http://localhost:8000/docs
-  ```
+Preferred local workflow is Docker Compose, which matches the repo's port mapping:
+
+```sh
+docker compose up
+```
+
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8004
+- Backend health: http://localhost:8004/healthz
+
+Frontend-only work can run with `npm run dev`. Backend-only host runs should mirror
+the container working directory:
+
+```sh
+cd backend/app
+uvicorn main:app --reload --host 0.0.0.0 --port 8004
+```
 
 ---
 
@@ -70,7 +76,9 @@ docker compose up --build
 ## ⚙️ **Environment Variables**
 
 - `.env.local` is the dev env file (gitignored, no `.env.example` — use `.env.local` as the template).
-- Docker/CI/CD uses `.env.production` (see GitHub secrets).
+- `.env` provides local Docker Compose interpolation for build-time frontend API args.
+- OVH production keeps its real `.env` on the VPS; `.github/workflows/deploy-ovh.yml` rsyncs code only and does not write production secrets.
+- `.env.production` is legacy/staging-era local material. Do not treat it as the OVH production source of truth.
 
 ---
 

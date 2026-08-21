@@ -17,6 +17,7 @@ Closes #
 - [ ] `npm run lint` (frontend) / `ruff check backend/app` (backend) pass — both CI-enforced (#30)
 - [ ] Verified in-container with `docker compose up` (if backend, Docker, or dependency changes)
 - [ ] `npx playwright test` passes (if this PR touches a rendered route/component)
+- [ ] Live browser validation completed at relevant responsive breakpoints, with before/after screenshots or notes for rendered UI changes
 - [ ] Self-reviewed diff
 - [ ] Commit message follows `type(scope): description [#N]`
 
