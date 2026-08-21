@@ -38,7 +38,6 @@ export default function Document({ appliesRedesignSystem }: DocumentProps) {
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
           }}
         />
-        <meta name="description" content="Personal site and blog of Laud Tetteh." />
         <meta name="author" content="Laud Tetteh" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />

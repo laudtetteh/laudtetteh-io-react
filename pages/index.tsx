@@ -1,7 +1,7 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
-import Head from 'next/head';
 import RedesignLayout from '../components/redesign/RedesignLayout';
+import Seo from '../components/Seo';
 import { GithubRepo } from '../types/github';
 import { PostData } from '../types/blog';
 import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '../lib/github';
@@ -21,10 +21,7 @@ interface HomePageProps {
 // page shell directly, matching the original side-by-side `/redesign` route.
 const HomePage: React.FC<HomePageProps> = ({ repos, posts }) => (
   <>
-    <Head>
-      <title>Laud Tetteh | Full Stack Developer</title>
-      <meta name="description" content="Personal site and portfolio of Laud Tetteh." />
-    </Head>
+    <Seo title="Laud Tetteh | Full Stack Developer" description="Personal site and portfolio of Laud Tetteh." />
     <RedesignLayout repos={repos} posts={posts} />
   </>
 );
