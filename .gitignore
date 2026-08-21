@@ -51,6 +51,7 @@ __pycache__/
 
 # Logs
 backend/app/logs/*.log
+backend/logs/*.log
 
 # Workspace
 *.code-workspace
