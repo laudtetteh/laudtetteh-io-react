@@ -31,13 +31,15 @@
 
 ## Features (shipped)
 
-These are live in the codebase and functional (or nearly so):
+These are live in the codebase and functional unless noted:
 
 - [x] Portfolio homepage — bio, skills, work history, education, testimonials, GitHub project showcase
 - [x] Blog — list view, individual post view, category filtering, featured images via AWS S3, ISR
-- [x] Blog admin — create, edit, publish/draft, delete posts; drag-and-drop weight ordering
+- [x] Blog admin — create, edit, publish/draft, delete posts
+- [ ] Blog admin drag-and-drop ordering — UI scaffolding exists but is inert until #35 restores or removes it
 - [x] Media manager — upload images to S3, view and delete uploaded files
-- [x] Contact form — client-side captcha, Resend email delivery to hello@laudtetteh.io
+- [x] Contact form — Resend email delivery to hello@laudtetteh.io, with backend validation/rate limiting
+- [ ] Contact form abuse protection beyond rate limiting — client-side captcha/Turnstile is not shipped
 - [x] JWT auth — single admin login; token stored in localStorage; protected admin routes
 - [x] Tiptap rich text editor — client-side WYSIWYG for blog post body
 - [x] CV download — `/docs/cv/Laud-Tetteh-Resume.pdf` linked from the About section
