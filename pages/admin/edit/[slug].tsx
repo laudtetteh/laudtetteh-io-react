@@ -38,7 +38,7 @@ export default function EditPostPage() {
 
     const fetchPost = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/posts/${slug}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/posts/${slug}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

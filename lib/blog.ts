@@ -1,9 +1,9 @@
 import type { PostData } from '@/types/blog';
 
 /**
- * `GET /api/posts` returns every post (draft and published), sorted
- * server-side by `date_published` desc (falling back to `date_created`,
- * then a legacy `date` field — see `backend/app/api/blog.py`). Server-side
+ * `GET /api/posts` returns published posts only, sorted server-side by
+ * `date_published` desc (falling back to `date_created`, then a legacy
+ * `date` field — see `backend/app/api/blog.py`). Server-side
  * callers (`getStaticProps`/ISR) must hit the internal Docker network
  * address via `API_SERVER`, not the browser-facing `NEXT_PUBLIC_API_BROWSER`
  * — see CLAUDE.md's "API routing" convention.
@@ -40,9 +40,7 @@ async function fetchPublishedPosts(): Promise<PostData[]> {
     throw new Error(`Failed to fetch posts: ${res.status}`);
   }
   const allPosts: PostData[] = await res.json();
-  return allPosts
-    .filter(post => post.status === 'published')
-    .sort((a, b) => toTimestamp(b) - toTimestamp(a));
+  return allPosts.sort((a, b) => toTimestamp(b) - toTimestamp(a));
 }
 
 /**

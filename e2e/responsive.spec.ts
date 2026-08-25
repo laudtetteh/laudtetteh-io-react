@@ -176,11 +176,10 @@ test('contact form fields and submit button fit at mobile and sm widths', async 
 test('blog post media and prose do not overflow on mobile', async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/blog/methodistcrm', { waitUntil: 'networkidle' });
+  const response = await page.goto('/blog/methodistcrm', { waitUntil: 'networkidle' });
+  test.skip(response?.status() === 404, 'live backend content unavailable in this environment');
 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  const isFallbackPost = await page.getByRole('heading', { name: 'Post not found' }).count();
-  test.skip(isFallbackPost > 0, 'live backend content unavailable in this environment');
 
   const viewportWidth = await page.evaluate(() => document.documentElement.clientWidth);
   const checkedElements = page.locator('.prose img, .prose pre, .prose table, nav[aria-label="Breadcrumb"]');
