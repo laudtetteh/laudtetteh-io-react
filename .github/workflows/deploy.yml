@@ -1,26 +1,35 @@
-# Legacy staging deploy for dev.laudtetteh.io / api.dev.laudtetteh.io.
+# Retired legacy staging deploy for dev.laudtetteh.io / api.dev.laudtetteh.io.
 # Production is OVH and deploys only via deploy-ovh.yml workflow_dispatch.
-# This workflow remains active until #85 decides whether to migrate or retire staging.
-name: Deploy to DigitalOcean staging
+# The DigitalOcean staging host is currently a decommission candidate (#85), and
+# dev.laudtetteh.io / api.dev.laudtetteh.io return 502. Keep this workflow as a
+# tombstone until the droplet/DNS/secrets are removed, but do not run it on push.
+name: Retired DigitalOcean staging deploy
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  retired:
     runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
+      - name: Stop
+        run: |
+          echo "DigitalOcean staging deploy is retired under #85."
+          echo "Use deploy-ovh.yml for production deploys."
+
       - name: Checkout code
+        if: ${{ false }}
         uses: actions/checkout@v3  # Fetch the latest code from the repo
 
       - name: Generate .env.production from secret
+        if: ${{ false }}
         # Create the .env.production file from a GitHub secret
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
 
       - name: Copy app files to DigitalOcean staging
+        if: ${{ false }}
         # Securely copy all app files to the staging DigitalOcean droplet.
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -32,6 +41,7 @@ jobs:
           strip_components: 0  # Preserve directory structure
 
       - name: SSH and deploy
+        if: ${{ false }}
         # SSH into the droplet and run deployment commands
         uses: appleboy/ssh-action@v1.0.0
         with:
