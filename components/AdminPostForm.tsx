@@ -12,7 +12,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
 import { Extension, type JSONContent } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
-import { uploadImage, getPost } from '@/lib/api';
+import { uploadImage, getAdminPost } from '@/lib/api';
 import type { PostData } from '@/types/blog';
 import PostMetaFields from './admin/PostMetaFields';
 import PostContentEditor from './admin/PostContentEditor';
@@ -277,8 +277,9 @@ export default function AdminPostForm({
 
     // Uniqueness check for slug
     if (!isEdit) {
+      const token = localStorage.getItem('token');
       try {
-        await getPost(formData.slug);
+        await getAdminPost(formData.slug, token || '');
         setErrors({ ...validationErrors, slug: 'Slug already exists. Please choose a unique one.' });
         pushMessage('Slug already exists. Please choose a unique one.', 'top-center', 'error');
         return;

@@ -15,6 +15,14 @@ export async function getPost(slug: string): Promise<PostData> {
   return res.json();
 }
 
+export async function getAdminPost(slug: string, token: string): Promise<PostData> {
+  const res = await fetch(`${API_BASE_URL}/api/admin/posts/${slug}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch post');
+  return res.json();
+}
+
 export async function createPost(data: BlogPostFormData, token: string): Promise<PostData> {
   const res = await fetch(`${API_BASE_URL}/api/posts`, {
     method: 'POST',
@@ -79,4 +87,4 @@ export async function sendContact(form: { name: string; email: string; message: 
   });
   if (!res.ok) throw new Error('Failed to send contact form');
   return res.json();
-} 
+}

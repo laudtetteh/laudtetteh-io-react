@@ -97,13 +97,11 @@ test('admin Edit link is absent from the archive when logged out', async ({ page
 });
 
 test('blog routes opt into the redesign shell (#60)', async ({ page }) => {
-  for (const route of ['/blog', '/blog/does-not-exist-e2e']) {
-    await page.goto(route, { waitUntil: 'domcontentloaded' });
-    const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
-    const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
-    expect(dataRoute).toBe('redesign');
-    expect(scrollBehavior).toBe('smooth');
-  }
+  await page.goto('/blog', { waitUntil: 'domcontentloaded' });
+  const dataRoute = await page.evaluate(() => document.documentElement.getAttribute('data-route'));
+  const scrollBehavior = await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+  expect(dataRoute).toBe('redesign');
+  expect(scrollBehavior).toBe('smooth');
 });
 
 test('blog archive theme toggle switches dark class on html element', async ({ page }) => {
@@ -115,14 +113,12 @@ test('blog archive theme toggle switches dark class on html element', async ({ p
   expect(afterDark).not.toBe(initiallyDark);
 });
 
-test('single post page renders breadcrumbs and handles an unknown slug without crashing', async ({ page }) => {
-  const consoleErrors: string[] = [];
-  page.on('console', (msg) => {
-    if (msg.type() === 'error') consoleErrors.push(msg.text());
-  });
-  page.on('pageerror', (err) => consoleErrors.push(err.message));
+test('single post page returns 404 for an unknown public slug without crashing', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (err) => pageErrors.push(err.message));
 
-  await page.goto('/blog/does-not-exist-e2e', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByRole('navigation', { name: 'Breadcrumb' }).or(page.getByText('Loading post...'))).toBeVisible();
-  expect(consoleErrors).toEqual([]);
+  const response = await page.goto('/blog/does-not-exist-e2e', { waitUntil: 'domcontentloaded' });
+  expect(response?.status()).toBe(404);
+  await expect(page.getByText('This page could not be found')).toBeVisible();
+  expect(pageErrors).toEqual([]);
 });

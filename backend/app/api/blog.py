@@ -50,7 +50,7 @@ def coerce_dates(post_dict):
 @router.get("/api/posts", response_model=list[BlogPost])
 async def get_all_posts():
     # Sort by date_published (desc), falling back to date_created for older posts
-    posts = await posts_collection.find().sort([
+    posts = await posts_collection.find({"status": "published"}).sort([
         ("date_published", -1),
         ("date_created", -1),
         ("date", -1)
@@ -59,7 +59,7 @@ async def get_all_posts():
 
 @router.get("/api/posts/{slug}", response_model=BlogPost)
 async def get_post_by_slug(slug: str):
-    post = await posts_collection.find_one({"slug": slug})
+    post = await posts_collection.find_one({"slug": slug, "status": "published"})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
     return post
@@ -140,9 +140,20 @@ async def get_all_posts_admin():
     ]).to_list(100)
     return posts
 
+@router.get(
+    "/api/admin/posts/{slug}",
+    response_model=BlogPost,
+    dependencies=[Depends(verify_token)],
+)
+async def get_post_by_slug_admin(slug: str):
+    post = await posts_collection.find_one({"slug": slug})
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
 @router.get("/api/blog/{slug}", response_model=BlogPost)
 async def get_public_post(slug: str):
-    post = await posts_collection.find_one({"slug": slug})
+    post = await posts_collection.find_one({"slug": slug, "status": "published"})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
     return post

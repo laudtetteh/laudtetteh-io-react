@@ -207,10 +207,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
       params: { slug: post.slug },
     }));
 
-    return { paths, fallback: true };
+    return { paths, fallback: 'blocking' };
   } catch (err) {
     console.error("[getStaticPaths] ❌ Failed to fetch posts:", err);
-    return { paths: [], fallback: true };
+    return { paths: [], fallback: 'blocking' };
   }
 };
 
@@ -220,6 +220,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     // Fetch all posts to determine prev/next
     const allRes = await fetch(`${API_BASE_URL}/api/posts`);
+    if (!allRes.ok) throw new Error("Failed to fetch posts");
     const allPosts: BlogPost[] = await allRes.json();
     const index = allPosts.findIndex((p) => p.slug === slug);
     const prevPost = index > 0 ? allPosts[index - 1] : null;
@@ -227,6 +228,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     // Fetch current post
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
+    if (res.status === 404) {
+      return {
+        notFound: true,
+        revalidate: 10,
+      };
+    }
     if (!res.ok) throw new Error("Post not found");
     const post: BlogPost = await res.json();
     return {
@@ -240,15 +247,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch (err) {
     console.error(`[getStaticProps] ❌ Failed to fetch post for slug '${slug}':`, err);
     return {
-      props: {
-        post: {
-          title: 'Post not found',
-          slug,
-          content: { html: '<p>This post could not be loaded.</p>' },
-        },
-        prevPost: null,
-        nextPost: null,
-      },
+      notFound: true,
+      revalidate: 10,
     };
   }
 };
