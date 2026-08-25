@@ -8,10 +8,9 @@ import Pagination from '@/components/redesign/blog/Pagination';
 import { getAllPublishedPosts } from '@/lib/blog';
 import type { PostData } from '@/types/blog';
 
-// Blog content changes more often than a static page but not so often that
-// visitors need second-by-second freshness — matches the precedent set by
-// the redesign's own POSTS_REVALIDATE_SECONDS (`pages/redesign.tsx`).
-const BLOG_INDEX_REVALIDATE_SECONDS = 3600; // 1 hour
+// Keep the blog index close to admin/API content changes. Content-only edits
+// do not otherwise trigger a deploy or on-demand revalidation.
+const BLOG_INDEX_REVALIDATE_SECONDS = 60;
 const POSTS_PER_PAGE = 6;
 
 interface BlogIndexProps {

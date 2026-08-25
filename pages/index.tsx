@@ -8,9 +8,9 @@ import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '../lib/github';
 import { getLatestPosts } from '../lib/blog';
 
 const LATEST_POSTS_COUNT = 4;
-// Blog content changes more often than GitHub repo topics — a shorter
-// revalidate window keeps the Writing section closer to real-time.
-const POSTS_REVALIDATE_SECONDS = 3600; // 1 hour
+// Keep the Writing section close to admin/API content changes. Content-only
+// edits do not otherwise trigger a deploy or on-demand revalidation.
+const POSTS_REVALIDATE_SECONDS = 60;
 
 interface HomePageProps {
   repos: GithubRepo[];
