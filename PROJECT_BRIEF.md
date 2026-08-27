@@ -10,7 +10,11 @@
 
 **One-liner:** Laud Tetteh's personal portfolio and blog — a public-facing site that communicates professional identity, showcases work, and shares technical writing.
 
-**Problem statement:** Laud needed a professional online presence that accurately reflects his seniority (Senior Software Engineer at Salesforce) and serves as the landing page for recruiters, hiring managers, and the broader tech community. Off-the-shelf portfolio platforms don't allow the level of control or custom functionality required.
+**Problem statement:** Laud needed a professional online presence that accurately reflects his scope and level (Software Engineer (MTS) at Salesforce) and serves as the landing page for recruiters, hiring managers, and the broader tech community. Off-the-shelf portfolio platforms don't allow the level of control or custom functionality required.
+
+> ⚠️ **Public title:** `Software Engineer (MTS)`. Never write "Senior", "Lead", "Staff", or
+> "Principal" in reference to the Salesforce role on any public surface. Binding rule from
+> `$RIG_DIR/docs/career/DOSSIER.md` §3.
 
 **Solution:** A custom full-stack portfolio site with a self-hosted blog CMS, GitHub project showcase, contact form, and a private admin panel for content management. Everything is owned and deployed by Laud, with no third-party CMS dependency.
 
@@ -42,7 +46,7 @@ These are live in the codebase and functional unless noted:
 - [ ] Contact form abuse protection beyond rate limiting — client-side captcha/Turnstile is not shipped
 - [x] JWT auth — single admin login; token stored in localStorage; protected admin routes
 - [x] Tiptap rich text editor — client-side WYSIWYG for blog post body
-- [x] CV download — `/docs/cv/Laud-Tetteh-Resume.pdf` linked from the About section
+- [x] CV download — `/docs/cv/Laud-Tetteh-Resume-2026.pdf` linked from the About section and from Experience. Phone-free variant of the 2026 résumé; the 2024 `Laud-Tetteh-Resume.pdf` is retired and no longer linked
 
 ---
 
@@ -70,9 +74,10 @@ These will not be built:
 | Auth | JWT — `python-jose` | Single admin; token in localStorage |
 | Rich text | Tiptap | Client-side only; sanitized with `bleach` before DB write |
 | Infra | Docker + Docker Compose | `docker-compose.override.yml` for dev hot reload |
-| CI/CD | GitHub Actions → OVH VPS (SSH + rsync) | Production deploy is manual via `.github/workflows/deploy-ovh.yml`; old DigitalOcean workflow is staging-only until #85 |
-| Linting | ESLint (frontend) + ruff (backend), wired up (#30) | `npm run lint`, `ruff check backend/app`. Required locally before committing anything either covers; CI-enforced on every push (`.github/workflows/lint.yml`). ~28 pre-existing violations temporarily downgraded/ignored, tracked in #31 |
-| Testing | Playwright e2e wired up (#27) | `npm run test:e2e`, CI-enforced on every push touching frontend paths. Run locally for changes e2e would actually catch (new/changed routes or components), not every edit. Jest/RTL and pytest still aspirational — not yet wired up (tracked in #26, now unblocked by the shipped redesign) |
+| CI/CD | GitHub Actions → OVH VPS (SSH + rsync) | Production deploy is manual via `.github/workflows/deploy-ovh.yml`. `deploy.yml` is a retired tombstone after PR #100 — it deploys nothing; #85 still owns droplet/DNS/secrets removal |
+| Linting | ESLint (frontend) + ruff (backend), wired up (#30) | `npm run lint`, `ruff check backend/app`. Required locally before committing anything either covers; CI-enforced on every push (`.github/workflows/lint.yml`). #31 is closed — no rules are downgraded; ESLint runs stock `next/core-web-vitals` + `next/typescript` and ruff ignores only `B008` (a permanent FastAPI-idiom exclusion). A handful of ESLint *warnings* remain (admin-panel `<img>` usage and `react-hooks/exhaustive-deps`); **zero errors** — don't read those warnings as a regression you introduced |
+| Testing — e2e | Playwright, wired up (#27) | `npm run test:e2e`, CI-enforced on every push touching frontend paths. Run locally for changes e2e would actually catch (new/changed routes or components), not every edit |
+| Testing — unit/integration | Vitest + RTL (frontend), pytest (backend), wired up (#26/#97) | `npm run test`, and `pytest` from `backend/`. A **foundation suite, not full coverage** — add specs alongside new logic. **Not CI-enforced;** run locally |
 
 ---
 
@@ -80,7 +85,7 @@ These will not be built:
 
 **Timeline:** Production launched on OVH on 2026-08-18. Current work is post-launch hardening, content cleanup, and staging/rollback decommission planning.
 
-**Budget:** Free tier where possible. MongoDB Atlas M0, AWS S3 pay-per-use, GitHub Actions free tier, OVH VPS for production. DigitalOcean remains only for `dev.*` staging until #85 decides its fate.
+**Budget:** Free tier where possible. MongoDB Atlas M0, AWS S3 pay-per-use, GitHub Actions free tier, OVH VPS for production. The DigitalOcean droplet no longer serves anything (`dev.*` returns 502) but is still billing until #85 removes it; Opalstack likewise under #84.
 
 **Must integrate with:**
 - MongoDB Atlas (cloud-hosted)
@@ -116,5 +121,5 @@ These will not be built:
 - [ ] Resend domain verification: is `laudtetteh.io` verified in the Resend dashboard for sending?
 - [ ] MongoDB Atlas IP allowlist: confirm the OVH VPS IP remains allowed.
 - [ ] `react-quill` in `package.json` — is this a dead dependency (Tiptap is the actual editor)?
-- [ ] Decide whether to migrate or retire `dev.laudtetteh.io` before decommissioning the DigitalOcean droplet (#85).
+- [x] Decide whether to migrate or retire `dev.laudtetteh.io` — **retired.** PR #100 tombstoned the workflow; droplet/DNS/secrets/billing removal remains open in #85.
 - [ ] Retire Opalstack only after the OVH rollback window is no longer needed (#84).

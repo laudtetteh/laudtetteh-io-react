@@ -114,9 +114,15 @@ laudtetteh-io-react/
 - Run: `npm run test:e2e` (or `npx playwright test e2e/<file>.spec.ts` for one spec).
 - CI-enforced on every push touching frontend paths (`.github/workflows/e2e.yml`).
 
-### Unit/Integration — not yet installed
+### Unit/Integration — installed, run locally
 
-No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as #26; the redesign has shipped, so this is no longer blocked by cutover.
+- **Frontend:** Vitest + React Testing Library + jsdom (`vitest.config.mts`, `vitest.setup.ts`).
+  Run: `npm run test` (or `npm run test:watch`).
+- **Backend:** pytest + pytest-asyncio + httpx (`backend/pyproject.toml`, specs in `backend/tests/`).
+  Run: `pytest` from `backend/` with the virtualenv active.
+- Both were wired up under #26/#97 as a foundation suite, not full coverage — expect to add specs
+  alongside new logic rather than to find existing coverage for it.
+- **Not CI-enforced.** Only `lint.yml` and `e2e.yml` run on push; run these two locally before committing.
 
 ---
 
@@ -124,7 +130,7 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as #26; the
 
 - **Production deploys** are handled by `.github/workflows/deploy-ovh.yml`, Docker Compose, and Caddy on the OVH VPS.
 - **Production deploys are manual** (`workflow_dispatch`) and target `laudtetteh.io`, `www.laudtetteh.io`, and `api.laudtetteh.io`.
-- **DigitalOcean is staging-only** for `dev.laudtetteh.io` / `api.dev.laudtetteh.io` until #85 decides whether to migrate or retire it. `.github/workflows/deploy.yml` still points there and should not be mistaken for production.
+- **DigitalOcean staging is retired.** `.github/workflows/deploy.yml` was reduced to a `workflow_dispatch` tombstone by PR #100 — it no longer deploys on push to `main` and no longer deploys anywhere. `dev.laudtetteh.io` / `api.dev.laudtetteh.io` return 502. The droplet, DNS records, secrets, and billing are still pending removal under #85.
 - **Secrets** (env vars, SSH keys) are managed via GitHub Secrets.
 - **Production stack:**
   - `docker-compose.prod.yml` builds `web`, `api`, and `caddy`.
@@ -166,7 +172,9 @@ No Jest/RTL (frontend) or pytest (backend) suite exists yet. Tracked as #26; the
 - `lint.yml` — ESLint + Ruff, on every push, every branch.
 - `e2e.yml` — Playwright, on every push touching frontend paths.
 - `deploy-ovh.yml` — manual production deploy to OVH.
-- `deploy.yml` — legacy/staging deploy to the DigitalOcean droplet on push to `main`; do not treat it as production.
+- `deploy.yml` — retired DigitalOcean staging deploy (PR #100). `workflow_dispatch` only, and its one job just prints a notice and exits. Kept as a tombstone until #85 removes the droplet/DNS/secrets.
+
+> Unit tests (`npm run test`, `pytest`) do **not** run in CI. Run them locally.
 
 ---
 

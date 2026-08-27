@@ -1,6 +1,6 @@
 # Production deploy pipeline for laudtetteh.io on OVH.
-# Manual by design: deploy.yml still targets the DigitalOcean staging droplet on push
-# to main until #85 retires or migrates dev.laudtetteh.io.
+# Manual by design: this is the only workflow that deploys anywhere. deploy.yml is a
+# retired tombstone after PR #100 and no longer deploys on push to main.
 # The VPS owns its .env file; this workflow rsyncs code only and never writes secrets.
 name: Deploy to OVH production
 
