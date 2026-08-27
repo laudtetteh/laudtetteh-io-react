@@ -17,12 +17,14 @@ import { useScrollSpy } from './hooks/useScrollSpy';
  * architecture, Drupal/PHP, Laravel and GA4/DataLayer as Strong; WordPress
  * multisite as Working; React as defendable and sourced from the hand-written
  * Salesforce work (`SF-APP-01`, `SF-DATA-01`), not the AI-assisted projects.
- * "Release Engineering" is `SF-LEAD-01`.
+ * "Deployment Automation" is `SF-CI-06`/`SF-CI-07`; "Release Engineering"
+ * (tagline 5) is `SF-LEAD-01`. §12.1 deduplicated these on 2026-08-27 so
+ * "Release Engineering" appears once, not twice.
  */
 const TAGLINES = [
   'Platform & Web Engineering',
   '12+ Years Building for the Web',
-  'CI/CD · Docker · GitHub Actions · Release Engineering',
+  'CI/CD · Docker · GitHub Actions · Deployment Automation',
   'Drupal 10 · WordPress Multisite · Laravel · React',
   'Observability · Release Engineering · Incident Response',
   'Analytics Engineering · GA4 · DataLayer',
