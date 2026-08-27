@@ -1,18 +1,15 @@
 import { inter } from '@/lib/fonts';
-import type { GithubRepo } from '@/types/github';
 import type { PostData } from '@/types/blog';
 import Header from './Header';
 import AboutSection from './AboutSection';
 import ExperienceSection from './ExperienceSection';
 import ProjectsSection from './ProjectsSection';
-import SandboxSection from './SandboxSection';
 import WritingSection from './WritingSection';
 import ContactSection from './ContactSection';
 import Footer from './Footer';
 import { useSpotlight } from './hooks/useSpotlight';
 
 interface RedesignLayoutProps {
-  repos: GithubRepo[];
   posts: PostData[];
 }
 
@@ -32,7 +29,7 @@ interface RedesignLayoutProps {
  * it as a radial-gradient glow on that overlay, positioned relative to the
  * outermost `group/spotlight` wrapper.
  */
-export default function RedesignLayout({ repos, posts }: RedesignLayoutProps) {
+export default function RedesignLayout({ posts }: RedesignLayoutProps) {
   const { background: spotlightBackground, ref: spotlightRef } = useSpotlight();
 
   return (
@@ -61,7 +58,22 @@ export default function RedesignLayout({ repos, posts }: RedesignLayoutProps) {
             <AboutSection />
             <ExperienceSection />
             <ProjectsSection />
-            <SandboxSection repos={repos} />
+            {/*
+              Sandbox is intentionally not rendered (#101, 2026-08-27). The
+              GitHub API returns 11 public repos, 8 of which match the section's
+              topic filter — and all 8 were last pushed in 2021, so the section
+              was rendering direct evidence for the "stopped shipping in 2021"
+              impression the 2026 content pass exists to correct. `the-rig` is
+              public and current but carries no topics, so the filter excludes it.
+
+              The fix lives in the GitHub account, not here. `SandboxSection.tsx`
+              and `lib/github.ts` are deliberately left intact and unmodified, so
+              restoring this is purely additive: re-add the import, the `repos`
+              prop, and the `getSandboxRepos()` call in `pages/index.tsx`.
+              Tracked in #108, which also records that the topics recommended in
+              DOSSIER §12.5 do not intersect this filter, and that `devops` and
+              `ci-cd` must be added to `the-rig` alongside them.
+            */}
             <WritingSection posts={posts} />
             <ContactSection />
           </main>

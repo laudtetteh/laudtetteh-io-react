@@ -50,7 +50,12 @@ test('about section renders real bio content in initial HTML', async ({ page }) 
   const about = page.locator('#about');
   await expect(about).toContainText('Laud Tetteh');
   await expect(about).toContainText('Download CV');
-  await expect(about).toContainText('Server Side');
+  // One stable bio assertion so this test still verifies copy, not just
+  // structure. "12 years" is a dossier-fixed value (§4.3), not styling.
+  await expect(about).toContainText('12 years');
+  // Assert the Skills block is present structurally rather than pinning a
+  // category name — category labels are content and change with the copy.
+  await expect(about.getByRole('heading', { name: 'Skills' })).toBeVisible();
 });
 
 test('experience section renders real work history in initial HTML', async ({ page }) => {
@@ -64,45 +69,17 @@ test('projects section renders real case-study cards in initial HTML', async ({ 
   await page.goto('/');
   const projects = page.locator('#projects');
   await expect(projects).toContainText('MethodistCRM');
-  await expect(projects.getByRole('img').first()).toBeVisible();
+  // Projects is a text-forward list by design (#101) — no thumbnails. The
+  // Pricing Calculator is the lead entry and the only publicly clickable one.
+  await expect(
+    projects.locator('a[href="https://www.tableau.com/product-and-pricing-selector"]')
+  ).toBeVisible();
 });
 
-test('sandbox section renders real GitHub repos with a working category filter', async ({ page }) => {
-  await page.goto('/');
-  const sandbox = page.locator('#sandbox');
-  await expect(sandbox.getByRole('button', { name: 'All' })).toBeVisible();
-  const initialCardCount = await sandbox.locator('article').count();
-  expect(initialCardCount).toBeGreaterThan(0);
-  await sandbox.getByRole('button', { name: 'Backend' }).click();
-  await expect(sandbox.locator('article').first()).toBeVisible();
-});
-
-test('sandbox filter results fade in on click rather than snapping instantly', async ({ page }) => {
-  await page.goto('/');
-  const sandbox = page.locator('#sandbox');
-  const grid = sandbox.locator('.animate-fade-in').first();
-  await expect(grid).toBeVisible();
-
-  await sandbox.getByRole('button', { name: 'Backend' }).click();
-
-  // Poll opacity immediately after the click — if a real fade-in animation
-  // is running, opacity starts below 1 and rises; an instant swap would
-  // read 1 on every sample. Mirrors the polling approach already used for
-  // the smooth-scroll assertion above, since a fixed-delay sample can land
-  // after a short animation has already finished under CPU contention.
-  const samples: number[] = [];
-  const deadline = Date.now() + 1000;
-  while (Date.now() < deadline) {
-    samples.push(await grid.evaluate(el => parseFloat(getComputedStyle(el).opacity)));
-    await page.waitForTimeout(20);
-  }
-  expect(samples.some(o => o < 0.95)).toBe(true);
-  // `toHaveCSS` auto-retries rather than trusting the sampling loop's last
-  // value, which can land mid-animation (not yet settled at 1) under heavy
-  // parallel-worker CPU contention — same class of timing issue documented
-  // on the spotlight-cursor and scroll-spy tests above.
-  await expect(grid).toHaveCSS('opacity', '1');
-});
+// The two Sandbox tests that lived here were removed in #101 along with the
+// section itself — it rendered eight repos last pushed in 2021, which argued
+// against the site rather than for it. `SandboxSection.tsx` and `lib/github.ts`
+// are untouched; #108 restores the section and these tests together.
 
 test('writing section renders real blog teaser cards in initial HTML', async ({ page }) => {
   await page.goto('/');
@@ -119,7 +96,7 @@ test('writing section renders real blog teaser cards in initial HTML', async ({ 
   if (cardCount > 0) {
     await expect(writing.locator('article').first()).toBeVisible();
   } else {
-    await expect(writing).toContainText('Writing is being refreshed.');
+    await expect(writing).toContainText('Nothing published here yet.');
     await expect(writing.getByRole('link', { name: 'Open the blog' })).toBeVisible();
   }
 });
@@ -161,7 +138,12 @@ test('header renders name/role/nav/social in initial HTML', async ({ page }) => 
   await page.goto('/');
   const header = page.locator('#header');
   await expect(header).toContainText('Laud Tetteh');
-  await expect(header).toContainText('Software Engineer');
+  // DOSSIER §3.2/§3.3: the public title is exact, and "Senior" must never
+  // appear. Scope the negative assertion to the whole page, not #header — the
+  // regression it guards ("Senior Dev." twice) lived in #experience, so a
+  // header-scoped check would be vacuous.
+  await expect(header).toContainText('Software Engineer (MTS)');
+  await expect(page.locator('body')).not.toContainText('Senior');
   await expect(header.locator('a[href="#about"]')).toBeVisible();
   await expect(header.locator('a[href="https://github.com/laudtetteh"]')).toBeVisible();
   await expect(header.locator('a[href="https://www.linkedin.com/in/laudtetteh"]')).toBeVisible();

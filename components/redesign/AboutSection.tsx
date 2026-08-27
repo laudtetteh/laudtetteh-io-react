@@ -13,14 +13,22 @@ interface InfoItem {
 
 const INFO_ITEMS: InfoItem[] = [
   { label: 'Name', value: 'Laud Tetteh' },
-  { label: 'Job', value: 'Software Engineer' },
+  // Title is fixed by DOSSIER §3.2. Never "Senior", "Lead", "Staff", "Principal".
+  { label: 'Job', value: 'Software Engineer (MTS)' },
   { label: 'Location', value: 'Seattle, WA' },
   { label: 'Working at', value: 'Salesforce' },
+  // Always the personal address — never the employer's (DOSSIER §15.2 item 9).
   { label: 'Email', value: 'hello@laudtetteh.io', href: 'mailto:hello@laudtetteh.io' },
   { label: 'Website', value: 'www.laudtetteh.io', href: 'https://www.laudtetteh.io' },
 ];
 
-const CV_HREF = '/docs/cv/Laud-Tetteh-Resume.pdf';
+/**
+ * Public CV. Rendered from the 2026 two-page résumé with the phone number
+ * removed — the file is served from a public URL and gets crawled, so the
+ * contact line is email/site/LinkedIn/GitHub only. The full-contact version
+ * is kept out of the repo and sent directly with applications.
+ */
+const CV_HREF = '/docs/cv/Laud-Tetteh-Resume-2026.pdf';
 
 /** One skills category, grouped into the tool "rows" as they exist in the live content. */
 interface SkillCategory {
@@ -29,34 +37,50 @@ interface SkillCategory {
   rows: string[][];
 }
 
+/**
+ * Skills, ordered platform-first per `WEBSITE-BRIEF.md` §6 and filtered to the
+ * defendable-only list in `DOSSIER.md` §10.1/§10.4 — the standard being "what
+ * survives Senior-depth questioning", not "what appears in the stack".
+ *
+ * Deliberately absent, and not to be re-added without checking §10.4 first:
+ * - Node.js, MongoDB, Playwright, TypeScript, Next.js, FastAPI, Python,
+ *   GraphQL, Terraform — cut from Skills. Several are accurate *inside* a
+ *   project description as system composition; none is a claimable skill.
+ * - Redis, Memcache, Acquia, Optimizely, OneTrust — present in the Tableau
+ *   platform, but a tool being in a system you work on is not a skill.
+ * - Heroku, Netlify, Sketch, Gulp, Grunt, jQuery — dead 2016 tooling.
+ * - Agile/Jira/Asana/Figma — process tools carry no signal at this level
+ *   (§14.1: "a skills tag cloud proves nothing").
+ * - GUS — internal Salesforce work tracker; not marketable and internal-flavoured.
+ */
 const SKILLS: SkillCategory[] = [
   {
-    category: 'Server Side',
-    rows: [
-      ['PHP', 'Node.js'],
-      ['Laravel', 'WordPress', 'Drupal'],
-      ['MySQL', 'MariaDB', 'MongoDB'],
-    ],
+    category: 'Platform & CI/CD',
+    rows: [['Docker', 'Docker Compose'], ['GitHub Actions', 'CI/CD architecture'], ['Bash']],
   },
   {
-    category: 'Client Side',
-    rows: [['React JS'], ['Bootstrap', 'TailwindCSS'], ['HTML', 'CSS', 'SASS']],
+    category: 'Cloud & Delivery',
+    rows: [['AWS S3'], ['CloudFront', 'Akamai CDN']],
   },
   {
-    category: 'Dev-Ops & CI/CD',
-    rows: [
-      ['GitHub Actions'],
-      ['Cypress', 'PHPUnit', 'Playwright'],
-      ['Docker', 'AWS', 'Heroku', 'Netlify'],
-    ],
+    category: 'Observability',
+    rows: [['New Relic', 'Splunk'], ['Application monitoring', 'Log analysis']],
   },
   {
-    category: 'Others',
-    rows: [
-      ['Agile', 'Jira', 'GUS', 'Asana'],
-      ['New Relic', 'Google Analytics'],
-      ['Figma', 'Sketch'],
-    ],
+    category: 'Backend & Data',
+    rows: [['PHP', 'Laravel'], ['MySQL', 'MariaDB'], ['REST API design']],
+  },
+  {
+    category: 'CMS & Content',
+    rows: [['Drupal', 'WordPress multisite'], ['Config-as-code']],
+  },
+  {
+    category: 'Web & Analytics',
+    rows: [['JavaScript', 'React', 'SCSS'], ['GA4', 'Google Tag Manager'], ['DataLayer engineering']],
+  },
+  {
+    category: 'Testing',
+    rows: [['Cypress']],
   },
 ];
 
@@ -77,14 +101,36 @@ export default function AboutSection() {
           About
         </h2>
 
-        <p className="mt-6 text-base leading-normal text-slate-700 dark:text-slate-400">
-          I&apos;m Laud Tetteh, a Full Stack Web Developer based in Seattle, WA, with 10+
-          years of experience building, optimizing, and maintaining web applications for
-          clients and employers across the US and Africa. I thrive on learning new
-          technologies, collaborating with smart people, and solving real-world problems
-          through code. My background spans backend, frontend and DevOps. Let&apos;s build
-          something great together!
-        </p>
+        {/*
+          Bio derived from DOSSIER §12.4 Medium. Four deviations from that text are
+          deliberate and rule-forced — see WEBSITE-CONTENT-SPEC.md §B.1:
+          "co-own" not "own" and the explicit inherited-pipeline boundary (§6.2
+          attribution), and "design, build and maintain … a production e-commerce
+          platform" rather than "build and run … a live e-commerce business" (§7.2,
+          which bans both the verb and that exact phrase).
+        */}
+        <div className="mt-6 space-y-4 text-base leading-normal text-slate-700 dark:text-slate-400">
+          <p>
+            I&apos;m Laud Tetteh, a software engineer in Seattle with 12 years of experience
+            building and operating web platforms.
+          </p>
+          <p>
+            At Salesforce/Tableau I work on tableau.com — a site drawing roughly 13 million
+            visits a month (Semrush estimate, 2026) on a large enterprise Drupal installation.
+            I co-own much of the automation behind it: the CI container images, the composite
+            Actions our workflows are assembled from, the gated pipeline that deploys to
+            production four times a week, and the nightly extract-transform-load job that
+            keeps the team on clean data. I didn&apos;t write that pipeline — I inherited it, and I&apos;ve spent four
+            years making it better without breaking the team that depends on it. I built the
+            site&apos;s public pricing calculator, and I led its analytics re-platform.
+          </p>
+          <p>I take the release rotation, lead the weekly operations review, and carry the pager.</p>
+          <p>
+            On my own time I design, build and maintain Beacon Essentials, a production
+            e-commerce platform in Ghana, and The Rig, an open-source framework for making AI
+            coding agents reliable.
+          </p>
+        </div>
 
         {/* Info table */}
         <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 border-t border-slate-200 pt-8 dark:border-slate-800 sm:grid-cols-2">

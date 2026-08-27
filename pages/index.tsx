@@ -2,9 +2,7 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import RedesignLayout from '../components/redesign/RedesignLayout';
 import Seo from '../components/Seo';
-import { GithubRepo } from '../types/github';
 import { PostData } from '../types/blog';
-import { getSandboxRepos, SANDBOX_REVALIDATE_SECONDS } from '../lib/github';
 import { getLatestPosts } from '../lib/blog';
 
 const LATEST_POSTS_COUNT = 4;
@@ -13,37 +11,40 @@ const LATEST_POSTS_COUNT = 4;
 const POSTS_REVALIDATE_SECONDS = 60;
 
 interface HomePageProps {
-  repos: GithubRepo[];
   posts: PostData[];
 }
 
 // Deliberately does NOT use `components/Layout.tsx`; the redesign owns its
 // page shell directly, matching the original side-by-side `/redesign` route.
-const HomePage: React.FC<HomePageProps> = ({ repos, posts }) => (
+//
+// The Sandbox section and its GitHub fetch were removed here in #101 — see the
+// comment in `RedesignLayout.tsx` for why, and #108 for restoring them.
+// `lib/github.ts` and `components/redesign/SandboxSection.tsx` are intentionally
+// left in place and unmodified so that restoration is additive.
+const HomePage: React.FC<HomePageProps> = ({ posts }) => (
   <>
-    <Seo title="Laud Tetteh | Full Stack Developer" description="Personal site and portfolio of Laud Tetteh." />
-    <RedesignLayout repos={repos} posts={posts} />
+    <Seo
+      title="Laud Tetteh | Software Engineer (MTS)"
+      description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
+    />
+    <RedesignLayout posts={posts} />
   </>
 );
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const [reposResult, postsResult] = await Promise.allSettled([getSandboxRepos(), getLatestPosts(LATEST_POSTS_COUNT)]);
+  let posts: PostData[] = [];
 
-  if (reposResult.status === 'rejected') {
-    console.error(reposResult.reason);
-  }
-  if (postsResult.status === 'rejected') {
-    console.error(postsResult.reason);
+  try {
+    posts = await getLatestPosts(LATEST_POSTS_COUNT);
+  } catch (error) {
+    // The blog API is unreachable at build time in CI (API_SERVER points at a
+    // Docker-internal address). The Writing section renders its own empty state.
+    console.error(error);
   }
 
   return {
-    props: {
-      repos: reposResult.status === 'fulfilled' ? reposResult.value : [],
-      posts: postsResult.status === 'fulfilled' ? postsResult.value : [],
-    },
-    // Shortest of the two sections' desired freshness windows, since both
-    // props share one page-level revalidate.
-    revalidate: Math.min(SANDBOX_REVALIDATE_SECONDS, POSTS_REVALIDATE_SECONDS),
+    props: { posts },
+    revalidate: POSTS_REVALIDATE_SECONDS,
   };
 };
 
