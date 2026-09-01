@@ -102,7 +102,9 @@ test('mobile homepage nav exposes tappable links without horizontal overflow', a
 
   const nav = page.getByRole('navigation', { name: 'In-page' });
   await expect(nav).toBeVisible();
-  await expect(nav.getByRole('link')).toHaveCount(6);
+  // About · Experience · Projects · Writing · Contact. Sandbox was removed in
+  // #101 and comes back with the section in #108.
+  await expect(nav.getByRole('link')).toHaveCount(5);
 
   const viewportWidth = await page.evaluate(() => document.documentElement.clientWidth);
   for (const link of await nav.getByRole('link').all()) {

@@ -9,8 +9,12 @@
  * mode, so light-mode colors here are this project's own choice, not a
  * ported value.
  *
- * All content, including per-job descriptions/tech tags/related links,
- * is sourced from Laud's résumé (`public/docs/cv/Laud-Tetteh-Resume.pdf`).
+ * All content, including per-job descriptions/tech tags/related links, is
+ * governed by the approved content spec at
+ * `$RIG_DIR/docs/career/WEBSITE-CONTENT-SPEC.md` §C, which cites a dossier
+ * item ID for every factual claim. Do not edit copy here without checking it —
+ * several phrasings are load-bearing for attribution and confidentiality
+ * reasons that are not obvious from the text alone.
  *
  * Server-rendered — no client-only gate. The `group/list` +
  * `lg:group-hover/list:opacity-50` + `lg:hover:!opacity-100` pair on each
@@ -25,12 +29,27 @@ interface RelatedLink {
   href: string;
 }
 
+/**
+ * A labelled block of detail within a role. Only the Salesforce entry uses
+ * these: it carries ~65% of the section's weight, and a visitor arriving from
+ * any of the five audiences in WEBSITE-BRIEF §3 needs to find their evidence
+ * within one scroll. A single prose blob can't do that; labelled clusters can.
+ */
+interface ExperienceCluster {
+  label: string;
+  paragraphs: string[];
+}
+
 interface ExperienceEntry {
   dateRange: string;
   title: string;
   company: string;
   companyHref: string;
+  /** Role qualifier shown under the title, e.g. the specific team. */
+  subtitle?: string;
   description: string;
+  /** Optional depth layer rendered beneath `description`. */
+  clusters?: ExperienceCluster[];
   techTags: string[];
   relatedLinks: RelatedLink[];
 }
@@ -48,50 +67,121 @@ interface Testimonial {
   role: string;
 }
 
+/**
+ * Work history. Content is governed by `docs/career/WEBSITE-CONTENT-SPEC.md` §C,
+ * which cites a dossier item ID for every claim. Three rules bind this file:
+ *
+ * 1. **Title.** "Software Engineer (MTS)" — never "Senior", "Lead", "Staff" or
+ *    "Principal" (§3.3). The previous version used "Senior Dev." twice.
+ * 2. **Attribution.** Tableau CI/CD is an *inherited* system (§6.2): use
+ *    co-own / maintain / optimized / improved, never built / designed / own of
+ *    the pipeline as a whole. `SF-CI-05` and `SF-CI-10` are the exceptions —
+ *    tagged INDIVIDUAL, so strong verbs are correct for those two only.
+ *    Per-client attribution in the agency era varies and must not be
+ *    generalised: UH Law was INHERITED, SSNOCWTA was BUILT.
+ * 3. **Beacon Avenue is not employment** (§7.2). MethodistCRM previously
+ *    appeared here as a 2019–2021 employer, which presented a self-built
+ *    project as a job — a background-check surface. It now lives in Projects.
+ */
 const experience: ExperienceEntry[] = [
   {
-    dateRange: '2021–Present',
-    title: 'Software Eng.',
+    dateRange: 'Oct 2021 – Present',
+    title: 'Software Engineer (MTS)',
     company: 'Salesforce',
     companyHref: 'https://www.salesforce.com',
+    subtitle: 'Tableau Marketing Engineering',
     description:
-      "Build custom solutions in PHP, JavaScript, MySQL, and YML for Tableau's marketing sites (tableau.com, on Drupal 10), owning projects from discovery through post-release monitoring across 3 US time zones. Lead engineer for a pipeline automating daily extraction of user-submitted assessment data via GitHub Actions and AWS, and rebuilt authentication-gated Product Download pages with a Drupal-UI-toggleable kill switch.",
-    techTags: ['PHP', 'Drupal', 'JavaScript', 'MySQL', 'AWS', 'GitHub Actions'],
-    relatedLinks: [{ label: 'tableau.com', href: 'https://www.tableau.com' }],
+      'I work on tableau.com — a top-5,400 global site drawing roughly 13 million visits a month (Semrush estimate, August 2026), running a large enterprise Drupal installation of about 58 custom modules, 3,500 configuration files, and a hundred-spec end-to-end test suite.',
+    clusters: [
+      {
+        label: 'Platform & CI/CD',
+        paragraphs: [
+          'I co-own the automation that moves code and data through our environments. I didn’t write this pipeline — I inherited it, and I’ve spent four years making it measurably better without breaking the team that depends on it. That’s a five-image CI container suite in a private registry, reusable composite Actions covering dependency caching, test setup and registry auth, and a gated pipeline promoting integration → dev → test → production with commit-SHA parity checks at each hop and a programmatic gate that blocks the production deploy if the previous stage’s checks didn’t pass. Four releases a week run unattended. A nightly ETL — extract, transform, load — clones production down to test and dev, prunes and sanitizes it, and provisions test users, so every engineer starts the day on realistic, safe data.',
+          'Two pieces are mine outright. I designed the branch-scoped dependency cache keys that eliminated a cross-environment cache-poisoning failure mode — a class of intermittent build failure that is genuinely hard to see. And I own credential rotation across cloud IAM, source control and service accounts, always verifying a clean deploy on the new keys before retiring the old ones.',
+        ],
+      },
+      {
+        label: 'Product engineering',
+        paragraphs: [
+          'I built the current Tableau Pricing Calculator — the tool that lets you configure editions, licenses and add-ons and see what they cost. It’s a React front end on a Drupal REST API I designed, with multi-currency logic and cached exchange rates handled server-side, payload contracts negotiated with the frontend team, an accessible responsive UI, analytics instrumentation, and end-to-end Cypress coverage.',
+          'I also authored the technical architecture for a bulk content-ingestion system that moves up to 100 CMS nodes in a single operation, built both its admin interface and its backend, and ran cross-team user acceptance testing that deliberately fed it out-of-order payloads to prove it wouldn’t corrupt state. And I rebuilt the authentication gating on product download pages with a kill switch operators can flip from the CMS — because the useful question about a gate isn’t whether it works, it’s how fast you can turn it off at 2am.',
+        ],
+      },
+      {
+        label: 'Analytics engineering',
+        paragraphs: [
+          'I’ve been doing marketing-analytics engineering for a decade. It started at Moz in 2016 with Adobe DTM and Segment, and at Tableau I led the site’s GA4 data-layer re-platform — ten-plus event types, custom deduplication so nothing double-counts, consent-aware cookie handling, and customer-relationship-management (CRM) interactions integration. Effectively every conversion event the marketing organization measures runs through it. I also built metadata export tooling that lets analysts join traffic data against CMS metadata; it has been reused across two migrations and re-requested more than a year after I first built it.',
+        ],
+      },
+      {
+        label: 'Platform migration',
+        paragraphs: [
+          'I’m a contributing engineer on the multi-year re-platform of the site off Drupal and onto a consolidated enterprise WordPress multisite with a decoupled Node.js frontend — content transformation, Terraform-managed environment configuration, GraphQL integration, and phased traffic cutover at the CDN, without interrupting global marketing operations.',
+          'Before we migrated one path namespace I validated 469 redirect rules against thirty days of CDN traffic — 99.98% matched across 2.15 million redirect events. Migrations break on the 0.02% you didn’t check.',
+        ],
+      },
+      {
+        label: 'Release, reliability & leadership',
+        paragraphs: [
+          'I take the release rotation as Release Engineer of record — owning user acceptance testing and production deployment coordination, and signing off the change request. For about two years I’ve led our weekly operations review, where post-deployment triage happens and where I report site health, production errors and open issues to stakeholders. I asked for that rotation. I’m on the on-call roster, and I wrote the working agreement that governs it — what constitutes a page, what waits until morning, what a responder owes the next shift — which went from draft to org-wide adoption inside a quarter.',
+          'When product download links started intermittently 404ing, I ran the investigation: quantified the blast radius from logs at roughly three thousand affected users, traced it to a build artifact that never landed in a gated storage bucket, and coordinated the fix with release engineering. I led a cross-team discovery comparing observability platforms for properties moving onto the new architecture, engaging three partner teams to set the organization’s forward monitoring approach. And when a new engineer joined and hit the wall our Drupal setup puts in front of everyone, I wrote the onboarding guide I wished existed and paired with them through their first pull requests — it’s what we hand new people now.',
+        ],
+      },
+    ],
+    techTags: [
+      'Drupal',
+      'PHP',
+      'JavaScript',
+      'React',
+      'Docker',
+      'GitHub Actions',
+      'AWS S3',
+      'MySQL',
+      'Cypress',
+      'GA4',
+      'New Relic',
+      'Splunk',
+    ],
+    relatedLinks: [
+      { label: 'tableau.com', href: 'https://www.tableau.com' },
+      {
+        label: 'Pricing Calculator',
+        href: 'https://www.tableau.com/product-and-pricing-selector',
+      },
+    ],
   },
   {
-    dateRange: '2019–2021',
-    title: 'Senior Dev.',
-    company: 'MethodistCRM',
-    companyHref: '/blog/methodistcrm',
+    dateRange: 'Jul 2016 – Jan 2017',
+    title: 'Software Engineer',
+    company: 'Moz',
+    companyHref: 'https://www.moz.com',
     description:
-      'Built a CRM dashboard with authentication for community-based church programs, powered by Laravel & MySQL. Shipped reports & dynamic search, notifications, analytics, messaging, an events calendar, branch locator, store, cart, and checkout.',
-    techTags: ['Laravel', 'MySQL', 'PHP'],
+      'Migrated portions of moz.com from CakePHP to Craft CMS, partnered with the UX team turning design comps into marketing pages, and worked with business intelligence to implement page-load and event tracking through Adobe DTM and Segment — the start of the analytics-engineering thread that runs through everything since.',
+    techTags: ['Craft CMS', 'PHP', 'JavaScript', 'Adobe DTM', 'Segment'],
     relatedLinks: [],
   },
   {
-    dateRange: '2014–2021',
-    title: 'Senior Dev.',
-    company: 'Studio Ten Four, LLC',
+    dateRange: 'Oct 2014 – Oct 2021',
+    title: 'Web Developer',
+    company: 'Studio Ten Four',
     companyHref: 'https://www.studiotenfour.com',
     description:
-      "Webmaster and custom plugin development for King County 4Culture, a Washington State non-profit. Built and maintained a Drupal-powered class/course database, personnel directory, events calendar, and password-protected content portal for the University of Hawai'i's William S. Richardson School of Law, then led the data migration when the site rebuilt onto WordPress. Also redesigned the South Seminole and North Orange County Wastewater Transmission Authority site to WCAG 2.2 accessibility compliance.",
-    techTags: ['WordPress', 'Drupal', 'PHP', 'Accessibility'],
+      'Seven years building, inheriting and migrating WordPress and Drupal platforms for public-sector and university clients, owning the relationship end to end from requirements through delivery.',
+    clusters: [
+      {
+        label: 'Client platforms',
+        paragraphs: [
+          'For the University of Hawai’i’s William S. Richardson School of Law I inherited and maintained a Drupal platform — course database, personnel directory, events calendar, student classifieds, job listings, and a portal gated to @hawaii.edu accounts — then led the data migration when the site was rebuilt onto WordPress. For King County’s 4Culture I was webmaster and wrote four custom WordPress plugins, all public on GitHub, and coordinated an accessibility and SEO overhaul under county compliance deadlines — screen-reader and keyboard-navigation testing alongside the design and content teams, plus custom Drupal hooks that automated meta-tag population and schema-markup injection. I built the South Seminole & North Orange County Wastewater Transmission Authority site from scratch to WCAG accessibility compliance.',
+          'I also introduced automated build and test pipelines to client projects years before it became my specialty, and did enough schema export and transformation work that platform migration became a through-line rather than a one-off.',
+        ],
+      },
+    ],
+    techTags: ['WordPress', 'Drupal', 'PHP', 'MySQL', 'Accessibility'],
     relatedLinks: [
       { label: '4culture.org', href: 'https://www.4culture.org' },
       { label: 'law.hawaii.edu', href: 'https://law.hawaii.edu' },
       { label: 'ssnocwta.com', href: 'https://ssnocwta.com' },
     ],
-  },
-  {
-    dateRange: '2016–2017',
-    title: 'Front-End Eng.',
-    company: 'Moz',
-    companyHref: 'https://www.moz.com',
-    description:
-      'Worked with the Inbound Engineering team migrating portions of moz.com from CakePHP to Craft CMS. Partnered with the UX team translating comps into marketing pages, and with Business Intelligence to implement page-load and event tracking via Adobe DTM and Segment.',
-    techTags: ['CraftCMS', 'PHP', 'Adobe DTM', 'Segment'],
-    relatedLinks: [],
   },
 ];
 
@@ -135,7 +225,7 @@ export default function ExperienceSection() {
             Experience
           </h2>
           <a
-            href="/docs/cv/Laud-Tetteh-Resume.pdf"
+            href="/docs/cv/Laud-Tetteh-Resume-2026.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
@@ -177,13 +267,46 @@ export default function ExperienceSection() {
                       </span>
                     </a>
                   </h3>
+                  {entry.subtitle && (
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{entry.subtitle}</p>
+                  )}
                   <p className="mt-2 text-sm leading-normal text-slate-700 dark:text-slate-400">
                     {entry.description}
                   </p>
-                  <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+
+                  {entry.clusters && (
+                    <div className="mt-5 space-y-5 border-l border-slate-200 pl-4 dark:border-slate-800">
+                      {entry.clusters.map(cluster => (
+                        <div key={cluster.label}>
+                          <h4 className="text-xs font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+                            {cluster.label}
+                          </h4>
+                          <div className="mt-2 space-y-2">
+                            {cluster.paragraphs.map((paragraph, index) => (
+                              <p
+                                key={index}
+                                className="text-sm leading-normal text-slate-700 dark:text-slate-400"
+                              >
+                                {paragraph}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Labelled for the same reason as ProjectsSection's — these
+                      describe the role's stack, not a claimed-skill list. */}
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                    Stack
+                  </p>
+                  <ul className="mt-1 flex flex-wrap" aria-label="Role stack">
                     {entry.techTags.map(tag => (
                       <li key={tag} className="mr-1.5 mt-2">
-                        <div className="flex items-center rounded-full bg-teal-600/10 px-3 py-1 text-xs font-medium leading-5 text-teal-700 dark:bg-teal-400/10 dark:text-teal-300">
+                        {/* Neutral outline — see ProjectsSection for why these
+                            must not look like the teal Skills pills. */}
+                        <div className="flex items-center rounded-full border border-slate-300 px-3 py-1 text-xs font-medium leading-5 text-slate-600 dark:border-slate-700 dark:text-slate-400">
                           {tag}
                         </div>
                       </li>
@@ -234,8 +357,23 @@ export default function ExperienceSection() {
           </ol>
         </div>
 
-        {/* Testimonial */}
+        {/*
+          Testimonial. The label is the point (PRE-08, WEBSITE-BRIEF §5 #9): a
+          marketing stakeholder praising an engineer's communication is
+          third-party evidence of stakeholder fluency. Unlabelled it reads as
+          decoration, which is what it was doing before.
+        */}
         <figure className="mt-16 border-t border-slate-200 pt-10 dark:border-slate-800">
+          {/* Not a <figcaption> — a <figure> may only have one, and the
+              attribution below is it. */}
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              What a marketing stakeholder said about working with an engineer
+            </h3>
+            <p className="mt-1 text-sm italic text-slate-600 dark:text-slate-400">
+              Third-party evidence of the thing that is hardest to claim about yourself.
+            </p>
+          </div>
           <blockquote className="text-lg italic text-slate-900 dark:text-slate-100">
             <p>&ldquo;{testimonial.quote}&rdquo;</p>
           </blockquote>

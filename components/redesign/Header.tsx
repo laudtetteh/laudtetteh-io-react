@@ -5,13 +5,29 @@ import { ThemeToggle } from './ThemeToggle';
 import { useRotatingText } from './hooks/useRotatingText';
 import { useScrollSpy } from './hooks/useScrollSpy';
 
+/**
+ * Rotating hero taglines — `DOSSIER.md` §12.1 replacement set, verbatim.
+ *
+ * §12.1 was corrected at source on 2026-08-27 to drop Terraform, Next.js and
+ * FastAPI, which §10.4 bars as *claimed* skills. A tagline is a bare keyword
+ * line with no room for context, so it is a claim surface; those three remain
+ * accurate and permitted inside project descriptions as system composition.
+ *
+ * Every term is explicitly rated in §10.1: Docker, GitHub Actions, CI/CD
+ * architecture, Drupal/PHP, Laravel and GA4/DataLayer as Strong; WordPress
+ * multisite as Working; React as defendable and sourced from the hand-written
+ * Salesforce work (`SF-APP-01`, `SF-DATA-01`), not the AI-assisted projects.
+ * "Deployment Automation" is `SF-CI-06`/`SF-CI-07`; "Release Engineering"
+ * (tagline 5) is `SF-LEAD-01`. §12.1 deduplicated these on 2026-08-27 so
+ * "Release Engineering" appears once, not twice.
+ */
 const TAGLINES = [
-  'Full-Stack Web Developer',
-  '10+ Years Experience',
-  'PHP | Laravel | Drupal | WordPress',
-  'ReactJS | TailwindCSS | SASS | Webpack',
-  'Databases | APIs',
-  'Dev Ops | Git | Testing | CI/CD',
+  'Platform & Web Engineering',
+  '12+ Years Building for the Web',
+  'CI/CD · Docker · GitHub Actions · Deployment Automation',
+  'Drupal 10 · WordPress Multisite · Laravel · React',
+  'Observability · Release Engineering · Incident Response',
+  'Analytics Engineering · GA4 · DataLayer',
 ];
 
 const TAGLINE_INTERVAL_MS = 4000;
@@ -20,7 +36,8 @@ const NAV_ITEMS = [
   { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
-  { id: 'sandbox', label: 'Sandbox' },
+  // 'sandbox' removed in #101 — the section is not rendered. Restore both
+  // together (#108), or scroll-spy will track an anchor that doesn't exist.
   { id: 'writing', label: 'Writing' },
   { id: 'contact', label: 'Contact' },
 ] as const;
@@ -50,11 +67,18 @@ export default function Header(): React.ReactElement {
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
             <a href="#header">Laud Tetteh</a>
           </h1>
-          <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">Software Engineer</h2>
+          {/* Public title is fixed by DOSSIER §3.2 — never "Senior", "Lead", "Staff" or "Principal". */}
+          <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">Software Engineer (MTS)</h2>
           <p
             aria-live="polite"
             className={classNames(
-              'mt-3 min-h-[1.5rem] max-w-xs text-sm font-medium text-teal-600 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
+              // min-h reserves three lines so the rotation never shifts layout.
+              // Measured: the longest tagline ('Observability · Release
+              // Engineering · Incident Response') wraps to 2 lines / 40px at
+              // 375px and above, but to 3 lines / 60px at 320px. 2.5rem was
+              // enough for the 375px case only, and responsive.spec.ts tests
+              // 375, so CI would not have caught the 320px shift.
+              'mt-3 min-h-[3.75rem] max-w-xs text-sm font-medium text-teal-600 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
               taglineVisible ? 'opacity-100' : 'opacity-0'
             )}
           >

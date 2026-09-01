@@ -46,8 +46,13 @@ export default function WritingSection({ posts }: WritingSectionProps) {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Writing</h2>
+            {/*
+              Deliberately does not imply a cadence. Two posts remain after the
+              #82 content cleanup, and "Recent posts on…" read as an active blog
+              that no longer exists (#105).
+            */}
             <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
-              Recent posts on the projects, tools, and lessons I&apos;m working through.
+              Occasional notes on the systems I work on.
             </p>
           </div>
           <Link
@@ -114,9 +119,9 @@ export default function WritingSection({ posts }: WritingSectionProps) {
           </div>
         ) : (
           <div className="mt-10 rounded-md border border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center dark:border-slate-800 dark:bg-slate-900/40">
-            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Writing is being refreshed.</p>
+            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Nothing published here yet.</p>
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
-              New posts will appear here once the blog content pass is published. The archive is still available.
+              The archive is still available.
             </p>
             <Link
               href="/blog"
