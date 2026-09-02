@@ -90,7 +90,7 @@ export default function BlogSidebar(): React.ReactElement {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-slate-600 transition-colors hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400"
+                className="text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400"
               >
                 <Icon />
               </a>

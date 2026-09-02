@@ -412,7 +412,40 @@ test('contact form text inputs render rounded corners and the intended border co
   expect(inputRadius).toBe(textareaRadius);
 
   const inputBorderColor = await nameInput.evaluate((el) => getComputedStyle(el).borderTopColor);
-  expect(inputBorderColor).toBe('rgb(226, 232, 240)'); // slate-200, not the legacy #eee
+  // Original #19 intent: not the legacy hardcoded #eee.
+  expect(inputBorderColor).not.toBe('rgb(238, 238, 238)');
+
+  // #110: assert the requirement rather than a specific token. WCAG SC 1.4.11
+  // needs 3:1 for the visual boundary of a UI control, and this border is the
+  // field's only boundary. Pinning a hex here is what made this test break on
+  // an intentional a11y fix — slate-200 measured 1.18:1, slate-400 2.56:1, and
+  // slate-500 is the first value that clears the bar.
+  const borderContrast = await nameInput.evaluate((el) => {
+    const parse = (s: string) => (s.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map(Number);
+    const lum = (c: number[]) => {
+      const [r, g, b] = c.map((v) => {
+        const n = v / 255;
+        return n <= 0.03928 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const border = parse(getComputedStyle(el).borderTopColor);
+    // Walk up for the first opaque background behind the field.
+    let node: HTMLElement | null = el as HTMLElement;
+    let bg = [255, 255, 255];
+    while (node) {
+      const c = getComputedStyle(node).backgroundColor;
+      const alpha = c.startsWith('rgba') ? Number(c.split(',')[3]) : 1;
+      if (alpha > 0.5) {
+        bg = parse(c);
+        break;
+      }
+      node = node.parentElement;
+    }
+    const [l1, l2] = [lum(border), lum(bg)];
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  });
+  expect(borderContrast).toBeGreaterThanOrEqual(3);
 });
 
 test('/redesign redirects to the homepage after the #17 cutover', async ({ page }) => {

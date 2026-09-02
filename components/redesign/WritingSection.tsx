@@ -57,7 +57,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
           </div>
           <Link
             href="/blog"
-            className="shrink-0 text-sm font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400"
+            className="shrink-0 text-sm font-medium text-teal-700 underline-offset-2 hover:underline dark:text-teal-400"
           >
             Read the blog &rarr;
           </Link>
@@ -98,7 +98,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
                     <h3 className="mt-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="transition-colors hover:text-teal-600 dark:hover:text-teal-400"
+                        className="transition-colors hover:text-teal-700 dark:hover:text-teal-400"
                       >
                         {post.title}
                       </Link>
@@ -108,7 +108,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
 
                     <Link
                       href={`/blog/${post.slug}`}
-                      className="mt-4 inline-block text-sm font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400"
+                      className="mt-4 inline-block text-sm font-medium text-teal-700 underline-offset-2 hover:underline dark:text-teal-400"
                     >
                       Read more &rarr;
                     </Link>
@@ -125,7 +125,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
             </p>
             <Link
               href="/blog"
-              className="mt-5 inline-flex items-center justify-center rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-600 hover:text-white dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
+              className="mt-5 inline-flex items-center justify-center rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-700 hover:text-white dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
             >
               Open the blog
             </Link>

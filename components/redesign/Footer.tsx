@@ -5,7 +5,7 @@ const GITHUB_URL = 'https://github.com/laudtetteh';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/laudtetteh';
 
 const LINK_CLASSES =
-  'text-slate-600 transition-colors hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400';
+  'text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400';
 
 /**
  * Site-wide footer for the redesigned homepage. Carries the real,

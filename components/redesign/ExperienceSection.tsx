@@ -228,7 +228,7 @@ export default function ExperienceSection() {
             href="/docs/cv/Laud-Tetteh-Resume-2026.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
+            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-teal-700 transition-colors hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
           >
             View Full Résumé
             <ExternalLinkIcon />
@@ -247,7 +247,7 @@ export default function ExperienceSection() {
                 className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(15,23,42,0.06)] lg:group-hover:drop-shadow-lg dark:lg:group-hover:bg-slate-800/50 dark:lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]"
               />
               <div className="relative grid gap-1 pb-1 sm:grid-cols-8 sm:gap-8 md:gap-4">
-                <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2">
+                <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 sm:col-span-2">
                   {entry.dateRange}
                 </header>
                 <div className="z-10 sm:col-span-6">
@@ -278,7 +278,7 @@ export default function ExperienceSection() {
                     <div className="mt-5 space-y-5 border-l border-slate-200 pl-4 dark:border-slate-800">
                       {entry.clusters.map(cluster => (
                         <div key={cluster.label}>
-                          <h4 className="text-xs font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+                          <h4 className="text-xs font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
                             {cluster.label}
                           </h4>
                           <div className="mt-2 space-y-2">
@@ -345,7 +345,7 @@ export default function ExperienceSection() {
                   aria-hidden="true"
                   className="absolute -left-[2.15rem] top-1.5 h-3 w-3 rounded-full border-2 border-teal-600 bg-slate-50 dark:border-teal-400 dark:bg-slate-900"
                 />
-                <p className="text-sm font-medium text-teal-600 dark:text-teal-400">{entry.year}</p>
+                <p className="text-sm font-medium text-teal-700 dark:text-teal-400">{entry.year}</p>
                 <h4 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">
                   {entry.institution}
                 </h4>

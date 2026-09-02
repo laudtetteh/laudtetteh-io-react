@@ -221,7 +221,7 @@ export default function ProjectsSection() {
 
         {/* The arc. The intro line is what makes these three read as one story. */}
         <div className="mt-14">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
             Build &rarr; wall &rarr; generalize &rarr; apply
           </h3>
           <p className="mt-2 text-sm text-slate-700 dark:text-slate-400">
@@ -235,7 +235,7 @@ export default function ProjectsSection() {
         </div>
 
         <div className="mt-14">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
             The counterweight
           </h3>
           <ul className="group/list mt-6 space-y-5">

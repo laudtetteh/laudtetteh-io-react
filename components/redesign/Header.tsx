@@ -78,7 +78,7 @@ export default function Header(): React.ReactElement {
               // 375px and above, but to 3 lines / 60px at 320px. 2.5rem was
               // enough for the 375px case only, and responsive.spec.ts tests
               // 375, so CI would not have caught the 320px shift.
-              'mt-3 min-h-[3.75rem] max-w-xs text-sm font-medium text-teal-600 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
+              'mt-3 min-h-[3.75rem] max-w-xs text-sm font-medium text-teal-700 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
               taglineVisible ? 'opacity-100' : 'opacity-0'
             )}
           >
@@ -130,7 +130,7 @@ export default function Header(): React.ReactElement {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-slate-600 transition-colors hover:text-teal-600 dark:text-slate-400 dark:hover:text-teal-400"
+                className="text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400"
               >
                 <Icon />
               </a>

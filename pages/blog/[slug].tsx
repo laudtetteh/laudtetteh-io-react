@@ -90,13 +90,13 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
         <nav aria-label="Breadcrumb" className="mb-6">
           <ul className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
             <li>
-              <Link href="/" className="hover:text-teal-600 dark:hover:text-teal-400">
+              <Link href="/" className="hover:text-teal-700 dark:hover:text-teal-400">
                 Home
               </Link>
             </li>
             <li aria-hidden="true">&rsaquo;</li>
             <li>
-              <Link href="/blog" className="hover:text-teal-600 dark:hover:text-teal-400">
+              <Link href="/blog" className="hover:text-teal-700 dark:hover:text-teal-400">
                 Blog
               </Link>
             </li>
@@ -104,7 +104,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
             <li>
               <Link
                 href={`/blog?category=${encodeURIComponent(category)}`}
-                className="font-medium text-slate-700 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400"
+                className="font-medium text-slate-700 hover:text-teal-700 dark:text-slate-300 dark:hover:text-teal-400"
               >
                 {category}
               </Link>
@@ -135,7 +135,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
             In{' '}
             <Link
               href={`/blog?category=${encodeURIComponent(category)}`}
-              className="font-medium text-teal-600 hover:underline dark:text-teal-400"
+              className="font-medium text-teal-700 hover:underline dark:text-teal-400"
             >
               {category}
             </Link>
@@ -154,14 +154,14 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
         */}
         <div className="mt-8 max-w-3xl">
           <div
-            className="prose prose-slate dark:prose-invert prose-a:text-teal-600 dark:prose-a:text-teal-400"
+            className="prose prose-slate dark:prose-invert prose-a:text-teal-700 dark:prose-a:text-teal-400"
             dangerouslySetInnerHTML={{ __html: post.content.html }}
           />
         </div>
 
         {loggedIn && (
           <div className="mt-8">
-            <Link href={`/admin/edit/${post.slug}`} className="text-sm font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400">
+            <Link href={`/admin/edit/${post.slug}`} className="text-sm font-medium text-teal-700 underline-offset-2 hover:underline dark:text-teal-400">
               Edit
             </Link>
           </div>
@@ -174,7 +174,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
                 href={`/blog/${prevPost.slug}`}
                 className="rounded-lg border border-slate-200 p-4 transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:hover:border-teal-400/40"
               >
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">Previous</span>
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">Previous</span>
                 <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">{truncate(prevPost.title, 48)}</p>
               </Link>
             ) : (
@@ -185,7 +185,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
                 href={`/blog/${nextPost.slug}`}
                 className="rounded-lg border border-slate-200 p-4 text-right transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:hover:border-teal-400/40"
               >
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">Next</span>
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">Next</span>
                 <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">{truncate(nextPost.title, 48)}</p>
               </Link>
             ) : (

@@ -38,7 +38,7 @@ export default function RedesignLayout({ posts }: RedesignLayoutProps) {
     >
       <a
         href="#content"
-        className="absolute left-0 top-0 z-50 block -translate-x-full rounded bg-teal-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white focus:outline-none focus-visible:translate-x-0 focus-visible:ring-2 focus-visible:ring-teal-300 dark:bg-teal-400 dark:text-slate-900"
+        className="absolute left-0 top-0 z-50 block -translate-x-full rounded bg-teal-700 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white focus:outline-none focus-visible:translate-x-0 focus-visible:ring-2 focus-visible:ring-teal-300 dark:bg-teal-400 dark:text-slate-900"
       >
         Skip to Content
       </a>

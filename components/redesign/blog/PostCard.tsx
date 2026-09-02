@@ -49,13 +49,13 @@ export default function PostCard({ post, loggedIn }: PostCardProps) {
             {displayDate && <span>{displayDate}</span>}
           </div>
 
-          <h3 className="mt-3 text-lg font-semibold text-slate-900 transition-colors group-hover:text-teal-600 dark:text-slate-100 dark:group-hover:text-teal-400">
+          <h3 className="mt-3 text-lg font-semibold text-slate-900 transition-colors group-hover:text-teal-700 dark:text-slate-100 dark:group-hover:text-teal-400">
             {post.title}
           </h3>
 
           <p className="mt-2 line-clamp-3 text-sm text-slate-600 dark:text-slate-400">{post.summary}</p>
 
-          <span className="mt-4 inline-block text-sm font-medium text-teal-600 underline-offset-2 group-hover:underline dark:text-teal-400">
+          <span className="mt-4 inline-block text-sm font-medium text-teal-700 underline-offset-2 group-hover:underline dark:text-teal-400">
             Read more &rarr;
           </span>
         </div>
@@ -65,7 +65,7 @@ export default function PostCard({ post, loggedIn }: PostCardProps) {
         <div className="border-t border-slate-200 px-6 py-3 dark:border-slate-800">
           <Link
             href={`/admin/edit/${post.slug}`}
-            className="text-sm font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400"
+            className="text-sm font-medium text-teal-700 underline-offset-2 hover:underline dark:text-teal-400"
           >
             Edit
           </Link>
