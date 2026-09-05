@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest", "--browser", "chrome", "--storage-state", ".playwright-mcp/auth.json", "--secrets", ".playwright-mcp/secrets.env", "--output-dir", ".playwright-mcp"]
+      "command": "/Users/beaconavenue/.codex/bin/playwright-mcp-project",
+      "args": []
     }
   }
 }
