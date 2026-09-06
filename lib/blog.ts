@@ -1,4 +1,5 @@
 import type { PostData } from '@/types/blog';
+import { STATIC_BLOG_POSTS } from '@/data/blogPosts';
 
 /**
  * `GET /api/posts` returns published posts only, sorted server-side by
@@ -8,7 +9,9 @@ import type { PostData } from '@/types/blog';
  * address via `API_SERVER`, not the browser-facing `NEXT_PUBLIC_API_BROWSER`
  * — see CLAUDE.md's "API routing" convention.
  */
-const POSTS_ENDPOINT = `${process.env.API_SERVER}/api/posts`;
+function getPostsEndpoint(): string | null {
+  return process.env.API_SERVER ? `${process.env.API_SERVER}/api/posts` : null;
+}
 
 /**
  * Resolves a post's most relevant date for sorting, mirroring the backend's
@@ -29,18 +32,39 @@ function toTimestamp(post: PostData): number {
  * sort logic lives in exactly one place.
  *
  * Server-side only (relies on `API_SERVER`, the Docker-internal address).
- * Matches `getSandboxRepos()`'s (`lib/github.ts`) error-handling contract:
- * throws on a non-OK response or network failure — callers are expected to
- * run this inside their own `getStaticProps` try/catch and fall back to an
- * empty array on failure, deciding their own revalidate behavior.
+ * Static posts are repo-backed content for PR review and production deploys.
+ * API posts still merge in when the backend is reachable; static posts win on
+ * slug conflicts so a reviewed post cannot be shadowed by stale database data.
  */
-async function fetchPublishedPosts(): Promise<PostData[]> {
-  const res = await fetch(POSTS_ENDPOINT);
+export function mergePublishedPosts(apiPosts: PostData[]): PostData[] {
+  const seen = new Set<string>();
+  return [...STATIC_BLOG_POSTS, ...apiPosts]
+    .filter(post => post.status === 'published')
+    .filter(post => {
+      if (seen.has(post.slug)) return false;
+      seen.add(post.slug);
+      return true;
+    })
+    .sort((a, b) => toTimestamp(b) - toTimestamp(a));
+}
+
+async function fetchApiPublishedPosts(): Promise<PostData[]> {
+  const endpoint = getPostsEndpoint();
+  if (!endpoint) return [];
+
+  const res = await fetch(endpoint);
   if (!res.ok) {
     throw new Error(`Failed to fetch posts: ${res.status}`);
   }
-  const allPosts: PostData[] = await res.json();
-  return allPosts.sort((a, b) => toTimestamp(b) - toTimestamp(a));
+  return res.json();
+}
+
+async function fetchPublishedPosts(): Promise<PostData[]> {
+  try {
+    return mergePublishedPosts(await fetchApiPublishedPosts());
+  } catch {
+    return mergePublishedPosts([]);
+  }
 }
 
 /**

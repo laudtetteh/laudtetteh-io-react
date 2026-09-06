@@ -1,22 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { API_BASE_URL } from '@/utils/api';
 import { useEffect, useState } from 'react';
 import BlogLayout from '@/components/redesign/blog/BlogLayout';
+import { getAllPublishedPosts } from '@/lib/blog';
+import type { PostData } from '@/types/blog';
 
-interface BlogPost {
-  /** Typed as a union because the API has historically sent this as an array in edge cases. */
-  title: string | string[];
-  slug: string;
-  content: { html: string };
-  summary?: string;
-  date?: string;
-  date_published?: string;
-  status?: string;
-  categories?: string[];
-  featuredImage?: string;
-}
+type BlogPost = PostData;
 
 interface PostNav {
   slug: string;
@@ -68,14 +58,12 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
     );
   }
 
-  const imageUrl =
-    post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : '/images/writing/headless.jpeg';
-  const socialImageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : undefined;
+  const imageUrl = post.featuredImage && post.featuredImage.trim() !== '' ? post.featuredImage : undefined;
   const author = 'Laud Tetteh';
   const category = post.categories && post.categories.length > 0 ? post.categories[0] : 'Uncategorized';
   const displayDate = post.date_published || post.date;
   const formattedDate = formatDate(displayDate);
-  const displayTitle = Array.isArray(post.title) ? post.title.join(' ') : post.title;
+  const displayTitle = post.title;
 
   return (
     <BlogLayout
@@ -83,8 +71,8 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
       description={post.summary ?? ''}
       path={`/blog/${post.slug}`}
       type="article"
-      imagePath={socialImageUrl}
-      imageAlt={socialImageUrl ? `${displayTitle} featured image` : undefined}
+      imagePath={imageUrl}
+      imageAlt={imageUrl ? `${displayTitle} featured image` : undefined}
     >
       <article className="mb-16 md:mb-24">
         <nav aria-label="Breadcrumb" className="mb-6">
@@ -116,17 +104,25 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
           </ul>
         </nav>
 
-        <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
-          {/* eslint-disable-next-line @next/next/no-img-element -- external S3 URLs, no configured next/image remote domains */}
-          <img src={imageUrl} alt="" className="h-full w-full object-cover" />
-          {formattedDate && (
-            <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow dark:bg-slate-900 dark:text-slate-300">
-              {formattedDate}
-            </span>
-          )}
-        </div>
+        {imageUrl && (
+          <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
+            {/* eslint-disable-next-line @next/next/no-img-element -- external S3 URLs, no configured next/image remote domains */}
+            <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+            {formattedDate && (
+              <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-700 shadow dark:bg-slate-900 dark:text-slate-300">
+                {formattedDate}
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 pb-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+          {formattedDate && !imageUrl && (
+            <>
+              <span>{formattedDate}</span>
+              <span aria-hidden="true">&middot;</span>
+            </>
+          )}
           <span>
             By <span className="font-medium text-slate-900 dark:text-slate-100">{author}</span>
           </span>
@@ -200,9 +196,7 @@ export default function BlogPostPage({ post, prevPost, nextPost }: PostPageProps
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/posts`);
-    const posts: BlogPost[] = await res.json();
-
+    const posts = await getAllPublishedPosts();
     const paths = posts.map((post) => ({
       params: { slug: post.slug },
     }));
@@ -218,24 +212,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
 
   try {
-    // Fetch all posts to determine prev/next
-    const allRes = await fetch(`${API_BASE_URL}/api/posts`);
-    if (!allRes.ok) throw new Error("Failed to fetch posts");
-    const allPosts: BlogPost[] = await allRes.json();
+    const allPosts = await getAllPublishedPosts();
     const index = allPosts.findIndex((p) => p.slug === slug);
+    const post = index >= 0 ? allPosts[index] : null;
+    if (!post || index === -1) return { notFound: true, revalidate: 10 };
     const prevPost = index > 0 ? allPosts[index - 1] : null;
     const nextPost = index < allPosts.length - 1 ? allPosts[index + 1] : null;
 
-    // Fetch current post
-    const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`);
-    if (res.status === 404) {
-      return {
-        notFound: true,
-        revalidate: 10,
-      };
-    }
-    if (!res.ok) throw new Error("Post not found");
-    const post: BlogPost = await res.json();
     return {
       props: {
         post,
