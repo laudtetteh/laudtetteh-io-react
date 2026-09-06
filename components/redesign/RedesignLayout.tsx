@@ -11,6 +11,7 @@ import { useSpotlight } from './hooks/useSpotlight';
 
 interface RedesignLayoutProps {
   posts: PostData[];
+  cvHref: string | null;
 }
 
 /**
@@ -29,7 +30,7 @@ interface RedesignLayoutProps {
  * it as a radial-gradient glow on that overlay, positioned relative to the
  * outermost `group/spotlight` wrapper.
  */
-export default function RedesignLayout({ posts }: RedesignLayoutProps) {
+export default function RedesignLayout({ posts, cvHref }: RedesignLayoutProps) {
   const { background: spotlightBackground, ref: spotlightRef } = useSpotlight();
 
   return (
@@ -55,8 +56,8 @@ export default function RedesignLayout({ posts }: RedesignLayoutProps) {
           <Header />
 
           <main id="content" className="pt-24 lg:w-[52%] lg:py-24">
-            <AboutSection />
-            <ExperienceSection />
+            <AboutSection cvHref={cvHref} />
+            <ExperienceSection cvHref={cvHref} />
             <ProjectsSection />
             {/*
               Sandbox is intentionally not rendered (#101, 2026-08-27). The

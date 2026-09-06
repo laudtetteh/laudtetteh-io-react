@@ -114,10 +114,10 @@ const experience: ExperienceEntry[] = [
       {
         label: 'Product engineering',
         synopsis:
-          'I extended an existing pricing product inside the legacy Tableau platform, authored the architecture for bulk content ingestion, and rebuilt product-download gating with an operator kill switch.',
+          'I extended an existing pricing product inside the legacy Tableau platform, contributed to the architecture for bulk content ingestion, and updated product-download gating with an operator kill switch.',
         paragraphs: [
           'The Pricing Calculator leads Projects below, where the useful question is what the public tool does. In the role history, the useful question is how it shipped: I extended an existing product inside a legacy Drupal platform instead of rebuilding it, negotiated payload contracts with the frontend team, moved multi-currency logic and cached exchange rates server-side, and covered the flow with accessibility, analytics and Cypress work.',
-          'I also authored the technical architecture for a bulk content-ingestion system that moves up to 100 CMS nodes in a single operation, built both its admin interface and its backend, and ran cross-team user acceptance testing that deliberately fed it out-of-order payloads to prove it wouldn’t corrupt state. And I rebuilt the authentication gating on product download pages with a kill switch operators can flip from the CMS — because the useful question about a gate isn’t whether it works, it’s how fast you can turn it off at 2am.',
+          'I also contributed to the technical architecture for a bulk content-ingestion system that moves up to 100 CMS nodes in a single operation, implemented both its admin interface and its backend, and ran cross-team user acceptance testing that deliberately fed it out-of-order payloads to prove it wouldn’t corrupt state. And I updated the authentication gating on product download pages with a kill switch operators can flip from the CMS — because the useful question about a gate isn’t whether it works, it’s how fast you can turn it off at 2am.',
         ],
       },
       {
@@ -140,7 +140,7 @@ const experience: ExperienceEntry[] = [
       {
         label: 'Leadership, release & reliability',
         synopsis:
-          'I review more code than I write — 208 pull requests reviewed against 134 authored, across six repositories. I also lead the weekly operations review, contributed to the on-call working agreement that went org-wide inside a quarter, and take the release rotation as Release Engineer of record.',
+          'I review more code than I write — 208 pull requests reviewed against 134 opened, across six repositories. I also lead the weekly operations review, contributed to the on-call working agreement that went org-wide inside a quarter, and take the release rotation as Release Engineer of record.',
         paragraphs: [
           'I take the release rotation as Release Engineer of record — owning user acceptance testing and production deployment coordination, and signing off the change request. For about two years I’ve led our weekly operations review, where post-deployment triage happens and where I report site health, production errors and open issues to stakeholders. I asked for that rotation. I’m on the on-call roster, and I contributed to the working agreement that governs it — what constitutes a page, what waits until morning, what a responder owes the next shift — which went from draft to org-wide adoption inside a quarter.',
           'Most of my influence on this codebase is not my own commits. I review more pull requests than I author — 208 against 134 — across six repositories including ones I don’t own, and I’m one of the people who integrates other engineers’ work into the platform. When product download links started intermittently 404ing, I ran the investigation: quantified the blast radius from logs at roughly three thousand affected users, traced it to a build artifact that never landed in a gated storage bucket, and coordinated the fix with release engineering. I led a cross-team discovery comparing observability platforms for properties moving onto the new architecture, engaging three partner teams to set the organization’s forward monitoring approach. And when a new engineer joined and hit the wall our Drupal setup puts in front of everyone, I helped turn that friction into reusable onboarding documentation — the kind of small enablement work that saves the next person a week of spelunking.',
@@ -238,7 +238,11 @@ const testimonial: Testimonial = {
   role: 'Marketing Leader, Moz',
 };
 
-export default function ExperienceSection() {
+interface ExperienceSectionProps {
+  cvHref: string | null;
+}
+
+export default function ExperienceSection({ cvHref }: ExperienceSectionProps) {
   return (
     <section
       id="experience"
@@ -255,15 +259,17 @@ export default function ExperienceSection() {
           >
             Experience
           </h2>
-          <a
-            href="/docs/cv/Laud-Tetteh-Resume-2026.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-teal-700 transition-colors hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
-          >
-            View Full Résumé
-            <ExternalLinkIcon />
-          </a>
+          {cvHref && (
+            <a
+              href={cvHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-teal-700 transition-colors hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
+            >
+              View Full Résumé
+              <ExternalLinkIcon />
+            </a>
+          )}
         </div>
 
         {/* Work history timeline */}

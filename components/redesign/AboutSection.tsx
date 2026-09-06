@@ -22,14 +22,6 @@ const INFO_ITEMS: InfoItem[] = [
   { label: 'Website', value: 'www.laudtetteh.io', href: 'https://www.laudtetteh.io' },
 ];
 
-/**
- * Public CV. Rendered from the 2026 two-page résumé with the phone number
- * removed — the file is served from a public URL and gets crawled, so the
- * contact line is email/site/LinkedIn/GitHub only. The full-contact version
- * is kept out of the repo and sent directly with applications.
- */
-const CV_HREF = '/docs/cv/Laud-Tetteh-Resume-2026.pdf';
-
 /** One skills category, grouped into the tool "rows" as they exist in the live content. */
 interface SkillCategory {
   category: string;
@@ -96,7 +88,11 @@ const SKILLS: SkillCategory[] = [
  * The new design's About section: real bio, info table, and skills
  * breakdown. Server-rendered — no client-only gate, no hooks.
  */
-export default function AboutSection() {
+interface AboutSectionProps {
+  cvHref: string | null;
+}
+
+export default function AboutSection({ cvHref }: AboutSectionProps) {
   return (
     <section
       id="about"
@@ -183,13 +179,15 @@ export default function AboutSection() {
           ))}
         </dl>
 
-        <a
-          href={CV_HREF}
-          download
-          className="mt-8 inline-flex items-center gap-2 rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-700 hover:text-slate-50 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
-        >
-          Download CV
-        </a>
+        {cvHref && (
+          <a
+            href={cvHref}
+            download
+            className="mt-8 inline-flex items-center gap-2 rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-700 hover:text-slate-50 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
+          >
+            Download CV
+          </a>
+        )}
 
         {/* Skills */}
         <div className="mt-14 border-t border-slate-200 pt-8 dark:border-slate-800">
