@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import { ThemeToggle } from '../ThemeToggle';
 import SiteIdentity from '../SiteIdentity';
+import MobileSectionRail from '../MobileSectionRail';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
@@ -30,69 +31,84 @@ const SOCIAL_LINKS = [
  */
 export default function BlogSidebar(): React.ReactElement {
   const router = useRouter();
+  const activeHref = router.pathname === '/' ? '/' : '/blog';
 
   return (
-    <header className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
-      <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
-        <SiteIdentity nameAs="p" nameHref="/" />
+    <>
+      {/*
+        Blog routes do not expose stable heading IDs from post HTML, so the
+        mobile rail mirrors the blog shell's site nav instead of inventing a
+        fragile table of contents (#139).
+      */}
+      <MobileSectionRail
+        items={NAV_ITEMS}
+        activeHref={activeHref}
+        ariaLabel="Site rail"
+        current="page"
+      />
 
-        <div className="lg:hidden">
-          <ThemeToggle />
+      <header className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
+        <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
+          <SiteIdentity nameAs="p" nameHref="/" />
+
+          <div className="lg:hidden">
+            <ThemeToggle />
+          </div>
         </div>
-      </div>
 
-      <nav aria-label="Site" className="mt-10 px-6 lg:mt-0 lg:px-0">
-        <ul className="flex flex-wrap gap-x-6 gap-y-2 lg:block lg:space-y-1">
-          {NAV_ITEMS.map(item => {
-            const isActive = item.href === '/' ? router.pathname === '/' : router.pathname.startsWith(item.href);
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={classNames(
-                    'group flex items-center py-1 text-xs font-bold uppercase tracking-widest transition-colors',
-                    isActive
-                      ? 'active text-slate-900 dark:text-slate-200'
-                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
+        <nav aria-label="Site" className="mt-10 px-6 lg:mt-0 lg:px-0">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 lg:block lg:space-y-1">
+            {NAV_ITEMS.map(item => {
+              const isActive = item.href === activeHref;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
                     className={classNames(
-                      'mr-3 hidden h-px transition-all lg:block',
-                      isActive ? 'w-10 bg-slate-900 dark:bg-slate-200' : 'w-6 bg-slate-400 group-hover:w-10 group-hover:bg-slate-900 dark:bg-slate-600 dark:group-hover:bg-slate-200'
+                      'group flex items-center py-1 text-xs font-bold uppercase tracking-widest transition-colors',
+                      isActive
+                        ? 'active text-slate-900 dark:text-slate-200'
+                        : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                     )}
-                  />
-                  {item.label}
-                </Link>
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        'mr-3 hidden h-px transition-all lg:block',
+                        isActive ? 'w-10 bg-slate-900 dark:bg-slate-200' : 'w-6 bg-slate-400 group-hover:w-10 group-hover:bg-slate-900 dark:bg-slate-600 dark:group-hover:bg-slate-200'
+                      )}
+                    />
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="mt-10 flex items-center gap-5 px-6 pb-10 lg:mt-0 lg:px-0 lg:pb-0">
+          <ul className="flex items-center gap-4">
+            {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400"
+                >
+                  <Icon />
+                </a>
               </li>
-            );
-          })}
-        </ul>
-      </nav>
+            ))}
+          </ul>
 
-      <div className="mt-10 flex items-center gap-5 px-6 pb-10 lg:mt-0 lg:px-0 lg:pb-0">
-        <ul className="flex items-center gap-4">
-          {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
-            <li key={label}>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400"
-              >
-                <Icon />
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div className="hidden lg:block">
-          <ThemeToggle />
+          <div className="hidden lg:block">
+            <ThemeToggle />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 

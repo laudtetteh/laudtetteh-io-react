@@ -126,8 +126,9 @@ export default function AboutSection() {
           panels.
 
           What survives here is deliberate:
-          - The arc, stated as "both halves are load-bearing" — the hybrid-engineer
-            framing Laud approved, and the one thing Experience cannot say.
+          - The hybrid-engineer thesis: both halves are load-bearing. The named
+            LaudBot/Rig/Beacon arc lives in Projects, where it can be shown once
+            with supporting detail instead of repeated here in miniature.
           - Exactly ONE non-code item: asking for the on-call rotation and then
             writing the agreement. §9 says show the evidence and let the reader
             conclude, so this is an action, never an adjective about initiative.
@@ -154,10 +155,10 @@ export default function AboutSection() {
             contributed to the working agreement that governs it.
           </p>
           <p>
-            On my own time I built LaudBot, hit the wall every engineer working with AI agents
-            hits, and turned the fix into The Rig — which now runs under everything I build,
-            including the work I do for a living. That&apos;s the shape of it: build the thing,
-            find where it breaks, then fix the class of problem rather than the instance.
+            On my own time, the same habit turned a brittle AI-agent workflow into reusable
+            guardrails for real projects, including the work I do for a living. That&apos;s the
+            shape of it: build the thing, find where it breaks, then fix the class of problem
+            rather than the instance.
           </p>
         </div>
 

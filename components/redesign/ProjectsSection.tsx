@@ -70,7 +70,8 @@ const arcProjects: ProjectEntry[] = [
     title: 'LaudBot',
     synopsis:
       'A production, invite-only AI agent that answers questions about my background from approved sources only, never guessing — administered entirely in-app, down to swapping the LLM provider without a redeploy.',
-    url: 'https://laudbot.laudtetteh.io',
+    // Keep unlinked until laudtetteh/laudbot#105 refreshes the stale approved-source corpus.
+    url: '',
     linkNote: 'invite only',
     paragraphs: [
       'A production, invite-only AI agent that gives approved visitors — recruiters, colleagues — a conversational way to ask about my background. It answers from approved sources only and doesn’t guess, adapts its tone and focus per invite, and is administered entirely in-app: content, modes and even the LLM provider are configurable without a redeploy. Every AI call routes through a provider-agnostic abstraction layer, so swapping providers doesn’t touch business logic. Two-role JWT auth keeps visitor and admin strictly separate. I wrote the product requirements and architecture documents before I wrote any code.',

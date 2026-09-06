@@ -254,3 +254,37 @@ test.describe('mobile section rail (#119)', () => {
     }
   });
 });
+
+test.describe('blog mobile site rail (#139)', () => {
+  test('blog archive and category URLs show the mobile site rail below lg', async ({ page }) => {
+    for (const route of ['/blog', '/blog?category=Development']) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(route);
+
+      const rail = page.locator('nav[aria-label="Site rail"]');
+      await expect(rail).toBeVisible();
+      await expect(rail.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+      await expect(rail.getByRole('link', { name: 'Blog' })).toHaveAttribute('aria-current', 'page');
+      await expectNoHorizontalOverflow(page);
+
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await expect(rail).toBeHidden();
+    }
+  });
+
+  test('post detail pages keep the mobile site rail when a post exists', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/blog');
+
+    const firstPost = page.locator('a[href^="/blog/"]').first();
+    test.skip((await firstPost.count()) === 0, 'no posts available without a live backend');
+
+    await firstPost.click();
+    await expect(page).toHaveURL(/\/blog\/.+/);
+
+    const rail = page.locator('nav[aria-label="Site rail"]');
+    await expect(rail).toBeVisible();
+    await expect(rail.getByRole('link', { name: 'Blog' })).toHaveAttribute('aria-current', 'page');
+    await expectNoHorizontalOverflow(page);
+  });
+});

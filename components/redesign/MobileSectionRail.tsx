@@ -1,15 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
+import Link from 'next/link';
 
 interface RailItem {
-  id: string;
+  id?: string;
+  href?: string;
   label: string;
 }
 
 interface MobileSectionRailProps {
   items: readonly RailItem[];
   /** Currently visible section, from the same `useScrollSpy` the sidebar uses. */
-  activeId: string | null;
+  activeId?: string | null;
+  /** Currently active route for page-level rails. */
+  activeHref?: string | null;
+  ariaLabel?: string;
+  current?: 'location' | 'page';
 }
 
 /**
@@ -44,35 +50,51 @@ interface MobileSectionRailProps {
  * - Colours match the #110 audit. Every marker is non-text UI, so the bar is
  *   3:1, not 4.5:1 — there is no visible text in this component at all.
  */
-export default function MobileSectionRail({ items, activeId }: MobileSectionRailProps) {
+export default function MobileSectionRail({
+  items,
+  activeId = null,
+  activeHref = null,
+  ariaLabel = 'Section',
+  current = 'location',
+}: MobileSectionRailProps) {
   return (
     <nav
-      aria-label="Section"
+      aria-label={ariaLabel}
       className="fixed right-1.5 top-1/2 z-40 -translate-y-1/2 lg:hidden"
     >
       {/* Opaque, not translucent: it sits over cards, and 80% opacity let the
           text behind bleed through the markers. */}
       <ul className="flex flex-col items-end gap-0.5 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-2 shadow-sm shadow-slate-300/40 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30">
         {items.map(item => {
-          const isActive = activeId === item.id;
+          const href = item.href ?? `#${item.id}`;
+          const key = item.href ?? item.id ?? item.label;
+          const isActive = item.href ? activeHref === item.href : activeId === item.id;
+          const className = 'group flex min-h-[2.75rem] items-center justify-end rounded-sm px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 dark:focus-visible:ring-teal-400';
+          const content = (
+            <>
+              <span className="sr-only">{item.label}</span>
+              <span
+                aria-hidden="true"
+                className={classNames(
+                  'block h-0.5 rounded-full transition-all duration-200 motion-reduce:transition-none',
+                  isActive
+                    ? 'w-6 bg-slate-900 dark:bg-slate-200'
+                    : 'w-3 bg-slate-500 group-hover:w-5 group-hover:bg-slate-700 dark:bg-slate-400 dark:group-hover:bg-slate-200'
+                )}
+              />
+            </>
+          );
           return (
-            <li key={item.id}>
-              <a
-                href={`#${item.id}`}
-                aria-current={isActive ? 'location' : undefined}
-                className="group flex min-h-[2.75rem] items-center justify-end rounded-sm px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 dark:focus-visible:ring-teal-400"
-              >
-                <span className="sr-only">{item.label}</span>
-                <span
-                  aria-hidden="true"
-                  className={classNames(
-                    'block h-0.5 rounded-full transition-all duration-200 motion-reduce:transition-none',
-                    isActive
-                      ? 'w-6 bg-slate-900 dark:bg-slate-200'
-                      : 'w-3 bg-slate-500 group-hover:w-5 group-hover:bg-slate-700 dark:bg-slate-400 dark:group-hover:bg-slate-200'
-                  )}
-                />
-              </a>
+            <li key={key}>
+              {href.startsWith('/') ? (
+                <Link href={href} aria-current={isActive ? current : undefined} className={className}>
+                  {content}
+                </Link>
+              ) : (
+                <a href={href} aria-current={isActive ? current : undefined} className={className}>
+                  {content}
+                </a>
+              )}
             </li>
           );
         })}
