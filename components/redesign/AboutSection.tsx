@@ -150,8 +150,8 @@ export default function AboutSection() {
           <p>
             At Salesforce/Tableau I work on tableau.com — roughly 13 million visits a month
             (Semrush estimate, 2026). I build product on it and co-own the automation underneath
-            it. I asked for the on-call rotation rather than waiting to be assigned it, then wrote
-            the working agreement that governs it.
+            it. I asked for the on-call rotation rather than waiting to be assigned it, then
+            contributed to the working agreement that governs it.
           </p>
           <p>
             On my own time I built LaudBot, hit the wall every engineer working with AI agents
