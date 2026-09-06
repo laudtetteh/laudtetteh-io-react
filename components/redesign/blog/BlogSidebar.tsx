@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 
 import { ThemeToggle } from '../ThemeToggle';
+import SiteIdentity from '../SiteIdentity';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
@@ -20,8 +21,12 @@ const SOCIAL_LINKS = [
  * homepage's `Header.tsx` (name/role, social icons, theme toggle, same
  * sticky-left-column layout) but with a real multi-page nav instead of
  * `Header.tsx`'s scroll-spy anchor nav, which only makes sense within a
- * single long page (see #60's open question). No rotating tagline — that
- * content is homepage-specific.
+ * single long page (see #60's open question).
+ *
+ * The name/role/tagline block comes from the shared `SiteIdentity` (#117
+ * item 9) so it is identical on every route. It previously diverged — this
+ * sidebar showed a bare "Software Engineer" and no tagline while the homepage
+ * had changed twice.
  */
 export default function BlogSidebar(): React.ReactElement {
   const router = useRouter();
@@ -29,22 +34,7 @@ export default function BlogSidebar(): React.ReactElement {
   return (
     <header className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
       <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
-        <div>
-          {/*
-            Not an `<h1>`: unlike the homepage (one continuous document, so
-            `Header.tsx`'s name is the page's only h1), each blog route has
-            its own page-level h1 (`BlogIndex`'s "Blog", the post title on
-            `[slug]`) — a second h1 here would leave every blog page with two,
-            breaking the single-h1-per-page convention the rest of the
-            redesign follows.
-          */}
-          <p className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
-            <Link href="/">Laud Tetteh</Link>
-          </p>
-          <p className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">
-            Software Engineer
-          </p>
-        </div>
+        <SiteIdentity nameAs="p" nameHref="/" />
 
         <div className="lg:hidden">
           <ThemeToggle />

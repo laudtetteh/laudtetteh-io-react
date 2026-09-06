@@ -1,4 +1,5 @@
 import MobileSectionTitle from './MobileSectionTitle';
+import { ReadMore } from './DisclosurePanel';
 
 /**
  * Projects. Content is governed by `$RIG_DIR/docs/career/WEBSITE-CONTENT-SPEC.md`
@@ -27,6 +28,17 @@ interface ProjectEntry {
   url: string;
   /** Shown next to the link when the destination isn't openly accessible. */
   linkNote?: string;
+  /**
+   * Collapsed-state summary (#116). Present on the grouped cards only — the
+   * featured Pricing Calculator stays open because it is the section's hook.
+   *
+   * For the three arc projects the synopsis deliberately carries the
+   * *connective* phrase ("So I generalized the fix", "And then I used it"), not
+   * just a description. The arc only reads as one story if the collapsed state
+   * preserves the chain; summarising each project in isolation would quietly
+   * destroy the narrative the grouping exists to tell.
+   */
+  synopsis?: string;
   paragraphs: string[];
   tags: string[];
 }
@@ -43,7 +55,7 @@ const featuredProject: ProjectEntry = {
   title: 'Tableau Pricing Calculator',
   url: 'https://www.tableau.com/product-and-pricing-selector',
   paragraphs: [
-    'The only thing I’ve shipped that you can click. It’s the tool on tableau.com that lets you configure product editions, licenses and add-ons and see what they cost — a React front end on a Drupal REST API I designed, with multi-currency logic and cached exchange rates resolved server-side rather than in the browser, payload contracts negotiated with the frontend team, an accessible responsive interface, analytics instrumentation, and end-to-end Cypress coverage.',
+    'The pricing selector on tableau.com — the tool that lets you configure product editions, licenses and add-ons and see what they cost. I extended the legacy version rather than replacing it, across its UI, its API design and its backend: multi-currency logic and cached exchange rates resolved server-side rather than in the browser, payload contracts negotiated with the frontend team, accessibility and responsive work, analytics instrumentation, and end-to-end Cypress coverage. It is public, so you can go and click it.',
   ],
   tags: ['React', 'Drupal', 'REST API', 'Cypress', 'GA4'],
 };
@@ -56,6 +68,8 @@ const featuredProject: ProjectEntry = {
 const arcProjects: ProjectEntry[] = [
   {
     title: 'LaudBot',
+    synopsis:
+      'A production, invite-only AI agent that answers questions about my background from approved sources only, never guessing — administered entirely in-app, down to swapping the LLM provider without a redeploy.',
     url: 'https://laudbot.laudtetteh.io',
     linkNote: 'invite only',
     paragraphs: [
@@ -66,6 +80,8 @@ const arcProjects: ProjectEntry[] = [
   },
   {
     title: 'The Rig',
+    synopsis:
+      'So I generalized the fix. An open-source framework giving AI coding agents persistent structured memory, enforced workflows and a git-hook layer — MIT licensed, 300+ commits, piloted on a real production platform.',
     url: 'https://github.com/laudtetteh/the-rig',
     paragraphs: [
       'So I generalized the fix. The Rig is an open-source framework that gives AI coding agents persistent structured memory, enforced workflows, a task lifecycle engine, and a git-hook layer that won’t let a commit through without secret scanning and a properly formatted conventional message. Nine lifecycle hooks cover protected-path write restrictions, commit gating, context-compaction checkpointing and subagent context injection. MIT licensed, 300+ commits, with a bats test suite running in CI. I piloted it on 4Culture.org — a real multi-contributor production platform — rather than only on my own machine.',
@@ -74,7 +90,9 @@ const arcProjects: ProjectEntry[] = [
   },
   {
     title: 'Beacon Essentials',
-    url: '',
+    synopsis:
+      'And then I used it. A production e-commerce platform in Ghana that I designed, built and maintain — and it runs on The Rig. WhatsApp deep-link ordering, Mobile Money, dispatch-rider tracking; 540+ commits over a year.',
+    url: 'https://beaconessentials.shop',
     paragraphs: [
       'And then I used it. Beacon Essentials is a production e-commerce platform in Ghana that I designed, built and maintain — and it runs on The Rig. The interesting constraint was never technical: checkout had to work the way that market actually buys, which meant WhatsApp deep-link ordering with a conventional cart as fallback, Mobile Money as the primary payment rail, and order tracking built around dispatch-rider delivery. FastAPI and MongoDB on the back, Next.js on the front, a mobile workspace alongside them, all in one Turborepo monorepo; pre-signed S3 media so the API never serves binaries; Docker and GitHub Actions to deploy, with linting, tests and secret scanning enforced on every commit. 540+ commits and 450+ pull requests over a year.',
       'That last part is the real test of The Rig — it’s the framework running against software that takes money, not a framework with a README.',
@@ -90,6 +108,8 @@ const arcProjects: ProjectEntry[] = [
  */
 const counterweightProject: ProjectEntry = {
   title: 'MethodistCRM',
+    synopsis:
+      'Built solo and by hand in 2019\u20132021, before AI coding assistance existed. Laravel and MySQL: 38 models, 62 controllers and 359 views over a diocese → circuit → branch hierarchy, with deployment automation I wrote myself.',
   url: '/blog/methodistcrm',
   paragraphs: [
     'Built solo and by hand in 2019–2021, before AI coding assistance existed. Laravel and MySQL: 38 Eloquent models, 62 controllers and 359 Blade views over a three-level organizational hierarchy of diocese → circuit → branch. Barcode-based attendance check-in, a messaging subsystem with threads and drafts, Algolia-backed search, SMS through Hubtel — a Ghanaian gateway — push notifications, bulk Excel and CSV import/export through a staging table, and a full store with cart and checkout. I wrote its deployment automation by hand too: a shell script doing a git clone and an atomic directory swap while preserving uploads across releases, with companion database backup crons. Years before I had CI/CD tooling to do it for me.',
@@ -99,13 +119,30 @@ const counterweightProject: ProjectEntry = {
   tags: ['Laravel', 'PHP', 'MySQL', 'Algolia', 'Shell'],
 };
 
+/**
+ * `BA-02` / `OSS-04`. **Attribution matters here:** the Laravel + Vue application
+ * is not his — he modernized and containerized someone else's legacy codebase.
+ * Every verb below is deliberately about the infrastructure work, never the app.
+ */
+const containerizationProject: ProjectEntry = {
+  title: 'Seattle Collisions',
+  url: 'https://seattlecollisions.timganter.io/collisions',
+  synopsis:
+    'A legacy Laravel + Vue collision-data explorer that I containerized and modernized — I did not write the application, I made it deployable.',
+  paragraphs: [
+    'Docker Compose orchestrating the Laravel API, the Vue frontend and MySQL over an internal bridge network, with cross-service networking and environment configuration; GitHub Actions building the images; nginx on the host handling SSL termination with Certbot auto-renewal; and the local workflow documented so the next contributor can bring the whole stack up with one command.',
+    'It is the least glamorous kind of work and the kind most often needed: an application that ran on one person’s machine now runs reproducibly for anyone.',
+  ],
+  tags: ['Laravel', 'Vue', 'MySQL', 'Docker Compose', 'GitHub Actions', 'nginx'],
+};
+
 /** Retained but demoted — DOSSIER §7: "compressed, not deleted." */
 const secondaryProjects: SecondaryEntry[] = [
   {
     title: 'King County 4Culture',
     url: 'https://www.4culture.org',
     description:
-      'WordPress plugin development and webmaster work for a Washington State public arts agency. Four plugins, all public on GitHub.',
+      'Contract web developer and consultant for a Washington State public arts agency — theme and template development, the deployment pipeline and CI/CD, infrastructure and Docker-based local orchestration, and a Foundation-to-Bootstrap 5 migration that amounted to a rebuild.',
   },
   {
     title: 'UH Richardson School of Law',
@@ -164,13 +201,23 @@ function ProjectCard({
         )}
       </Heading>
 
-      <div className="mt-2 space-y-2">
-        {project.paragraphs.map((paragraph, index) => (
-          <p key={index} className="text-sm leading-normal text-slate-700 dark:text-slate-400">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      {project.synopsis ? (
+        <ReadMore synopsis={project.synopsis} title={project.title}>
+          {project.paragraphs.map((paragraph, index) => (
+            <p key={index} className="text-sm leading-normal text-slate-700 dark:text-slate-400">
+              {paragraph}
+            </p>
+          ))}
+        </ReadMore>
+      ) : (
+        <div className="mt-2 space-y-2">
+          {project.paragraphs.map((paragraph, index) => (
+            <p key={index} className="text-sm leading-normal text-slate-700 dark:text-slate-400">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/*
         The visible "Stack" label matters, it isn't decoration. These pills are
@@ -222,10 +269,11 @@ export default function ProjectsSection() {
         {/* The arc. The intro line is what makes these three read as one story. */}
         <div className="mt-14">
           <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
-            Build &rarr; wall &rarr; generalize &rarr; apply
+            I built a thing, hit a wall, then turned the wall into tooling
           </h3>
           <p className="mt-2 text-sm text-slate-700 dark:text-slate-400">
-            These three are one story, in order.
+            These three are one story, in order. The wall is the interesting part — everything I
+            build now runs on what came out of it, including the work I do at my day job.
           </p>
           <ul className="group/list mt-6 space-y-5 border-l border-slate-200 pl-4 dark:border-slate-800">
             {arcProjects.map(project => (
@@ -238,8 +286,21 @@ export default function ProjectsSection() {
           <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
             The counterweight
           </h3>
+          <p className="mt-2 text-sm text-slate-700 dark:text-slate-400">
+            Every engineer is quietly being asked the same question in 2026: is the person good,
+            or is the tooling good? Here is 2019, when there was no tooling.
+          </p>
           <ul className="group/list mt-6 space-y-5">
             <ProjectCard project={counterweightProject} headingLevel={4} />
+          </ul>
+        </div>
+
+        <div className="mt-14">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
+            Modernizing someone else&rsquo;s codebase
+          </h3>
+          <ul className="group/list mt-6 space-y-5">
+            <ProjectCard project={containerizationProject} headingLevel={4} />
           </ul>
         </div>
 

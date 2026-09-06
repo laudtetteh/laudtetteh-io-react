@@ -2,35 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { ThemeToggle } from './ThemeToggle';
-import { useRotatingText } from './hooks/useRotatingText';
+import SiteIdentity from './SiteIdentity';
+import MobileSectionRail from './MobileSectionRail';
 import { useScrollSpy } from './hooks/useScrollSpy';
-
-/**
- * Rotating hero taglines — `DOSSIER.md` §12.1 replacement set, verbatim.
- *
- * §12.1 was corrected at source on 2026-08-27 to drop Terraform, Next.js and
- * FastAPI, which §10.4 bars as *claimed* skills. A tagline is a bare keyword
- * line with no room for context, so it is a claim surface; those three remain
- * accurate and permitted inside project descriptions as system composition.
- *
- * Every term is explicitly rated in §10.1: Docker, GitHub Actions, CI/CD
- * architecture, Drupal/PHP, Laravel and GA4/DataLayer as Strong; WordPress
- * multisite as Working; React as defendable and sourced from the hand-written
- * Salesforce work (`SF-APP-01`, `SF-DATA-01`), not the AI-assisted projects.
- * "Deployment Automation" is `SF-CI-06`/`SF-CI-07`; "Release Engineering"
- * (tagline 5) is `SF-LEAD-01`. §12.1 deduplicated these on 2026-08-27 so
- * "Release Engineering" appears once, not twice.
- */
-const TAGLINES = [
-  'Platform & Web Engineering',
-  '12+ Years Building for the Web',
-  'CI/CD · Docker · GitHub Actions · Deployment Automation',
-  'Drupal 10 · WordPress Multisite · Laravel · React',
-  'Observability · Release Engineering · Incident Response',
-  'Analytics Engineering · GA4 · DataLayer',
-];
-
-const TAGLINE_INTERVAL_MS = 4000;
 
 const NAV_ITEMS = [
   { id: 'about', label: 'About' },
@@ -57,41 +31,27 @@ const SOCIAL_LINKS = [
  * `.active` highlight depends on the client-side `useScrollSpy` hook.
  */
 export default function Header(): React.ReactElement {
-  const { text: tagline, visible: taglineVisible } = useRotatingText(TAGLINES, TAGLINE_INTERVAL_MS);
   const activeSectionId = useScrollSpy(NAV_ITEMS.map(item => item.id));
 
   return (
+    <>
+      {/* Sibling of <header>, not a child: it is `fixed`, so DOM position is
+          irrelevant visually, and nesting it made `#header a[href="#about"]`
+          match two links — breaking #48's active-nav assertion. */}
+      <MobileSectionRail items={NAV_ITEMS} activeId={activeSectionId} />
+
     <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
       <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
-            <a href="#header">Laud Tetteh</a>
-          </h1>
-          {/* Public title is fixed by DOSSIER §3.2 — never "Senior", "Lead", "Staff" or "Principal". */}
-          <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">Software Engineer (MTS)</h2>
-          <p
-            aria-live="polite"
-            className={classNames(
-              // min-h reserves three lines so the rotation never shifts layout.
-              // Measured: the longest tagline ('Observability · Release
-              // Engineering · Incident Response') wraps to 2 lines / 40px at
-              // 375px and above, but to 3 lines / 60px at 320px. 2.5rem was
-              // enough for the 375px case only, and responsive.spec.ts tests
-              // 375, so CI would not have caught the 320px shift.
-              'mt-3 min-h-[3.75rem] max-w-xs text-sm font-medium text-teal-700 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
-              taglineVisible ? 'opacity-100' : 'opacity-0'
-            )}
-          >
-            {tagline}
-          </p>
-        </div>
+        <SiteIdentity nameAs="h1" nameHref="#header" />
 
         <div className="lg:hidden">
           <ThemeToggle />
         </div>
       </div>
 
-      <nav aria-label="In-page" className="mt-10 px-6 lg:mt-0 lg:px-0">
+      {/* Desktop only — the mobile equivalent is <MobileSectionRail>, which
+          stays visible while the stacked sidebar scrolls away (#119). */}
+      <nav aria-label="In-page" className="mt-10 hidden px-6 lg:mt-0 lg:block lg:px-0">
         <ul className="flex flex-wrap gap-x-6 gap-y-2 lg:block lg:space-y-1">
           {NAV_ITEMS.map(item => {
             const isActive = activeSectionId === item.id;
@@ -143,6 +103,7 @@ export default function Header(): React.ReactElement {
         </div>
       </div>
     </header>
+    </>
   );
 }
 

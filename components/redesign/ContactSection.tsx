@@ -85,7 +85,7 @@ const ContactSection: React.FC = () => {
           <p className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">Contact</p>
           <h2 className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">Get in Touch</h2>
           <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
-            Have a project in mind, or just want to say hello? Send a message below.
+            Have a project in mind, want to argue about deployment pipelines, or just want to say hello? Send a message below — it reaches me, not a queue.
           </p>
         </div>
 

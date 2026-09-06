@@ -24,7 +24,7 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ posts }) => (
   <>
     <Seo
-      title="Laud Tetteh | Software Engineer (MTS)"
+      title="Laud Tetteh | Full Stack Software Engineer"
       description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
     />
     <RedesignLayout posts={posts} />
