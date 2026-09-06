@@ -57,6 +57,9 @@ const AdminBar = () => {
           <Link href="/admin/create" className="font-semibold text-slate-100 hover:text-teal-400">
             + New Post
           </Link>
+          <Link href="/admin/messages" className="font-semibold text-slate-100 hover:text-teal-400">
+            Messages
+          </Link>
           {isEditPage && slug && (
             <>
               <a href={`/blog/${slug}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-100 hover:text-teal-400">View</a>
