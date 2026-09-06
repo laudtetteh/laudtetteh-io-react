@@ -56,3 +56,6 @@ backend/logs/*.log
 # Workspace
 *.code-workspace
 kitchen-sink/*
+
+# Pre-subset font originals (#125) — kept on disk, recoverable from git history
+lib/fonts/_archive/
