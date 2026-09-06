@@ -9,8 +9,21 @@ export interface PublicCv {
   phone_number_confirmed_absent: boolean;
 }
 
+function getPublicCvEndpoint(): string | null {
+  if (typeof window === 'undefined' && !process.env.API_SERVER) return null;
+  return `${API_BASE_URL}/api/cv`;
+}
+
 export async function getPublicCv(): Promise<PublicCv | null> {
-  const res = await fetch(`${API_BASE_URL}/api/cv`);
+  const endpoint = getPublicCvEndpoint();
+  if (!endpoint) return null;
+
+  let res: Response;
+  try {
+    res = await fetch(endpoint);
+  } catch {
+    return null;
+  }
   if (res.status === 404) return null;
   if (!res.ok) throw new Error('Failed to fetch public CV metadata');
   return res.json();

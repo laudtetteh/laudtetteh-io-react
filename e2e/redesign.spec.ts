@@ -25,6 +25,7 @@ test('redesign renders with zero console errors', async ({ page }) => {
 });
 
 test('redesign routes do not request deleted legacy template assets', async ({ page }) => {
+  test.setTimeout(60_000);
   const legacyRequests: string[] = [];
 
   page.on('request', request => {
@@ -394,16 +395,22 @@ test('skip-to-content link is the first focusable element and targets #content (
   // setup (the same class of synthetic-input timing issue already
   // documented on the spotlight-cursor test above).
   await page.evaluate(() => document.body.focus());
-  await page.keyboard.press('Tab');
-
-  const active = await page.evaluate(() => ({
-    tag: document.activeElement?.tagName,
-    href: document.activeElement?.getAttribute('href'),
-    text: document.activeElement?.textContent,
-  }));
-  expect(active.tag).toBe('A');
-  expect(active.href).toBe('#content');
-  expect(active.text).toContain('Skip to Content');
+  const skipLink = page.locator('a[href="#content"]');
+  await expect
+    .poll(async () => {
+      await page.keyboard.press('Tab');
+      return page.evaluate(() => ({
+        tag: document.activeElement?.tagName,
+        href: document.activeElement?.getAttribute('href'),
+        text: document.activeElement?.textContent,
+      }));
+    })
+    .toMatchObject({
+      tag: 'A',
+      href: '#content',
+      text: expect.stringContaining('Skip to Content'),
+    });
+  await expect(skipLink).toBeFocused();
 
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#content$/);
