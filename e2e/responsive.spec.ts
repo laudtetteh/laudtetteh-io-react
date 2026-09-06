@@ -100,7 +100,11 @@ test('mobile homepage nav exposes tappable links without horizontal overflow', a
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/', { waitUntil: 'networkidle' });
 
-  const nav = page.getByRole('navigation', { name: 'In-page' });
+  // Retargeted in #119: the wrapping horizontal list this used to assert was
+  // replaced by the fixed rail, which stays put while the stacked sidebar
+  // scrolls away. The invariants below are unchanged — five reachable,
+  // adequately sized links that do not push the page sideways.
+  const nav = page.getByRole('navigation', { name: 'Section' });
   await expect(nav).toBeVisible();
   // About · Experience · Projects · Writing · Contact. Sandbox was removed in
   // #101 and comes back with the section in #108.
@@ -112,7 +116,9 @@ test('mobile homepage nav exposes tappable links without horizontal overflow', a
     expect(box).not.toBeNull();
     expect(box!.x).toBeGreaterThanOrEqual(0);
     expect(box!.x + box!.width).toBeLessThanOrEqual(viewportWidth);
-    expect(box!.height).toBeGreaterThanOrEqual(20);
+    // 44px since #119 — the rail's dash is 2px of chrome, but the tap area a
+    // thumb has to hit is the whole row.
+    expect(box!.height).toBeGreaterThanOrEqual(44);
   }
 
   await nav.getByRole('link', { name: 'Contact' }).click();
@@ -196,4 +202,55 @@ test('blog post media and prose do not overflow on mobile', async ({ page }) => 
 
   await expectNoHorizontalOverflow(page);
   expect(errors).toEqual([]);
+});
+
+/**
+ * Mobile section rail (#119).
+ *
+ * Replaced the wrapping horizontal link list that scrolled away on the first
+ * swipe. The rail overlays content by design, so the assertions that matter are
+ * the breakpoint swap, the accessible names (a rail of bare dots is this
+ * pattern's classic failure), and that it never forces horizontal overflow.
+ */
+test.describe('mobile section rail (#119)', () => {
+  test('rail replaces the sidebar nav below lg and yields to it above', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('nav[aria-label="Section"]')).toBeVisible();
+    await expect(page.locator('nav[aria-label="In-page"]')).toBeHidden();
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('nav[aria-label="Section"]')).toBeHidden();
+    await expect(page.locator('nav[aria-label="In-page"]')).toBeVisible();
+  });
+
+  test('rail links carry real accessible names, not bare markers', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+
+    const links = page.locator('nav[aria-label="Section"] a');
+    const names = await links.evaluateAll(ns => ns.map(n => n.textContent?.trim() ?? ''));
+
+    expect(names.length).toBeGreaterThan(1);
+    expect(names.every(Boolean)).toBe(true);
+    expect(names).toContain('Projects');
+  });
+
+  test('rail marks the visible section and causes no horizontal overflow', async ({ page }) => {
+    for (const width of [320, 390, 768]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto('/');
+      await page.locator('#projects').scrollIntoViewIfNeeded();
+      await page.waitForTimeout(700);
+
+      const current = page.locator('nav[aria-label="Section"] a[aria-current="location"]');
+      await expect(current).toHaveCount(1);
+      await expect(current).toHaveText('Projects');
+
+      const overflows = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
+      expect(overflows, `horizontal overflow at ${width}px`).toBe(false);
+    }
+  });
 });

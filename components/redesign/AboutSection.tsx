@@ -82,6 +82,14 @@ const SKILLS: SkillCategory[] = [
     category: 'Testing',
     rows: [['Cypress']],
   },
+  {
+    // Every term here is on DOSSIER §13's defensible list. Deliberately no
+    // model or vendor names beyond the tool actually used daily — §10.4's rule
+    // is that a tool present in a system you work on is not a skill you can
+    // defend.
+    category: 'AI & Agentic Engineering',
+    rows: [['Agentic AI', 'LLM tooling'], ['MCP (Model Context Protocol)'], ['Claude Code', 'Developer tooling']],
+  },
 ];
 
 /**
@@ -102,33 +110,74 @@ export default function AboutSection() {
         </h2>
 
         {/*
-          Bio derived from DOSSIER §12.4 Medium. Four deviations from that text are
-          deliberate and rule-forced — see WEBSITE-CONTENT-SPEC.md §B.1:
-          "co-own" not "own" and the explicit inherited-pipeline boundary (§6.2
-          attribution), and "design, build and maintain … a production e-commerce
-          platform" rather than "build and run … a live e-commerce business" (§7.2,
-          which bans both the verb and that exact phrase).
+          Re-sequenced 2026-09-06 around the "hybrid engineer" framing Laud
+          approved: the arc from self-taught hand-coder to building the tooling
+          that makes AI agents dependable, with both halves stated as
+          load-bearing. Derived from DOSSIER §12.4 Medium plus §5.0.1's
+          Narrative A + B, which exist for exactly this pairing.
+
+          Two ordering decisions, both deliberate:
+
+          - **Product engineering comes before pipeline.** §14.4 sets the pillar
+            balance at 40% platform / 30% product and calls product "currently
+            thinnest, needs the most growth"; §17.2's unactioned feedback says he
+            must read as a product engineer, not only a pipeline engineer.
+            Platform is still the larger share by volume — it leads the third
+            paragraph — but it no longer arrives first.
+          - **Non-coding evidence is shown, never asserted.** §9 is explicit:
+            never write "senior-level", show the evidence and let the reader
+            conclude. Hence "I asked for the on-call rotation" rather than any
+            adjective about initiative.
+
+          Rule-forced wording that must survive future edits: "co-own" not "own"
+          and the explicit inherited-pipeline boundary (§6.2 attribution);
+          "extended" for the pricing calculator, never "built" or "rebuilt"
+          (corrected 2026-09-05, the fourth attribution inflation); "design,
+          build and maintain ... a production e-commerce platform" rather than
+          "run ... a live e-commerce business" (§7.2).
         */}
         <div className="mt-6 space-y-4 text-base leading-normal text-slate-700 dark:text-slate-400">
           <p>
-            I&apos;m Laud Tetteh, a software engineer in Seattle with 12 years of experience
-            building and operating web platforms.
+            I&apos;m Laud Tetteh, a software engineer in Seattle. I started out hand-coding
+            everything, taught myself in public, and spent 12 years learning how web
+            platforms actually behave under load, under deadline, and under other people&apos;s
+            deployment mistakes. These days a lot of my work is building the scaffolding that
+            makes AI coding agents dependable on real codebases. Both halves are load-bearing:
+            the second only works because of the first.
           </p>
           <p>
             At Salesforce/Tableau I work on tableau.com — a site drawing roughly 13 million
             visits a month (Semrush estimate, 2026) on a large enterprise Drupal installation.
-            I co-own much of the automation behind it: the CI container images, the composite
-            Actions our workflows are assembled from, the gated pipeline that deploys to
-            production four times a week, and the nightly extract-transform-load job that
-            keeps the team on clean data. I didn&apos;t write that pipeline — I inherited it, and I&apos;ve spent four
-            years making it better without breaking the team that depends on it. I built the
-            site&apos;s public pricing calculator, and I led its analytics re-platform.
+            The product side is the part I like most: I extended the public pricing calculator
+            across its UI, API design and backend, authored the architecture for a bulk
+            content-ingestion system that moves up to 100 nodes in one operation, and rebuilt
+            the authentication gating on product download pages with a kill switch operators
+            can flip from the CMS — because the useful question about a gate isn&apos;t whether
+            it works, it&apos;s how fast you can turn it off at 2am.
           </p>
-          <p>I take the release rotation, lead the weekly operations review, and carry the pager.</p>
           <p>
-            On my own time I design, build and maintain Beacon Essentials, a production
-            e-commerce platform in Ghana, and The Rig, an open-source framework for making AI
-            coding agents reliable.
+            I also co-own much of the automation underneath: the CI container images, the
+            composite Actions our workflows are assembled from, the gated pipeline that deploys
+            four times a week unattended, the nightly job that keeps everyone on clean data, and
+            the Akamai edge configuration in front of all of it. I didn&apos;t write that
+            pipeline — I inherited it, and I&apos;ve spent four years making it better without
+            breaking the team that depends on it.
+          </p>
+          <p>
+            The parts that aren&apos;t code matter just as much. I take the release rotation and
+            sign off the change request. I&apos;ve led the weekly operations review for about two
+            years. I asked for the on-call rotation rather than waiting to be assigned it, then
+            wrote the working agreement that governs it — what counts as a page, what waits until
+            morning, what a responder owes the next shift — which went from draft to org-wide
+            inside a quarter.
+          </p>
+          <p>
+            On my own time I built LaudBot, hit the wall every engineer working with AI agents
+            hits, and generalized the fix into The Rig — an open-source framework giving agents
+            persistent memory, enforced workflows, and a git-hook layer that won&apos;t let a
+            commit through unscanned. Then I used it to ship Beacon Essentials, a production
+            e-commerce platform in Ghana. That&apos;s the whole shape of how I work: build it,
+            find where it breaks, fix the class of problem rather than the instance.
           </p>
         </div>
 

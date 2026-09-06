@@ -142,7 +142,10 @@ test('header renders name/role/nav/social in initial HTML', async ({ page }) => 
   // appear. Scope the negative assertion to the whole page, not #header — the
   // regression it guards ("Senior Dev." twice) lived in #experience, so a
   // header-scoped check would be vacuous.
-  await expect(header).toContainText('Software Engineer (MTS)');
+  // The hero role line is a trade descriptor (#117 item 8), deliberately not the
+  // employer job title. The exact Salesforce title `Software Engineer (MTS)` still
+  // appears on the Experience entry, which is what a reference check verifies.
+  await expect(header).toContainText('Full Stack Software Engineer');
   await expect(page.locator('body')).not.toContainText('Senior');
   await expect(header.locator('a[href="#about"]')).toBeVisible();
   await expect(header.locator('a[href="https://github.com/laudtetteh"]')).toBeVisible();
@@ -458,4 +461,122 @@ test('/redesign redirects to the homepage after the #17 cutover', async ({ page 
   const res = await page.goto('/redesign');
   expect(res?.status()).toBe(200);
   expect(new URL(page.url()).pathname).toBe('/');
+});
+
+/**
+ * Progressive disclosure on Experience clusters and grouped Projects (#116).
+ *
+ * The DOM-retention assertion is the load-bearing one. The whole point of
+ * collapsing rather than truncating is that recruiters and crawlers still get
+ * the full text; if someone later "optimises" this into a conditional render,
+ * that is a silent SEO and accessibility regression and this test is what
+ * catches it.
+ */
+test.describe('progressive disclosure (#116)', () => {
+  test('clusters are collapsed by default and expand on click', async ({ page }) => {
+    await page.goto('/');
+
+    const triggers = page.locator('button[aria-expanded]');
+    expect(await triggers.count()).toBeGreaterThan(0);
+    expect(await page.locator('button[aria-expanded="true"]').count()).toBe(0);
+
+    const first = triggers.first();
+    const panelId = await first.getAttribute('aria-controls');
+    expect(panelId).toBeTruthy();
+
+    await first.click();
+    await expect(first).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator(`[id="${panelId}"]`)).toBeVisible();
+
+    await first.click();
+    await expect(first).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('disclosure is keyboard operable', async ({ page }) => {
+    await page.goto('/');
+    const first = page.locator('button[aria-expanded]').first();
+
+    await first.focus();
+    await expect(first).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(first).toHaveAttribute('aria-expanded', 'true');
+
+    await page.keyboard.press('Space');
+    await expect(first).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('collapsed content is still present in the server-rendered HTML', async ({ request }) => {
+    const html = await (await request.get('/')).text();
+
+    // Buried inside collapsed Experience clusters.
+    expect(html).toContain('branch-scoped dependency cache keys');
+    // Buried inside a collapsed project card.
+    expect(html).toContain('provider-agnostic abstraction layer');
+  });
+
+  test('the arc narrative survives the collapsed state', async ({ page }) => {
+    await page.goto('/');
+
+    // The three arc projects only read as one story if the connective phrases
+    // are in the synopsis rather than hidden in the expanded body. Each phrase
+    // matches twice — the synopsis and the body paragraph it compresses — so
+    // this asserts on the synopsis, which comes first in DOM order.
+    await expect(page.getByText('So I generalized the fix').first()).toBeVisible();
+    await expect(page.getByText('And then I used it').first()).toBeVisible();
+  });
+
+  test('project expand controls have distinct accessible names', async ({ page }) => {
+    await page.goto('/');
+
+    const readMore = page.getByRole('button', { name: /Read more about/i });
+    await expect(readMore.first()).toBeVisible();
+
+    // Collected in a single evaluation rather than looping `nth(i)`: the loop
+    // form races a re-render, `getAttribute` returns null for an index that
+    // moved, and two nulls collapse into one Set entry — which failed
+    // intermittently only inside full-suite runs.
+    const names = await readMore.evaluateAll(nodes =>
+      nodes.map(n => n.getAttribute('aria-label') ?? '')
+    );
+
+    expect(names.length).toBeGreaterThan(1);
+    expect(names.every(Boolean)).toBe(true);
+    // Repeated identical "Read more" names are a known screen-reader failure.
+    expect(new Set(names).size).toBe(names.length);
+  });
+});
+
+/**
+ * Shared site identity across every route (#117 item 9).
+ *
+ * The homepage and the blog shells previously rendered two different identity
+ * blocks and drifted: the blog sidebar showed a bare "Software Engineer" with
+ * no tagline while the homepage had changed twice. They now share
+ * `SiteIdentity`, and these assertions are what keeps them from splitting again.
+ */
+test.describe('shared site identity (#117)', () => {
+  const ROUTES = ['/', '/blog', '/blog/my-tech-journey'];
+
+  for (const route of ROUTES) {
+    test(`role line and rotating tagline render on ${route}`, async ({ page }) => {
+      await page.goto(route);
+
+      await expect(page.getByText('Full Stack Software Engineer').first()).toBeVisible();
+
+      const tagline = page.locator('p[aria-live="polite"]').first();
+      await expect(tagline).toBeVisible();
+      await expect(tagline).not.toBeEmpty();
+
+      // The employer job title belongs on the Experience entry, never the
+      // role line — and "Senior" is barred on every surface (DOSSIER §3.2).
+      await expect(page.locator('body')).not.toContainText('Senior');
+    });
+  }
+
+  test('every route still has exactly one h1', async ({ page }) => {
+    for (const route of ROUTES) {
+      await page.goto(route);
+      expect(await page.locator('h1').count(), `h1 count on ${route}`).toBe(1);
+    }
+  });
 });
