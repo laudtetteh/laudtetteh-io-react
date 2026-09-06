@@ -62,8 +62,7 @@ async function fetchApiPublishedPosts(): Promise<PostData[]> {
 async function fetchPublishedPosts(): Promise<PostData[]> {
   try {
     return mergePublishedPosts(await fetchApiPublishedPosts());
-  } catch (error) {
-    console.error(error);
+  } catch {
     return mergePublishedPosts([]);
   }
 }
