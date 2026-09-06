@@ -184,8 +184,8 @@ test('contact form fields and submit button fit at mobile and sm widths', async 
 test('blog post media and prose do not overflow on mobile', async ({ page }) => {
   const errors = collectPageErrors(page);
   await page.setViewportSize({ width: 375, height: 812 });
-  const response = await page.goto('/blog/methodistcrm', { waitUntil: 'networkidle' });
-  test.skip(response?.status() === 404, 'live backend content unavailable in this environment');
+  const response = await page.goto('/blog/what-breaks-with-ai-agents', { waitUntil: 'networkidle' });
+  expect(response?.status()).toBe(200);
 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
@@ -277,7 +277,7 @@ test.describe('blog mobile site rail (#139)', () => {
     await page.goto('/blog');
 
     const firstPost = page.locator('a[href^="/blog/"]').first();
-    test.skip((await firstPost.count()) === 0, 'no posts available without a live backend');
+    await expect(firstPost).toHaveCount(1);
 
     await firstPost.click();
     await expect(page).toHaveURL(/\/blog\/.+/);

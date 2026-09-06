@@ -599,12 +599,9 @@ test.describe('shared site identity (#117)', () => {
   test('role line and rotating tagline render in post detail HTML', async ({ request }) => {
     const archiveHtml = await (await request.get('/blog')).text();
     const firstPostHref = archiveHtml.match(/href="(\/blog\/[^"]+)"/)?.[1];
-    if (!firstPostHref) {
-      test.skip(true, 'no posts available from the current content source');
-      return;
-    }
+    expect(firstPostHref).toBeTruthy();
 
-    const html = await (await request.get(firstPostHref)).text();
+    const html = await (await request.get(firstPostHref!)).text();
     expect(html).toContain('Full Stack Software Engineer');
     expect(html).toContain('Platform &amp; Web Engineering');
     expect(html).not.toContain('Senior');
