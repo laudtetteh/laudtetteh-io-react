@@ -555,23 +555,41 @@ test.describe('progressive disclosure (#116)', () => {
  * `SiteIdentity`, and these assertions are what keeps them from splitting again.
  */
 test.describe('shared site identity (#117)', () => {
-  const ROUTES = ['/', '/blog', '/blog/my-tech-journey'];
+  // `/blog/[slug]` is deliberately absent: CI has no live backend, so no post
+  // slug is guaranteed to exist there. `blog.spec.ts` established the house
+  // pattern for this — discover the route, then `test.skip` when the data
+  // isn't there. The detail-page case is covered separately below.
+  const ROUTES = ['/', '/blog'];
+
+  async function expectIdentity(page: import('@playwright/test').Page) {
+    await expect(page.getByText('Full Stack Software Engineer').first()).toBeVisible();
+
+    const tagline = page.locator('p[aria-live="polite"]').first();
+    await expect(tagline).toBeVisible();
+    await expect(tagline).not.toBeEmpty();
+
+    // The employer job title belongs on the Experience entry, never the role
+    // line — and "Senior" is barred on every surface (DOSSIER §3.2).
+    await expect(page.locator('body')).not.toContainText('Senior');
+  }
 
   for (const route of ROUTES) {
     test(`role line and rotating tagline render on ${route}`, async ({ page }) => {
       await page.goto(route);
-
-      await expect(page.getByText('Full Stack Software Engineer').first()).toBeVisible();
-
-      const tagline = page.locator('p[aria-live="polite"]').first();
-      await expect(tagline).toBeVisible();
-      await expect(tagline).not.toBeEmpty();
-
-      // The employer job title belongs on the Experience entry, never the
-      // role line — and "Senior" is barred on every surface (DOSSIER §3.2).
-      await expect(page.locator('body')).not.toContainText('Senior');
+      await expectIdentity(page);
     });
   }
+
+  test('role line and rotating tagline render on a post detail page', async ({ page }) => {
+    await page.goto('/blog');
+    const firstPost = page.locator('a[href^="/blog/"]').first();
+    const count = await firstPost.count();
+    test.skip(count === 0, 'no posts available without a live backend');
+
+    await firstPost.click();
+    await expect(page).toHaveURL(/\/blog\/.+/);
+    await expectIdentity(page);
+  });
 
   test('every route still has exactly one h1', async ({ page }) => {
     for (const route of ROUTES) {
