@@ -8,8 +8,19 @@ const initialForm = {
   website: '', // honeypot -- real users never see/fill this field
 };
 
+/**
+ * Field borders are `slate-500` in both themes, not the `slate-200`/`slate-800`
+ * used for decorative dividers elsewhere. WCAG SC 1.4.11 requires 3:1 for the
+ * visual boundary of a UI control; the divider tokens measured 1.18:1 light and
+ * 1.22:1 dark, leaving the fields effectively borderless and readable only by
+ * their fill. `slate-400`/`slate-600` were tried first and still failed at
+ * 2.56:1/2.36:1 — `slate-500` is the first value that clears 3:1 on both
+ * backgrounds. Placeholders are `slate-500`/`slate-400` for the same reason: the
+ * previous values measured 2.45:1 light and 3.75:1 dark against a 4.5:1 bar.
+ * Do not "harmonise" any of these back to the divider tokens (#110).
+ */
 const inputClasses =
-  'w-full rounded-md border border-slate-200 bg-slate-50 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 transition-colors focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-teal-400 dark:focus:ring-teal-400/30';
+  'w-full rounded-md border border-slate-500 bg-slate-50 px-4 py-2.5 text-slate-900 placeholder:text-slate-500 transition-colors focus:border-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-700/30 dark:border-slate-500 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-teal-400 dark:focus:ring-teal-400/30';
 
 const labelClasses = 'mb-1.5 block text-sm font-medium text-slate-900 dark:text-slate-100';
 
@@ -71,7 +82,7 @@ const ContactSection: React.FC = () => {
       <MobileSectionTitle title="Contact" />
       <div className="mx-auto max-w-3xl px-6">
         <div className="mb-10 sm:mb-12">
-          <p className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">Contact</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">Contact</p>
           <h2 className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">Get in Touch</h2>
           <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
             Have a project in mind, or just want to say hello? Send a message below.
@@ -166,7 +177,7 @@ const ContactSection: React.FC = () => {
               type="submit"
               id="send_message"
               disabled={status === 'loading'}
-              className="inline-flex items-center justify-center rounded-md bg-teal-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
+              className="inline-flex items-center justify-center rounded-md bg-teal-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
             >
               {status === 'loading' ? 'Sending…' : 'Send Message'}
             </button>

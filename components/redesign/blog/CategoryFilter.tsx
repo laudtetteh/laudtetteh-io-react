@@ -28,7 +28,7 @@ export default function CategoryFilter({ categories, selectedCategory }: Categor
             className={classNames(
               'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-300 ease-out motion-reduce:transition-none active:scale-95',
               isActive
-                ? 'bg-teal-600 text-white dark:bg-teal-400 dark:text-slate-900'
+                ? 'bg-teal-700 text-white dark:bg-teal-400 dark:text-slate-900'
                 : 'bg-teal-600/10 text-teal-700 hover:bg-teal-600/20 dark:bg-teal-400/10 dark:text-teal-300 dark:hover:bg-teal-400/20'
             )}
           >

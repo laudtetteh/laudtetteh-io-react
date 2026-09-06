@@ -140,8 +140,8 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                   aria-pressed={activeCategory === filter.id}
                   className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300 ease-out motion-reduce:transition-none active:scale-95 ${
                     activeCategory === filter.id
-                      ? 'border-teal-600 bg-teal-600 text-white dark:border-teal-400 dark:bg-teal-400 dark:text-slate-900'
-                      : 'border-slate-200 text-slate-600 hover:border-teal-600/40 hover:text-teal-600 dark:border-slate-800 dark:text-slate-400 dark:hover:border-teal-400/40 dark:hover:text-teal-400'
+                      ? 'border-teal-600 bg-teal-700 text-white dark:border-teal-400 dark:bg-teal-400 dark:text-slate-900'
+                      : 'border-slate-200 text-slate-600 hover:border-teal-600/40 hover:text-teal-700 dark:border-slate-800 dark:text-slate-400 dark:hover:border-teal-400/40 dark:hover:text-teal-400'
                   }`}
                 >
                   {filter.label}
@@ -156,7 +156,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                     key={repo.id}
                     className="group flex min-h-56 flex-col rounded-md border border-slate-200 bg-white/80 p-5 shadow-sm shadow-slate-200/40 transition-colors hover:border-teal-600/40 dark:border-slate-800 dark:bg-slate-900/50 dark:shadow-black/10 dark:hover:border-teal-400/40"
                   >
-                    <div className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-500">
+                    <div className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                       <span>{getPrimaryTopic(repo)}</span>
                       <span>{repo.language || formatUpdatedDate(repo.updated_at)}</span>
                     </div>
@@ -167,7 +167,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                           href={repo.html_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="transition-colors hover:text-teal-600 dark:hover:text-teal-400"
+                          className="transition-colors hover:text-teal-700 dark:hover:text-teal-400"
                         >
                           {formatRepoName(repo.name)}
                         </a>
@@ -177,7 +177,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Open ${formatRepoName(repo.name)} on GitHub`}
-                        className="shrink-0 text-slate-400 transition-colors hover:text-teal-600 dark:text-slate-500 dark:hover:text-teal-400"
+                        className="shrink-0 text-slate-500 transition-colors hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-400"
                       >
                         <ExternalLinkIcon />
                       </a>
@@ -218,7 +218,7 @@ const SandboxSection: React.FC<SandboxSectionProps> = ({ repos }) => {
               href="https://github.com/laudtetteh"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-teal-600 underline underline-offset-2 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
+              className="font-medium text-teal-700 underline underline-offset-2 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
             >
               github.com/laudtetteh
             </a>{' '}

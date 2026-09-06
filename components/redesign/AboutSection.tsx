@@ -97,7 +97,7 @@ export default function AboutSection() {
     >
       <MobileSectionTitle title="About" />
       <div className="mx-auto max-w-3xl px-6 sm:px-10 lg:px-16">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
           About
         </h2>
 
@@ -141,7 +141,7 @@ export default function AboutSection() {
                 {item.href ? (
                   <a
                     href={item.href}
-                    className="text-teal-600 underline-offset-4 hover:underline dark:text-teal-400"
+                    className="text-teal-700 underline-offset-4 hover:underline dark:text-teal-400"
                   >
                     {item.value}
                   </a>
@@ -156,14 +156,14 @@ export default function AboutSection() {
         <a
           href={CV_HREF}
           download
-          className="mt-8 inline-flex items-center gap-2 rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-600 transition-colors hover:bg-teal-600 hover:text-slate-50 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
+          className="mt-8 inline-flex items-center gap-2 rounded-md border border-teal-600 px-4 py-2 text-sm font-semibold text-teal-700 transition-colors hover:bg-teal-700 hover:text-slate-50 dark:border-teal-400 dark:text-teal-400 dark:hover:bg-teal-400 dark:hover:text-slate-900"
         >
           Download CV
         </a>
 
         {/* Skills */}
         <div className="mt-14 border-t border-slate-200 pt-8 dark:border-slate-800">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-600 dark:text-teal-400">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
             Skills
           </h3>
 
