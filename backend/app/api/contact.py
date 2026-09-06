@@ -51,15 +51,19 @@ async def submit_contact(data: ContactSubmission, request: Request):
         )
 
     logger.info(f"📨 Contact form submission received from {client_ip}")
+    # Submitter address stays at DEBUG only. The success and failure lines below
+    # deliberately omit it: those run at INFO, land in a file, and that file was
+    # tracked in git for over a year before anyone noticed (#120). Keep personal
+    # data out of the log level that is on by default.
     logger.debug(f"Contact form data: Name={data.name}, Email={data.email}")
 
     try:
         success = send_contact_email(data.name, data.email, data.message)
         if success:
-            logger.info(f"✅ Successfully sent contact email for {data.email}")
+            logger.info("✅ Contact email sent successfully")
             return {"message": "✅ Message received and email sent. Thank you!"}
         else:
-            logger.error(f"❌ Failed to send contact email for {data.email}")
+            logger.error("❌ Failed to send contact email — see the Resend service log for detail")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to send email"
