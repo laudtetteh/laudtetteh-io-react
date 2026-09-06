@@ -14,6 +14,7 @@ import os
 from api.blog import router as blog_router
 from api.blog import set_categories_collection, set_posts_collection
 from api.contact import router as contact_router
+from api.contact import set_submissions_collection
 from api.s3 import router as upload_router
 from core.auth import ADMIN_PASSWORD, ADMIN_USERNAME, Token, create_access_token
 from core.db import connect_to_mongo, get_db
@@ -61,6 +62,7 @@ async def startup_event():
     db = get_db()
     set_posts_collection(db["posts"])
     set_categories_collection(db["categories"])
+    set_submissions_collection(db["contact_submissions"])
     logger.info("Database connections established")
 
 # ----------------------
