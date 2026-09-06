@@ -49,7 +49,7 @@ test('about section renders real bio content in initial HTML', async ({ page }) 
   await page.goto('/');
   const about = page.locator('#about');
   await expect(about).toContainText('Laud Tetteh');
-  await expect(about).toContainText('Download CV');
+  await expect(about.getByRole('link', { name: 'Download CV' })).toHaveCount(0);
   // One stable bio assertion so this test still verifies copy, not just
   // structure. "12 years" is a dossier-fixed value (§4.3), not styling.
   await expect(about).toContainText('12 years');

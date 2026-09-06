@@ -4,6 +4,7 @@ import RedesignLayout from '../components/redesign/RedesignLayout';
 import Seo from '../components/Seo';
 import { PostData } from '../types/blog';
 import { getLatestPosts } from '../lib/blog';
+import { getPublicCv, getPublicCvHref } from '../lib/cv';
 
 const LATEST_POSTS_COUNT = 4;
 // Keep the Writing section close to admin/API content changes. Content-only
@@ -12,6 +13,7 @@ const POSTS_REVALIDATE_SECONDS = 60;
 
 interface HomePageProps {
   posts: PostData[];
+  cvHref: string | null;
 }
 
 // Deliberately does NOT use `components/Layout.tsx`; the redesign owns its
@@ -21,18 +23,19 @@ interface HomePageProps {
 // comment in `RedesignLayout.tsx` for why, and #108 for restoring them.
 // `lib/github.ts` and `components/redesign/SandboxSection.tsx` are intentionally
 // left in place and unmodified so that restoration is additive.
-const HomePage: React.FC<HomePageProps> = ({ posts }) => (
+const HomePage: React.FC<HomePageProps> = ({ posts, cvHref }) => (
   <>
     <Seo
       title="Laud Tetteh | Full Stack Software Engineer"
       description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
     />
-    <RedesignLayout posts={posts} />
+    <RedesignLayout posts={posts} cvHref={cvHref} />
   </>
 );
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   let posts: PostData[] = [];
+  let cvHref: string | null = null;
 
   try {
     posts = await getLatestPosts(LATEST_POSTS_COUNT);
@@ -42,8 +45,14 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
     console.error(error);
   }
 
+  try {
+    cvHref = getPublicCvHref(await getPublicCv());
+  } catch (error) {
+    console.error(error);
+  }
+
   return {
-    props: { posts },
+    props: { posts, cvHref },
     revalidate: POSTS_REVALIDATE_SECONDS,
   };
 };

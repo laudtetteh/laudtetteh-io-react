@@ -23,7 +23,13 @@ import Layout from '@/components/Layout';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { inter } from '@/lib/fonts';
-import { inputClasses, primaryButtonClasses, dangerButtonClasses, cardClasses } from '@/components/admin/adminStyles';
+import {
+  cardClasses,
+  dangerButtonClasses,
+  inputClasses,
+  primaryButtonClasses,
+  secondaryButtonClasses,
+} from '@/components/admin/adminStyles';
 
 interface BlogPost {
   title: string;
@@ -393,14 +399,22 @@ export default function AdminDashboard() {
   return (
     <Layout title="Admin Dashboard | Laud Tetteh" description="Admin dashboard for managing blog posts and site content.">
       <div className={`${inter.variable} font-inter max-w-6xl mx-auto py-12 px-6 bg-slate-50`}>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
           <h1 className="font-inter text-3xl font-semibold text-slate-900">Admin Dashboard</h1>
-          <button
-            onClick={() => router.push("/admin/create")}
-            className={primaryButtonClasses}
-          >
-            + New Post
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => router.push("/admin/cv")}
+              className={secondaryButtonClasses}
+            >
+              CV Upload
+            </button>
+            <button
+              onClick={() => router.push("/admin/create")}
+              className={primaryButtonClasses}
+            >
+              + New Post
+            </button>
+          </div>
         </div>
 
         {/* Bulk Actions Bar */}
