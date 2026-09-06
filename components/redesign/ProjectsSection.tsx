@@ -269,10 +269,11 @@ export default function ProjectsSection() {
         {/* The arc. The intro line is what makes these three read as one story. */}
         <div className="mt-14">
           <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
-            I built a thing, hit a wall, built the fix, then used it
+            I built a thing, hit a wall, then turned the wall into tooling
           </h3>
           <p className="mt-2 text-sm text-slate-700 dark:text-slate-400">
-            These three are one story, in order.
+            These three are one story, in order. The wall is the interesting part — everything I
+            build now runs on what came out of it, including the work I do at my day job.
           </p>
           <ul className="group/list mt-6 space-y-5 border-l border-slate-200 pl-4 dark:border-slate-800">
             {arcProjects.map(project => (
@@ -285,6 +286,10 @@ export default function ProjectsSection() {
           <h3 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
             The counterweight
           </h3>
+          <p className="mt-2 text-sm text-slate-700 dark:text-slate-400">
+            Every engineer is quietly being asked the same question in 2026: is the person good,
+            or is the tooling good? Here is 2019, when there was no tooling.
+          </p>
           <ul className="group/list mt-6 space-y-5">
             <ProjectCard project={counterweightProject} headingLevel={4} />
           </ul>
