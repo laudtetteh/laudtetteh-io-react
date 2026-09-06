@@ -3,10 +3,9 @@ import { test, expect } from '@playwright/test';
 /**
  * Coverage for #60: `/blog` and `/blog/[slug]` picking up the redesign
  * system (BlogLayout/BlogSidebar) instead of the legacy jQuery theme.
- * CI has no live backend (`API_SERVER` points at a Docker-internal
- * address), so archive/category assertions mirror the "both valid
- * outcomes" pattern already established in redesign.spec.ts's writing
- * section test — real cards locally, graceful empty state in CI.
+ * CI has no live backend, but the public archive has repo-backed static posts.
+ * These assertions therefore exercise the real archive and category flows in
+ * CI while API-backed posts remain optional enrichment.
  */
 
 test('blog archive renders with zero console errors', async ({ page }) => {
@@ -22,21 +21,17 @@ test('blog archive renders with zero console errors', async ({ page }) => {
   expect(consoleErrors).toEqual([]);
 });
 
-test('blog archive shows real post cards or the graceful empty state', async ({ page }) => {
+test('blog archive shows the repo-backed post cards', async ({ page }) => {
   await page.goto('/blog', { waitUntil: 'domcontentloaded' });
   const cardCount = await page.locator('article').count();
-  if (cardCount > 0) {
-    await expect(page.locator('article').first()).toBeVisible();
-  } else {
-    await expect(page.getByText('No posts available yet.')).toBeVisible();
-  }
+  expect(cardCount).toBeGreaterThanOrEqual(3);
+  await expect(page.locator('article').first()).toBeVisible();
 });
 
 test('category filter link updates the URL and re-filters', async ({ page }) => {
   await page.goto('/blog', { waitUntil: 'domcontentloaded' });
   const categoryLinks = page.locator('a[href^="/blog?category="]');
-  const count = await categoryLinks.count();
-  test.skip(count === 0, 'no categories available without a live backend');
+  expect(await categoryLinks.count()).toBeGreaterThan(0);
 
   const firstCategory = categoryLinks.first();
   const href = await firstCategory.getAttribute('href');
@@ -73,8 +68,7 @@ test('switching category filter resets pagination back to page 1', async ({ page
 test('archive results fade in on filter click rather than snapping instantly', async ({ page }) => {
   await page.goto('/blog', { waitUntil: 'domcontentloaded' });
   const categoryLinks = page.locator('a[href^="/blog?category="]');
-  const count = await categoryLinks.count();
-  test.skip(count === 0, 'no categories available without a live backend');
+  expect(await categoryLinks.count()).toBeGreaterThan(0);
 
   const results = page.locator('main .animate-fade-in').first();
   await expect(results).toBeVisible();
