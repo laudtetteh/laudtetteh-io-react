@@ -573,6 +573,10 @@ test.describe('shared site identity (#117)', () => {
   const ROUTES = ['/', '/blog'];
 
   async function expectIdentity(page: import('@playwright/test').Page) {
+    const portrait = page.getByRole('img', { name: 'Portrait of Laud Tetteh' });
+    await expect(portrait).toBeVisible();
+    await expect(portrait).toHaveAttribute('src', /laud-tetteh/);
+
     await expect(page.locator('#header p', { hasText: 'Full Stack Software Engineer' })).toBeVisible();
 
     const tagline = page.locator('p[aria-live="polite"]').first();
