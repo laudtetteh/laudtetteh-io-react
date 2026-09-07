@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Image from 'next/image';
 
 import { ThemeToggle } from './ThemeToggle';
 import SiteIdentity from './SiteIdentity';
@@ -41,8 +42,23 @@ export default function Header(): React.ReactElement {
       <MobileSectionRail items={NAV_ITEMS} activeId={activeSectionId} />
 
     <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
-      <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
-        <SiteIdentity nameAs="h1" nameHref="#header" />
+      <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:px-0 lg:pt-0">
+        <div className="flex min-w-0 items-start gap-4">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700 sm:h-24 sm:w-24 lg:h-28 lg:w-28">
+            <Image
+              src="/images/profile/laud-tetteh-avatar.jpeg"
+              alt="Portrait of Laud Tetteh"
+              fill
+              priority
+              sizes="(min-width: 1024px) 112px, 96px"
+              className="object-cover"
+            />
+          </div>
+
+          <div className="min-w-0 pt-1">
+            <SiteIdentity nameAs="h1" nameHref="#header" />
+          </div>
+        </div>
 
         <div className="lg:hidden">
           <ThemeToggle />
