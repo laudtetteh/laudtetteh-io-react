@@ -155,7 +155,7 @@ export default function AboutSection({ cvHref }: AboutSectionProps) {
           <p>
             On my own time, the same habit turned a brittle AI-agent workflow into reusable
             guardrails for real projects, including the work I do for a living. That&apos;s the
-            shape of it: build the thing, find where it breaks, then <strong className={emphasisClasses}>fix the class of problem</strong>
+            shape of it: build the thing, find where it breaks, then <strong className={emphasisClasses}>fix the class of problem</strong>{' '}
             rather than the instance.
           </p>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -40,16 +40,21 @@ export default function AdminCv() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [confirmedNoPhone, setConfirmedNoPhone] = useState(false);
   const [error, setError] = useState("");
+  const [linksEnabled, setLinksEnabled] = useState(true);
+  const [linksLoaded, setLinksLoaded] = useState(false);
+  const [savingLinks, setSavingLinks] = useState(false);
+  const [linksMessage, setLinksMessage] = useState("");
+  const [linksError, setLinksError] = useState("");
 
   const currentVersion = versions.find(version => version.is_current);
 
-  const redirectToLogin = () => {
+  const redirectToLogin = useCallback(() => {
     localStorage.removeItem("token");
     const encodedPath = encodeURIComponent(router.asPath);
     router.replace(`/admin/login?redirect-to=${encodedPath}`);
-  };
+  }, [router]);
 
-  const fetchVersions = async () => {
+  const fetchVersions = useCallback(async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     setLoading(true);
@@ -68,13 +73,64 @@ export default function AdminCv() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [redirectToLogin]);
+
+  const fetchLinksSetting = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/settings/cv-links`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 401) {
+        redirectToLogin();
+        return;
+      }
+      if (!res.ok) throw new Error("Failed to load CV link visibility.");
+      const data = await res.json();
+      setLinksEnabled(data.enabled !== false);
+      setLinksLoaded(true);
+    } catch (err) {
+      setLinksError(err instanceof Error ? err.message : "Failed to load CV link visibility.");
+      setLinksLoaded(true);
+    }
+  }, [redirectToLogin]);
 
   useEffect(() => {
     if (!isCheckingAuth) {
       fetchVersions();
+      fetchLinksSetting();
     }
-  }, [isCheckingAuth]);
+  }, [fetchLinksSetting, fetchVersions, isCheckingAuth]);
+
+  const saveLinksSetting = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    setSavingLinks(true);
+    setLinksMessage("");
+    setLinksError("");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/settings/cv-links`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ enabled: linksEnabled }),
+      });
+      if (res.status === 401) {
+        redirectToLogin();
+        return;
+      }
+      if (!res.ok) throw new Error("Failed to save CV link visibility.");
+      setLinksMessage("CV link visibility saved.");
+    } catch (err) {
+      setLinksError(err instanceof Error ? err.message : "Failed to save CV link visibility.");
+    } finally {
+      setSavingLinks(false);
+    }
+  };
 
   const validateFile = (file: File) => {
     if (file.type !== "application/pdf" || !file.name.toLowerCase().endsWith(".pdf")) {
@@ -221,6 +277,37 @@ export default function AdminCv() {
               No current CV is published. The public About button will stay hidden.
             </p>
           )}
+
+          <div className="mt-6 border-t border-slate-200 pt-6">
+            <div className="flex flex-wrap items-start justify-between gap-6">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900">Public CV links</h3>
+                <p className="mt-1 max-w-xl text-sm text-slate-600">
+                  Show or hide both public CV links without removing the retained file.
+                </p>
+              </div>
+              <label className="inline-flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-900">
+                <input
+                  type="checkbox"
+                  aria-label="Show public CV links"
+                  checked={linksEnabled}
+                  disabled={!linksLoaded || savingLinks}
+                  onChange={event => setLinksEnabled(event.target.checked)}
+                  className="h-5 w-5 accent-teal-600"
+                />
+                Show links
+              </label>
+            </div>
+            {linksError && <p className="mt-4 text-sm font-medium text-red-600">{linksError}</p>}
+            {linksMessage && <p className="mt-4 text-sm font-medium text-teal-700">{linksMessage}</p>}
+            <button
+              onClick={saveLinksSetting}
+              disabled={!linksLoaded || savingLinks}
+              className={`${primaryButtonClasses} mt-4`}
+            >
+              {savingLinks ? "Saving..." : "Save visibility"}
+            </button>
+          </div>
         </section>
 
         <section className={`${cardClasses} p-6`}>
