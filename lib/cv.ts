@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/utils/api';
 
 export interface PublicCv {
@@ -46,6 +47,28 @@ export async function getPublicCvLinksEnabled(): Promise<boolean> {
   } catch {
     return true;
   }
+}
+
+/**
+ * Re-checks the public visibility flag in the browser because the homepage
+ * itself is statically generated and can otherwise retain an old decision.
+ */
+export function usePublicCvHref(initialHref: string | null): string | null {
+  const [visibleHref, setVisibleHref] = useState(initialHref);
+
+  useEffect(() => {
+    let mounted = true;
+
+    getPublicCvLinksEnabled().then(linksEnabled => {
+      if (mounted) setVisibleHref(linksEnabled ? initialHref : null);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [initialHref]);
+
+  return visibleHref;
 }
 
 export function getPublicCvHref(cv: PublicCv | null, linksEnabled = true): string | null {
