@@ -42,32 +42,26 @@ export default function Header(): React.ReactElement {
       <MobileSectionRail items={NAV_ITEMS} activeId={activeSectionId} />
 
     <header id="header" className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
-      <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:px-0 lg:pt-0">
-        <div className="flex min-w-0 items-start gap-4">
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700 sm:h-24 sm:w-24 lg:h-28 lg:w-28">
-            <Image
-              src="/images/profile/laud-tetteh-avatar.jpeg"
-              alt="Portrait of Laud Tetteh"
-              fill
-              priority
-              sizes="(min-width: 1024px) 112px, 96px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="min-w-0 pt-1">
-            <SiteIdentity nameAs="h1" nameHref="#header" />
-          </div>
+      <div className="flex flex-col gap-4 pt-8 lg:flex-row lg:items-start lg:gap-4 lg:pt-0">
+        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700 sm:h-20 sm:w-20 lg:h-28 lg:w-28">
+          <Image
+            src="/images/profile/laud-tetteh-avatar.jpeg"
+            alt="Portrait of Laud Tetteh"
+            fill
+            priority
+            sizes="(min-width: 1024px) 112px, 80px"
+            className="object-cover"
+          />
         </div>
 
-        <div className="lg:hidden">
-          <ThemeToggle />
+        <div className="min-w-0 lg:pt-1">
+          <SiteIdentity nameAs="h1" nameHref="#header" />
         </div>
       </div>
 
       {/* Desktop only — the mobile equivalent is <MobileSectionRail>, which
           stays visible while the stacked sidebar scrolls away (#119). */}
-      <nav aria-label="In-page" className="mt-10 hidden px-6 lg:mt-0 lg:block lg:px-0">
+      <nav aria-label="In-page" className="mt-10 hidden lg:mt-0 lg:block">
         <ul className="flex flex-wrap gap-x-6 gap-y-2 lg:block lg:space-y-1">
           {NAV_ITEMS.map(item => {
             const isActive = activeSectionId === item.id;
@@ -97,7 +91,7 @@ export default function Header(): React.ReactElement {
         </ul>
       </nav>
 
-      <div className="mt-10 flex items-center gap-5 px-6 pb-10 lg:mt-0 lg:px-0 lg:pb-0">
+      <div className="mt-8 flex items-center gap-5 pb-8 lg:mt-0 lg:pb-0">
         <ul className="flex items-center gap-4">
           {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
             <li key={label}>
@@ -114,6 +108,9 @@ export default function Header(): React.ReactElement {
           ))}
         </ul>
 
+        <div className="lg:hidden">
+          <ThemeToggle />
+        </div>
         <div className="hidden lg:block">
           <ThemeToggle />
         </div>

@@ -48,15 +48,11 @@ export default function BlogSidebar(): React.ReactElement {
       />
 
       <header className="bg-slate-50 dark:bg-slate-900 lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
-        <div className="flex items-start justify-between gap-4 px-6 pt-10 lg:block lg:px-0 lg:pt-0">
+        <div className="pt-8 lg:pt-0">
           <SiteIdentity nameAs="p" nameHref="/" />
-
-          <div className="lg:hidden">
-            <ThemeToggle />
-          </div>
         </div>
 
-        <nav aria-label="Site" className="mt-10 px-6 lg:mt-0 lg:px-0">
+        <nav aria-label="Site" className="mt-10 lg:mt-0">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 lg:block lg:space-y-1">
             {NAV_ITEMS.map(item => {
               const isActive = item.href === activeHref;
@@ -86,7 +82,7 @@ export default function BlogSidebar(): React.ReactElement {
           </ul>
         </nav>
 
-        <div className="mt-10 flex items-center gap-5 px-6 pb-10 lg:mt-0 lg:px-0 lg:pb-0">
+        <div className="mt-8 flex items-center gap-5 pb-8 lg:mt-0 lg:pb-0">
           <ul className="flex items-center gap-4">
             {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
               <li key={label}>
@@ -103,6 +99,9 @@ export default function BlogSidebar(): React.ReactElement {
             ))}
           </ul>
 
+          <div className="lg:hidden">
+            <ThemeToggle />
+          </div>
           <div className="hidden lg:block">
             <ThemeToggle />
           </div>

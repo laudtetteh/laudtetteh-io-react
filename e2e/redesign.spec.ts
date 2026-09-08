@@ -268,6 +268,26 @@ test('header stacks within viewport width on mobile', async ({ page }) => {
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
 });
 
+test('mobile identity is compact and section labels are not duplicated (#157)', async ({ page }) => {
+  for (const width of [320, 375, 417]) {
+    await page.setViewportSize({ width, height: 812 });
+    await page.goto('/');
+
+    const header = page.locator('#header');
+    const nameBox = await header.locator('h1').boundingBox();
+    const taglineBox = await header.locator('p[aria-live="polite"]').boundingBox();
+    expect(nameBox?.height, `name wrapped unexpectedly at ${width}px`).toBeLessThanOrEqual(40);
+    expect(taglineBox?.width, `tagline is too constrained at ${width}px`).toBeGreaterThan(240);
+    await expect(header.locator('button[aria-label*="Switch to"]:visible')).toHaveCount(1);
+
+    for (const sectionId of ['about', 'experience', 'projects', 'writing', 'contact']) {
+      const section = page.locator(`#${sectionId}`);
+      await expect(section.locator('[data-mobile-section-title]')).toHaveCount(1);
+      await expect(section.locator('[data-mobile-section-title]')).toBeVisible();
+    }
+  }
+});
+
 test('two-column shell splits header and main side by side at desktop width (#48)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');

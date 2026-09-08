@@ -261,7 +261,7 @@ export default function ProjectsSection() {
     >
       <MobileSectionTitle title="Projects" />
       <div className="mx-auto max-w-4xl">
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
+        <h2 className="sr-only text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl lg:not-sr-only">
           Projects
         </h2>
 

@@ -57,7 +57,7 @@ export default function RedesignLayout({ posts, cvHref }: RedesignLayoutProps) {
         <div className="lg:flex lg:justify-between lg:gap-4">
           <Header />
 
-          <main id="content" className="pt-24 lg:w-[52%] lg:py-24">
+          <main id="content" className="pt-12 lg:w-[52%] lg:py-24">
             <AboutSection cvHref={cvHref} />
             <ExperienceSection cvHref={cvHref} />
             <ProjectsSection />
