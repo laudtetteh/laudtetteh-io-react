@@ -50,7 +50,7 @@ interface SecondaryEntry {
   description: string;
 }
 
-/** The Pricing Calculator leads: it is the only publicly clickable thing here. */
+/** The Pricing Calculator leads; access notes distinguish public and private work. */
 const featuredProject: ProjectEntry = {
   title: 'Tableau Pricing Calculator',
   url: 'https://www.tableau.com/product-and-pricing-selector',
@@ -70,8 +70,9 @@ const arcProjects: ProjectEntry[] = [
     title: 'LaudBot',
     synopsis:
       'A production, invite-only AI agent that answers questions about my background from approved sources only, never guessing — administered entirely in-app, down to swapping the LLM provider without a redeploy.',
-    // Keep unlinked until laudtetteh/laudbot#105 refreshes the stale approved-source corpus.
-    url: '',
+    // The corpus refresh is merged; the app remains invite-only while #107
+    // completes its live probe checklist.
+    url: 'https://laudbot.laudtetteh.io',
     linkNote: 'invite only',
     paragraphs: [
       'A production, invite-only AI agent that gives approved visitors — recruiters, colleagues — a conversational way to ask about my background. It answers from approved sources only and doesn’t guess, adapts its tone and focus per invite, and is administered entirely in-app: content, modes and even the LLM provider are configurable without a redeploy. Every AI call routes through a provider-agnostic abstraction layer, so swapping providers doesn’t touch business logic. Two-role JWT auth keeps visitor and admin strictly separate. I wrote the product requirements and architecture documents before I wrote any code.',
@@ -94,6 +95,7 @@ const arcProjects: ProjectEntry[] = [
     synopsis:
       'And then I used it. A production e-commerce platform in Ghana that I designed, built and maintain — and it runs on The Rig. WhatsApp deep-link ordering, Mobile Money, dispatch-rider tracking; 540+ commits over a year.',
     url: 'https://beaconessentials.shop',
+    linkNote: 'private source repository · access on request',
     paragraphs: [
       'And then I used it. Beacon Essentials is a production e-commerce platform in Ghana that I designed, built and maintain — and it runs on The Rig. The interesting constraint was never technical: checkout had to work the way that market actually buys, which meant WhatsApp deep-link ordering with a conventional cart as fallback, Mobile Money as the primary payment rail, and order tracking built around dispatch-rider delivery. FastAPI and MongoDB on the back, Next.js on the front, a mobile workspace alongside them, all in one Turborepo monorepo; pre-signed S3 media so the API never serves binaries; Docker and GitHub Actions to deploy, with linting, tests and secret scanning enforced on every commit. 540+ commits and 450+ pull requests over a year.',
       'That last part is the real test of The Rig — it’s the framework running against software that takes money, not a framework with a README.',

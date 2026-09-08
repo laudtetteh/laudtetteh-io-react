@@ -13,8 +13,8 @@ interface InfoItem {
 
 const INFO_ITEMS: InfoItem[] = [
   { label: 'Name', value: 'Laud Tetteh' },
-  // Title is fixed by DOSSIER §3.2. Never "Senior", "Lead", "Staff", "Principal".
-  { label: 'Job', value: 'Software Engineer (MTS)' },
+  // Public positioning omits the internal level marker; never "Senior", "Lead", "Staff", "Principal".
+  { label: 'Job', value: 'Software Engineer' },
   { label: 'Location', value: 'Seattle, WA' },
   { label: 'Working at', value: 'Salesforce' },
   // Always the personal address — never the employer's (DOSSIER §15.2 item 9).
