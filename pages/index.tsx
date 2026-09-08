@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
 import RedesignLayout from '../components/redesign/RedesignLayout';
 import Seo from '../components/Seo';
@@ -23,15 +23,31 @@ interface HomePageProps {
 // comment in `RedesignLayout.tsx` for why, and #108 for restoring them.
 // `lib/github.ts` and `components/redesign/SandboxSection.tsx` are intentionally
 // left in place and unmodified so that restoration is additive.
-const HomePage: React.FC<HomePageProps> = ({ posts, cvHref }) => (
-  <>
-    <Seo
-      title="Laud Tetteh | Full Stack Software Engineer"
-      description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
-    />
-    <RedesignLayout posts={posts} cvHref={cvHref} />
-  </>
-);
+const HomePage: React.FC<HomePageProps> = ({ posts, cvHref }) => {
+  const [visibleCvHref, setVisibleCvHref] = useState(cvHref);
+
+  useEffect(() => {
+    let mounted = true;
+
+    getPublicCvLinksEnabled().then(linksEnabled => {
+      if (mounted) setVisibleCvHref(linksEnabled ? cvHref : null);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [cvHref]);
+
+  return (
+    <>
+      <Seo
+        title="Laud Tetteh | Full Stack Software Engineer"
+        description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
+      />
+      <RedesignLayout posts={posts} cvHref={visibleCvHref} />
+    </>
+  );
+};
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   let posts: PostData[] = [];

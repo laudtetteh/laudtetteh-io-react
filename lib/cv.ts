@@ -39,7 +39,7 @@ export async function getPublicCvLinksEnabled(): Promise<boolean> {
   if (!endpoint) return true;
 
   try {
-    const res = await fetch(endpoint);
+    const res = await fetch(endpoint, { cache: 'no-store' });
     if (!res.ok) return true;
     const payload = await res.json();
     return payload.enabled !== false;
