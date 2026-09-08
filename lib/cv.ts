@@ -63,8 +63,24 @@ export function usePublicCvHref(initialHref: string | null): string | null {
   useEffect(() => {
     let mounted = true;
 
-    getPublicCvLinksEnabled().then(linksEnabled => {
-      if (mounted) setVisibleHref(linksEnabled ? initialHref : null);
+    const refresh = async () => {
+      const linksEnabled = await getPublicCvLinksEnabled();
+      if (!mounted) return;
+      if (!linksEnabled) {
+        setVisibleHref(null);
+        return;
+      }
+      if (initialHref) {
+        setVisibleHref(initialHref);
+        return;
+      }
+
+      const cv = await getPublicCv();
+      if (mounted) setVisibleHref(getPublicCvHref(cv));
+    };
+
+    refresh().catch(() => {
+      if (mounted) setVisibleHref(null);
     });
 
     return () => {

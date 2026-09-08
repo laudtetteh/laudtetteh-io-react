@@ -60,4 +60,25 @@ describe('public CV link feature flag', () => {
 
     await waitFor(() => expect(screen.getByRole('link', { name: 'Download CV' })).toBeVisible());
   });
+
+  it('re-fetches CV metadata when the static page has no URL to restore', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ enabled: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => cv,
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<Harness initialHref={null} />);
+
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Download CV' })).toBeVisible());
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining('/api/cv'),
+    );
+  });
 });
