@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 
+import api.s3 as s3_api
 from api.s3 import set_cv_uploads_collection
 from core.auth import verify_token
 from httpx import ASGITransport, AsyncClient
@@ -106,8 +107,13 @@ async def test_cv_publish_requires_no_phone_confirmation():
     assert response.json()["detail"] == "Confirm the public CV does not contain a phone number"
 
 
-async def test_publishing_cv_sets_current_and_retains_previous_versions():
+async def test_publishing_cv_sets_current_and_retains_previous_versions(monkeypatch):
     app.dependency_overrides[verify_token] = _auth_override
+    monkeypatch.setattr(
+        s3_api,
+        "generate_presigned_download_url",
+        lambda key: f"https://signed.example/{key}?signature=redacted",
+    )
     collection = FakeCvCollection()
     collection.documents.append({
         "filename": "old.pdf",
@@ -148,7 +154,9 @@ async def test_publishing_cv_sets_current_and_retains_previous_versions():
     assert public_response.json()["filename"] == "Laud-Tetteh-Resume.pdf"
     assert public_response.json()["download_url"] == "/api/cv/download"
     assert redirect_response.status_code == 307
-    assert redirect_response.headers["location"] == payload["file_url"]
+    assert redirect_response.headers["location"] == (
+        "https://signed.example/cv/Laud-Tetteh-Resume_abc123.pdf?signature=redacted"
+    )
     assert len(collection.documents) == 2
     assert collection.documents[0]["is_current"] is False
     assert collection.documents[1]["is_current"] is True
@@ -156,3 +164,24 @@ async def test_publishing_cv_sets_current_and_retains_previous_versions():
         "Laud-Tetteh-Resume.pdf",
         "old.pdf",
     ]
+
+
+async def test_cv_download_rejects_invalid_stored_key():
+    collection = FakeCvCollection()
+    collection.documents.append({
+        "filename": "resume.pdf",
+        "content_type": "application/pdf",
+        "size": 1000,
+        "key": "uploads/resume.pdf",
+        "file_url": "https://bucket.example/cv/resume.pdf",
+        "uploaded_at": datetime(2026, 1, 1, tzinfo=UTC),
+        "is_current": True,
+        "phone_number_confirmed_absent": True,
+    })
+    set_cv_uploads_collection(collection)
+
+    async with await _client() as client:
+        response = await client.get("/api/cv/download")
+
+    assert response.status_code == 500
+    assert response.json()["detail"] == "Current CV has an invalid storage key"
