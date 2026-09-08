@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getPublicCvHref, usePublicCvHref } from './cv';
 
 const cv = {
@@ -12,6 +12,10 @@ const cv = {
 };
 
 describe('public CV link feature flag', () => {
+  beforeEach(() => {
+    process.env.NEXT_PUBLIC_API_BROWSER = 'https://api.example.test';
+  });
+
   it('returns the stable URL when links are enabled', () => {
     expect(getPublicCvHref(cv, true)).toMatch(/\/api\/cv\/download$/);
   });
@@ -22,6 +26,7 @@ describe('public CV link feature flag', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    delete process.env.NEXT_PUBLIC_API_BROWSER;
   });
 
   const Harness = ({ initialHref }: { initialHref: string | null }) => {

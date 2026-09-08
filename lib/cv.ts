@@ -16,8 +16,12 @@ function getPublicCvEndpoint(): string | null {
 }
 
 function getPublicCvLinksEndpoint(): string | null {
-  if (typeof window === 'undefined' && !process.env.API_SERVER) return null;
-  return `${API_BASE_URL}/api/settings/cv-links`;
+  if (typeof window === 'undefined') {
+    if (!process.env.API_SERVER) return null;
+    return `${API_BASE_URL}/api/settings/cv-links`;
+  }
+  if (!process.env.NEXT_PUBLIC_API_BROWSER) return null;
+  return `${process.env.NEXT_PUBLIC_API_BROWSER}/api/settings/cv-links`;
 }
 
 export async function getPublicCv(): Promise<PublicCv | null> {
