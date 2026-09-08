@@ -4,7 +4,7 @@ import RedesignLayout from '../components/redesign/RedesignLayout';
 import Seo from '../components/Seo';
 import { PostData } from '../types/blog';
 import { getLatestPosts } from '../lib/blog';
-import { getPublicCv, getPublicCvHref, getPublicCvLinksEnabled } from '../lib/cv';
+import { getPublicCv, getPublicCvHref, getPublicCvLinksEnabled, usePublicCvHref } from '../lib/cv';
 
 const LATEST_POSTS_COUNT = 4;
 // Keep the Writing section close to admin/API content changes. Content-only
@@ -23,15 +23,19 @@ interface HomePageProps {
 // comment in `RedesignLayout.tsx` for why, and #108 for restoring them.
 // `lib/github.ts` and `components/redesign/SandboxSection.tsx` are intentionally
 // left in place and unmodified so that restoration is additive.
-const HomePage: React.FC<HomePageProps> = ({ posts, cvHref }) => (
-  <>
-    <Seo
-      title="Laud Tetteh | Full Stack Software Engineer"
-      description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
-    />
-    <RedesignLayout posts={posts} cvHref={cvHref} />
-  </>
-);
+const HomePage: React.FC<HomePageProps> = ({ posts, cvHref }) => {
+  const visibleCvHref = usePublicCvHref(cvHref);
+
+  return (
+    <>
+      <Seo
+        title="Laud Tetteh | Full Stack Software Engineer"
+        description="Software engineer with 12 years building and operating web platforms at enterprise scale. I co-own the build, deployment and reliability automation behind a large enterprise Drupal installation — and write open-source tooling for AI-assisted development."
+      />
+      <RedesignLayout posts={posts} cvHref={visibleCvHref} />
+    </>
+  );
+};
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   let posts: PostData[] = [];
