@@ -32,14 +32,6 @@ const Footer: React.FC = () => {
         </p>
 
         <div className="flex items-center gap-6">
-          <a
-            href="#top"
-            aria-label="Back to top"
-            title="Back to top"
-            className={`${LINK_CLASSES} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-teal-400 dark:focus-visible:ring-offset-slate-900`}
-          >
-            <ArrowUpIcon />
-          </a>
           <a href={`mailto:${EMAIL}`} className={`text-sm ${LINK_CLASSES}`}>
             {EMAIL}
           </a>
@@ -69,20 +61,6 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
-
-const ArrowUpIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.75"
-    className="h-5 w-5"
-    aria-hidden="true"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m-5.5 5.5L12 5l5.5 5.5" />
-  </svg>
-);
 
 const GitHubIcon: React.FC = () => (
   <svg

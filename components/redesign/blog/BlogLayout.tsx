@@ -2,6 +2,7 @@ import React from 'react';
 
 import Seo from '@/components/Seo';
 import { inter } from '@/lib/fonts';
+import BackToTopButton from '../BackToTopButton';
 import Footer from '../Footer';
 import { useSpotlight } from '../hooks/useSpotlight';
 import BlogSidebar from './BlogSidebar';
@@ -70,6 +71,7 @@ export default function BlogLayout({
           RedesignLayout (#83). Nested inside the `lg:w-[52%]` column, this
           full-bleed footer stopped partway across the page. */}
       <Footer />
+      <BackToTopButton />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import ProjectsSection from './ProjectsSection';
 import WritingSection from './WritingSection';
 import ContactSection from './ContactSection';
 import Footer from './Footer';
+import BackToTopButton from './BackToTopButton';
 import { useSpotlight } from './hooks/useSpotlight';
 
 interface RedesignLayoutProps {
@@ -91,6 +92,7 @@ export default function RedesignLayout({ posts, cvHref }: RedesignLayoutProps) {
         <footer> as a sibling of <main> is also the more correct semantics.
       */}
       <Footer />
+      <BackToTopButton />
     </div>
   );
 }
