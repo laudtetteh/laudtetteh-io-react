@@ -70,7 +70,7 @@ export default function SiteIdentity({ nameAs, nameHref }: SiteIdentityProps) {
 
   return (
     <div>
-      <NameTag className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
+      <NameTag className="text-3xl font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
         {isAnchor ? <a href={nameHref}>Laud Tetteh</a> : <Link href={nameHref}>Laud Tetteh</Link>}
       </NameTag>
 
@@ -82,7 +82,7 @@ export default function SiteIdentity({ nameAs, nameHref }: SiteIdentityProps) {
         The rule that has not changed: never "Senior", "Lead", "Staff" or
         "Principal".
       */}
-      <p className="mt-3 text-lg font-medium tracking-tight text-slate-700 dark:text-slate-300 sm:text-xl">
+      <p className="mt-2 text-base font-medium leading-snug tracking-tight text-slate-700 dark:text-slate-300 sm:mt-3 sm:text-xl">
         Full Stack Software Engineer
       </p>
 
@@ -95,7 +95,7 @@ export default function SiteIdentity({ nameAs, nameHref }: SiteIdentityProps) {
           // 375px and above, but to 3 lines / 60px at 320px. 2.5rem was
           // enough for the 375px case only, and responsive.spec.ts tests
           // 375, so CI would not have caught the 320px shift.
-          'mt-3 min-h-[3.75rem] max-w-xs text-sm font-medium text-teal-700 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none',
+          'mt-2 min-h-[3rem] max-w-none text-sm font-medium text-teal-700 transition-opacity duration-200 dark:text-teal-400 motion-reduce:transition-none sm:mt-3 sm:min-h-[3.75rem] sm:max-w-xs',
           taglineVisible ? 'opacity-100' : 'opacity-0'
         )}
       >

@@ -17,6 +17,7 @@ export default function MobileSectionTitle({ title }: MobileSectionTitleProps) {
   return (
     <div
       aria-hidden="true"
+      data-mobile-section-title={title}
       className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-slate-50/75 px-6 py-5 backdrop-blur dark:bg-slate-900/75 md:-mx-12 md:px-12 lg:hidden"
     >
       <p className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-200">

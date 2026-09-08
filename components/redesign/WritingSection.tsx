@@ -43,7 +43,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Writing</h2>
+            <h2 className="sr-only text-3xl font-semibold text-slate-900 dark:text-slate-100 lg:not-sr-only">Writing</h2>
             {/*
               Deliberately does not imply a cadence. Two posts remain after the
               #82 content cleanup, and "Recent posts on…" read as an active blog

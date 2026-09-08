@@ -255,7 +255,7 @@ export default function ExperienceSection({ cvHref }: ExperienceSectionProps) {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <h2
             id="experience-heading"
-            className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl"
+            className="sr-only text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl lg:not-sr-only"
           >
             Experience
           </h2>

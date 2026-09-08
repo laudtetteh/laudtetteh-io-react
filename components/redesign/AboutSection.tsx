@@ -103,7 +103,7 @@ export default function AboutSection({ cvHref }: AboutSectionProps) {
     >
       <MobileSectionTitle title="About" />
       <div className="mx-auto max-w-3xl">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
+        <h2 className="sr-only text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400 lg:not-sr-only">
           About
         </h2>
 
