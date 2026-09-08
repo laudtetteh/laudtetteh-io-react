@@ -298,7 +298,7 @@ export default function ExperienceSection({ cvHref }: ExperienceSectionProps) {
                       <span>
                         {entry.title}{' '}
                         <span className="inline-flex items-center">
-                          @ {entry.company}
+                          &middot; {entry.company}
                           <ExternalLinkIcon className="ml-1 h-4 w-4 shrink-0 translate-y-px transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 motion-reduce:transition-none" />
                         </span>
                       </span>
