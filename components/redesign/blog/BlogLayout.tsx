@@ -37,6 +37,7 @@ export default function BlogLayout({
 
   return (
     <div
+      id="top"
       className={`${inter.variable} font-inter group/spotlight relative selection:bg-teal-300 selection:text-teal-900`}
     >
       <Seo title={title} description={description} path={path} type={type} imagePath={imagePath} imageAlt={imageAlt} />

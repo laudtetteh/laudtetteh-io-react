@@ -40,7 +40,7 @@ export default function WritingSection({ posts }: WritingSectionProps) {
       className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
       <MobileSectionTitle title="Writing" />
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-5xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Writing</h2>

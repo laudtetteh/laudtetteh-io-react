@@ -1,6 +1,8 @@
 import React from 'react';
 import MobileSectionTitle from './MobileSectionTitle';
 
+const emphasisClasses = 'font-medium text-slate-900 dark:text-slate-200';
+
 /** A single row in the "About" info table. */
 interface InfoItem {
   label: string;
@@ -100,7 +102,7 @@ export default function AboutSection({ cvHref }: AboutSectionProps) {
       className="mb-16 scroll-mt-16 border-b border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
       <MobileSectionTitle title="About" />
-      <div className="mx-auto max-w-3xl px-6 sm:px-10 lg:px-16">
+      <div className="mx-auto max-w-3xl">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-teal-700 dark:text-teal-400">
           About
         </h2>
@@ -135,25 +137,25 @@ export default function AboutSection({ cvHref }: AboutSectionProps) {
           as an attributed estimate); "extended" if the pricing calculator is ever
           re-mentioned here, never "built" or "rebuilt".
         */}
-        <div className="mt-6 space-y-4 text-base leading-normal text-slate-700 dark:text-slate-400">
+        <div className="mt-6 space-y-4 text-base leading-relaxed text-slate-700 dark:text-slate-400">
           <p>
             I&apos;m Laud Tetteh, a software engineer in Seattle. I started out hand-coding
-            everything, taught myself in public, and spent 12 years learning how web platforms
+            everything, taught myself in public, and spent <strong className={emphasisClasses}>12 years</strong> learning how web platforms
             actually behave — under load, under deadline, and under other people&apos;s deployment
-            mistakes. These days a lot of my work is building the scaffolding that makes AI coding
-            agents dependable on real codebases. Both halves are load-bearing: the second only
+            mistakes. These days a lot of my work is building the scaffolding that makes <strong className={emphasisClasses}>AI coding
+            agents</strong> dependable on real codebases. Both halves are load-bearing: the second only
             works because of the first.
           </p>
           <p>
             At Salesforce/Tableau I work on tableau.com — roughly 13 million visits a month
-            (Semrush estimate, 2026). I build product on it and co-own the automation underneath
-            it. I asked for the on-call rotation rather than waiting to be assigned it, then
+            (Semrush estimate, 2026). I build product on it and <strong className={emphasisClasses}>co-own the automation underneath
+            it</strong>. I asked for the <strong className={emphasisClasses}>on-call rotation</strong> rather than waiting to be assigned it, then
             contributed to the working agreement that governs it.
           </p>
           <p>
             On my own time, the same habit turned a brittle AI-agent workflow into reusable
             guardrails for real projects, including the work I do for a living. That&apos;s the
-            shape of it: build the thing, find where it breaks, then fix the class of problem
+            shape of it: build the thing, find where it breaks, then <strong className={emphasisClasses}>fix the class of problem</strong>
             rather than the instance.
           </p>
         </div>

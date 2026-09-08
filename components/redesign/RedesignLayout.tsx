@@ -35,6 +35,7 @@ export default function RedesignLayout({ posts, cvHref }: RedesignLayoutProps) {
 
   return (
     <div
+      id="top"
       className={`${inter.variable} font-inter group/spotlight relative selection:bg-teal-300 selection:text-teal-900`}
     >
       <a

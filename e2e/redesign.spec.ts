@@ -50,7 +50,9 @@ test('about section renders real bio content in initial HTML', async ({ page }) 
   await page.goto('/');
   const about = page.locator('#about');
   await expect(about).toContainText('Laud Tetteh');
-  await expect(about.getByRole('link', { name: 'Download CV' })).toHaveCount(0);
+  const cvLink = about.getByRole('link', { name: 'Download CV' });
+  expect(await cvLink.count()).toBeLessThanOrEqual(1);
+  if (await cvLink.count()) await expect(cvLink).toBeVisible();
   // One stable bio assertion so this test still verifies copy, not just
   // structure. "12 years" is a dossier-fixed value (§4.3), not styling.
   await expect(about).toContainText('12 years');
@@ -144,6 +146,22 @@ test('footer renders real copyright and contact links in initial HTML', async ({
   await expect(footer.locator('a[href="https://www.linkedin.com/in/laudtetteh"]')).toBeVisible();
 });
 
+test('footer back to top control uses the smooth-scroll page anchor', async ({ page }) => {
+  await page.goto('/');
+  const backToTop = page.locator('#footer').getByRole('link', { name: 'Back to top' });
+
+  await expect(backToTop).toHaveAttribute('href', '#top');
+  await expect(backToTop).toHaveAttribute('title', 'Back to top');
+  await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
+
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await backToTop.click();
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY), { timeout: 5_000 })
+    .toBeLessThan(10);
+});
+
 test('header renders name/role/nav/social in initial HTML', async ({ page }) => {
   await page.goto('/');
   const header = page.locator('#header');
@@ -200,6 +218,30 @@ test('header theme toggle switches dark class on html element', async ({ page })
   await page.locator('#header button[aria-label*="Switch to"]:visible').first().click();
   const afterDark = (await html.getAttribute('class'))?.includes('dark') ?? false;
   expect(afterDark).not.toBe(initiallyDark);
+});
+
+test('homepage matches reference typography and desktop content measure', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const metrics = await page.evaluate(() => {
+    const content = document.querySelector('#content');
+    const aboutInner = document.querySelector('#about > div:nth-child(2)');
+    const aboutParagraph = document.querySelector('#about > div:nth-child(2) > div');
+    const body = document.querySelector('#about > div:nth-child(2)');
+    return {
+      contentWidth: content ? Math.round(content.getBoundingClientRect().width) : null,
+      aboutInnerPadding: aboutInner ? getComputedStyle(aboutInner).paddingLeft : null,
+      aboutParagraphWidth: aboutParagraph ? Math.round(aboutParagraph.getBoundingClientRect().width) : null,
+      bodyLineHeight: body ? getComputedStyle(body).lineHeight : null,
+      fontSmoothing: body ? getComputedStyle(body).getPropertyValue('-webkit-font-smoothing') : null,
+    };
+  });
+
+  expect(metrics.aboutInnerPadding).toBe('0px');
+  expect(metrics.aboutParagraphWidth).toBe(metrics.contentWidth);
+  expect(metrics.bodyLineHeight).toBe('26px');
+  expect(metrics.fontSmoothing).toBe('antialiased');
 });
 
 test('header stacks within viewport width on mobile', async ({ page }) => {

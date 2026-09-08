@@ -260,7 +260,7 @@ export default function ProjectsSection() {
       className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
       <MobileSectionTitle title="Projects" />
-      <div className="mx-auto max-w-4xl px-6 sm:px-10 lg:px-16">
+      <div className="mx-auto max-w-4xl">
         <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
           Projects
         </h2>
