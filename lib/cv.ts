@@ -11,8 +11,12 @@ export interface PublicCv {
 }
 
 function getPublicCvEndpoint(): string | null {
-  if (typeof window === 'undefined' && !process.env.API_SERVER) return null;
-  return `${API_BASE_URL}/api/cv`;
+  if (typeof window === 'undefined') {
+    if (!process.env.API_SERVER) return null;
+    return `${API_BASE_URL}/api/cv`;
+  }
+  if (!process.env.NEXT_PUBLIC_API_BROWSER) return null;
+  return `${process.env.NEXT_PUBLIC_API_BROWSER}/api/cv`;
 }
 
 function getPublicCvLinksEndpoint(): string | null {
@@ -63,8 +67,24 @@ export function usePublicCvHref(initialHref: string | null): string | null {
   useEffect(() => {
     let mounted = true;
 
-    getPublicCvLinksEnabled().then(linksEnabled => {
-      if (mounted) setVisibleHref(linksEnabled ? initialHref : null);
+    const refresh = async () => {
+      const linksEnabled = await getPublicCvLinksEnabled();
+      if (!mounted) return;
+      if (!linksEnabled) {
+        setVisibleHref(null);
+        return;
+      }
+      if (initialHref) {
+        setVisibleHref(initialHref);
+        return;
+      }
+
+      const cv = await getPublicCv();
+      if (mounted) setVisibleHref(getPublicCvHref(cv));
+    };
+
+    refresh().catch(() => {
+      if (mounted) setVisibleHref(null);
     });
 
     return () => {

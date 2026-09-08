@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getPublicCvHref, usePublicCvHref } from './cv';
 
@@ -25,6 +25,7 @@ describe('public CV link feature flag', () => {
   });
 
   afterEach(() => {
+    cleanup();
     vi.unstubAllGlobals();
     delete process.env.NEXT_PUBLIC_API_BROWSER;
   });
@@ -59,5 +60,37 @@ describe('public CV link feature flag', () => {
     render(<Harness initialHref="https://api.example.test/api/cv/download" />);
 
     await waitFor(() => expect(screen.getByRole('link', { name: 'Download CV' })).toBeVisible());
+  });
+
+  it('re-fetches CV metadata when the static page has no URL to restore', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ enabled: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => cv,
+      });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<Harness initialHref={null} />);
+
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Download CV' })).toBeVisible());
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining('/api/cv'),
+    );
+  });
+
+  it('does not request the backend from the browser without a browser API URL', async () => {
+    delete process.env.NEXT_PUBLIC_API_BROWSER;
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<Harness initialHref={null} />);
+
+    await waitFor(() => expect(screen.getByText('Hidden')).toBeVisible());
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
