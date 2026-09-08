@@ -4,7 +4,7 @@ import RedesignLayout from '../components/redesign/RedesignLayout';
 import Seo from '../components/Seo';
 import { PostData } from '../types/blog';
 import { getLatestPosts } from '../lib/blog';
-import { getPublicCv, getPublicCvHref } from '../lib/cv';
+import { getPublicCv, getPublicCvHref, getPublicCvLinksEnabled } from '../lib/cv';
 
 const LATEST_POSTS_COUNT = 4;
 // Keep the Writing section close to admin/API content changes. Content-only
@@ -46,7 +46,11 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   }
 
   try {
-    cvHref = getPublicCvHref(await getPublicCv());
+    const [cv, linksEnabled] = await Promise.all([
+      getPublicCv(),
+      getPublicCvLinksEnabled(),
+    ]);
+    cvHref = getPublicCvHref(cv, linksEnabled);
   } catch (error) {
     console.error(error);
   }

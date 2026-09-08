@@ -14,6 +14,11 @@ function getPublicCvEndpoint(): string | null {
   return `${API_BASE_URL}/api/cv`;
 }
 
+function getPublicCvLinksEndpoint(): string | null {
+  if (typeof window === 'undefined' && !process.env.API_SERVER) return null;
+  return `${API_BASE_URL}/api/settings/cv-links`;
+}
+
 export async function getPublicCv(): Promise<PublicCv | null> {
   const endpoint = getPublicCvEndpoint();
   if (!endpoint) return null;
@@ -29,8 +34,22 @@ export async function getPublicCv(): Promise<PublicCv | null> {
   return res.json();
 }
 
-export function getPublicCvHref(cv: PublicCv | null): string | null {
-  if (!cv) return null;
+export async function getPublicCvLinksEnabled(): Promise<boolean> {
+  const endpoint = getPublicCvLinksEndpoint();
+  if (!endpoint) return true;
+
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) return true;
+    const payload = await res.json();
+    return payload.enabled !== false;
+  } catch {
+    return true;
+  }
+}
+
+export function getPublicCvHref(cv: PublicCv | null, linksEnabled = true): string | null {
+  if (!cv || !linksEnabled) return null;
   const apiBase = process.env.NEXT_PUBLIC_API_BROWSER || API_BASE_URL;
   return `${apiBase}${cv.download_url}`;
 }

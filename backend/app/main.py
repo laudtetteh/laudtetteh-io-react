@@ -17,6 +17,8 @@ from api.contact import router as contact_router
 from api.contact import set_submissions_collection
 from api.s3 import router as upload_router
 from api.s3 import set_cv_uploads_collection
+from api.settings import router as settings_router
+from api.settings import set_settings_collection
 from core.auth import ADMIN_PASSWORD, ADMIN_USERNAME, Token, create_access_token, verify_token
 from core.db import connect_to_mongo, get_db
 from core.logging import setup_logging
@@ -65,6 +67,7 @@ async def startup_event():
     set_categories_collection(db["categories"])
     set_submissions_collection(db["contact_submissions"])
     set_cv_uploads_collection(db["cv_uploads"])
+    set_settings_collection(db["site_settings"])
     logger.info("Database connections established")
 
 # ----------------------
@@ -91,6 +94,7 @@ async def log_requests(request: Request, call_next):
 # ----------------------
 app.include_router(blog_router)
 app.include_router(upload_router, prefix="/api")
+app.include_router(settings_router, prefix="/api")
 app.include_router(contact_router)
 
 # ----------------------

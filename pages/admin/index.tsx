@@ -409,6 +409,12 @@ export default function AdminDashboard() {
               CV Upload
             </button>
             <button
+              onClick={() => router.push("/admin/settings")}
+              className={secondaryButtonClasses}
+            >
+              Site Settings
+            </button>
+            <button
               onClick={() => router.push("/admin/create")}
               className={primaryButtonClasses}
             >
