@@ -65,7 +65,10 @@ test('experience section renders real work history in initial HTML', async ({ pa
   await page.goto('/');
   const experience = page.locator('#experience');
   await expect(experience).toContainText('Salesforce');
-  await expect(experience).toContainText('Software Engineer @ Salesforce');
+  await expect(experience).toContainText('Software Engineer · Salesforce');
+  const employmentHeadings = await experience.locator('h3').allTextContents();
+  expect(employmentHeadings.length).toBeGreaterThan(0);
+  expect(employmentHeadings.every(heading => !heading.includes(' @ '))).toBe(true);
   await expect(experience).toContainText('Brittani Dinsmore');
 });
 
