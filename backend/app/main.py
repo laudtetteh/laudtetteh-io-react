@@ -17,7 +17,7 @@ from api.contact import router as contact_router
 from api.contact import set_submissions_collection
 from api.s3 import router as upload_router
 from api.s3 import set_cv_uploads_collection
-from core.auth import ADMIN_PASSWORD, ADMIN_USERNAME, Token, create_access_token
+from core.auth import ADMIN_PASSWORD, ADMIN_USERNAME, Token, create_access_token, verify_token
 from core.db import connect_to_mongo, get_db
 from core.logging import setup_logging
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -113,3 +113,9 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
+
+
+@app.get("/api/admin/session", dependencies=[Depends(verify_token)])
+def admin_session():
+    """Validate the current admin JWT without loading protected business data."""
+    return {"authenticated": True}
