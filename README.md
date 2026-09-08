@@ -6,6 +6,7 @@ Production portfolio/blog for https://laudtetteh.io, with:
 - **Backend:** FastAPI (Python 3.11+)
 - **Dev Workflow:** Docker, ESLint (frontend), Ruff (backend), Playwright (e2e), GitHub Actions
 - **Production:** OVH VPS, Docker Compose, Caddy TLS via Cloudflare DNS-01
+- **Admin content controls:** Blog management, media uploads, CV publishing, and public CV-link visibility settings
 
 ---
 
@@ -131,7 +132,8 @@ laudtetteh-io-react/
 - **Production deploys** are handled by `.github/workflows/deploy-ovh.yml`, Docker Compose, and Caddy on the OVH VPS.
 - **Production deploys are manual** (`workflow_dispatch`) and target `laudtetteh.io`, `www.laudtetteh.io`, and `api.laudtetteh.io`.
 - **DigitalOcean staging is retired.** `.github/workflows/deploy.yml` was reduced to a `workflow_dispatch` tombstone by PR #100 — it no longer deploys on push to `main` and no longer deploys anywhere. `dev.laudtetteh.io` / `api.dev.laudtetteh.io` return 502. The droplet, DNS records, secrets, and billing are still pending removal under #85.
-- **Secrets** (env vars, SSH keys) are managed via GitHub Secrets.
+- **Deployment credentials** (SSH host/user/key) are managed via GitHub Secrets. OVH runtime
+  environment variables stay in the VPS `.env` and are not written by CI.
 - **Production stack:**
   - `docker-compose.prod.yml` builds `web`, `api`, and `caddy`.
   - Caddy terminates TLS and reverse-proxies apex/`www` to `web:3000` and `api.laudtetteh.io` to `api:8000`.

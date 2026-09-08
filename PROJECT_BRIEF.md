@@ -47,7 +47,7 @@ These are live in the codebase and functional unless noted:
 - [ ] Contact form abuse protection beyond rate limiting — client-side captcha/Turnstile is not shipped
 - [x] JWT auth — single admin login; token stored in localStorage; protected admin routes
 - [x] Tiptap rich text editor — client-side WYSIWYG for blog post body
-- [x] CV download — `/docs/cv/Laud-Tetteh-Resume-2026.pdf` linked from the About section and from Experience. Phone-free variant of the 2026 résumé; the 2024 `Laud-Tetteh-Resume.pdf` is retired and no longer linked
+- [x] CV download — admin-managed, phone-free CV published to S3 with Mongo metadata and served through the stable `/api/cv/download` endpoint. About and Experience link to the current published version and hide the link when no version is active; visibility is controlled by the admin site-settings feature flag (#162).
 
 ---
 
