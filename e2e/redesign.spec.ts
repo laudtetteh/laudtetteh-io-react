@@ -146,16 +146,23 @@ test('footer renders real copyright and contact links in initial HTML', async ({
   await expect(footer.locator('a[href="https://www.linkedin.com/in/laudtetteh"]')).toBeVisible();
 });
 
-test('footer back to top control uses the smooth-scroll page anchor', async ({ page }) => {
+test('floating back to top control appears after scrolling and returns smoothly', async ({ page }) => {
   await page.goto('/');
-  const backToTop = page.locator('#footer').getByRole('link', { name: 'Back to top' });
+  // The control is intentionally aria-hidden before the scroll threshold, so
+  // use its stable DOM label for the hidden-state assertion below.
+  const backToTop = page.locator('button[aria-label="Back to top"]');
 
-  await expect(backToTop).toHaveAttribute('href', '#top');
   await expect(backToTop).toHaveAttribute('title', 'Back to top');
+  await expect(backToTop).toHaveAttribute('aria-hidden', 'true');
+  await expect(backToTop).toHaveAttribute('tabindex', '-1');
   await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
 
-  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await page.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' }));
+  await expect(backToTop).toHaveAttribute('aria-hidden', 'false');
+  await expect(backToTop).toHaveAttribute('tabindex', '0');
+  await expect(backToTop).toBeVisible();
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.querySelector('button[aria-label="Back to top"]')!).position)).toBe('fixed');
+
   await backToTop.click();
   await expect
     .poll(() => page.evaluate(() => window.scrollY), { timeout: 5_000 })
