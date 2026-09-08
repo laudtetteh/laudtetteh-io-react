@@ -11,8 +11,12 @@ export interface PublicCv {
 }
 
 function getPublicCvEndpoint(): string | null {
-  if (typeof window === 'undefined' && !process.env.API_SERVER) return null;
-  return `${API_BASE_URL}/api/cv`;
+  if (typeof window === 'undefined') {
+    if (!process.env.API_SERVER) return null;
+    return `${API_BASE_URL}/api/cv`;
+  }
+  if (!process.env.NEXT_PUBLIC_API_BROWSER) return null;
+  return `${process.env.NEXT_PUBLIC_API_BROWSER}/api/cv`;
 }
 
 function getPublicCvLinksEndpoint(): string | null {
