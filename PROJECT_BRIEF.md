@@ -10,13 +10,14 @@
 
 **One-liner:** Laud Tetteh's personal portfolio and blog — a public-facing site that communicates professional identity, showcases work, and shares technical writing.
 
-**Problem statement:** Laud needed a professional online presence that accurately reflects his scope and level (Software Engineer (MTS) at Salesforce) and serves as the landing page for recruiters, hiring managers, and the broader tech community. Off-the-shelf portfolio platforms don't allow the level of control or custom functionality required.
+**Problem statement:** Laud needed a professional online presence that accurately reflects his scope as a Software Engineer at Salesforce and serves as the landing page for recruiters, hiring managers, and the broader tech community. Off-the-shelf portfolio platforms don't allow the level of control or custom functionality required.
 
-> ⚠️ **Public title:** `Software Engineer (MTS)`. Never write "Senior", "Lead", "Staff", or
-> "Principal" in reference to the Salesforce role on any public surface. Binding rule from
-> `$RIG_DIR/docs/career/DOSSIER.md` §3.
+> ⚠️ **Public title:** `Software Engineer`. The internal Salesforce level marker stays in
+> private career source material and is disclosed when required. Never write "Senior", "Lead",
+> "Staff", or "Principal" in reference to the Salesforce role on any public surface.
+> Binding rule from `$RIG_DIR/docs/career/DOSSIER.md` §3.
 
-**Solution:** A custom full-stack portfolio site with a self-hosted blog CMS, GitHub project showcase, contact form, and a private admin panel for content management. Everything is owned and deployed by Laud, with no third-party CMS dependency.
+**Solution:** A custom full-stack portfolio site with a self-hosted blog CMS, a project showcase that distinguishes public The Rig from private LaudBot and Beacon Essentials work, contact form, and a private admin panel for content management. Everything is owned and deployed by Laud, with no third-party CMS dependency.
 
 ---
 

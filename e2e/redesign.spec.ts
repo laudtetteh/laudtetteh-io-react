@@ -63,6 +63,7 @@ test('experience section renders real work history in initial HTML', async ({ pa
   await page.goto('/');
   const experience = page.locator('#experience');
   await expect(experience).toContainText('Salesforce');
+  await expect(experience).toContainText('Software Engineer @ Salesforce');
   await expect(experience).toContainText('Brittani Dinsmore');
 });
 
@@ -71,10 +72,12 @@ test('projects section renders real case-study cards in initial HTML', async ({ 
   const projects = page.locator('#projects');
   await expect(projects).toContainText('MethodistCRM');
   // Projects is a text-forward list by design (#101) — no thumbnails. The
-  // Pricing Calculator is the lead entry and the only publicly clickable one.
+  // Pricing Calculator leads; LaudBot is linked but remains invite-only.
   await expect(
     projects.locator('a[href="https://www.tableau.com/product-and-pricing-selector"]')
   ).toBeVisible();
+  await expect(projects.locator('a[href="https://laudbot.laudtetteh.io"]')).toBeVisible();
+  await expect(projects).toContainText('private source repository · access on request');
 });
 
 // The two Sandbox tests that lived here were removed in #101 along with the
@@ -145,15 +148,15 @@ test('header renders name/role/nav/social in initial HTML', async ({ page }) => 
   await page.goto('/');
   const header = page.locator('#header');
   await expect(header).toContainText('Laud Tetteh');
-  // DOSSIER §3.2/§3.3: the public title is exact, and "Senior" must never
+  // DOSSIER §3.2/§3.3: the public label is bounded, and "Senior" must never
   // appear. Scope the negative assertion to the whole page, not #header — the
   // regression it guards ("Senior Dev." twice) lived in #experience, so a
   // header-scoped check would be vacuous.
   // The hero role line is a trade descriptor (#117 item 8), deliberately not the
-  // employer job title. The exact Salesforce title `Software Engineer (MTS)` still
-  // appears on the Experience entry, which is what a reference check verifies.
+  // employer job title. The public Experience label omits the internal level marker.
   await expect(header).toContainText('Full Stack Software Engineer');
   await expect(page.locator('body')).not.toContainText('Senior');
+  await expect(page.locator('body')).not.toContainText('MTS');
   await expect(header.locator('a[href="#about"]')).toBeVisible();
   await expect(header.locator('a[href="https://github.com/laudtetteh"]')).toBeVisible();
   await expect(header.locator('a[href="https://www.linkedin.com/in/laudtetteh"]')).toBeVisible();

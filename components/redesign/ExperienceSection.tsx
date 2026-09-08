@@ -79,7 +79,7 @@ interface Testimonial {
  * Work history. Content is governed by `docs/career/WEBSITE-CONTENT-SPEC.md` §C,
  * which cites a dossier item ID for every claim. Three rules bind this file:
  *
- * 1. **Title.** "Software Engineer (MTS)" — never "Senior", "Lead", "Staff" or
+ * 1. **Title.** "Software Engineer" — the public label omits the internal level marker; never "Senior", "Lead", "Staff" or
  *    "Principal" (§3.3). The previous version used "Senior Dev." twice.
  * 2. **Attribution.** Tableau CI/CD is an *inherited* system (§6.2): use
  *    co-own / maintain / optimized / improved, never built / designed / own of
@@ -94,7 +94,7 @@ interface Testimonial {
 const experience: ExperienceEntry[] = [
   {
     dateRange: 'Oct 2021 – Present',
-    title: 'Software Engineer (MTS)',
+    title: 'Software Engineer',
     company: 'Salesforce',
     companyHref: 'https://www.salesforce.com',
     subtitle: 'Tableau Marketing Engineering',
