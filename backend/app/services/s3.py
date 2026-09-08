@@ -51,6 +51,18 @@ def generate_presigned_upload_url(
     except Exception as e:
         raise RuntimeError(f"Error generating presigned URL: {str(e)}") from e
 
+
+def generate_presigned_download_url(key: str, *, expires_in: int = 300) -> str:
+    """Generate a short-lived URL for reading a private S3 object."""
+    try:
+        return s3_client.generate_presigned_url(
+            ClientMethod="get_object",
+            Params={"Bucket": S3_BUCKET, "Key": key},
+            ExpiresIn=expires_in,
+        )
+    except Exception as e:
+        raise RuntimeError(f"Error generating presigned download URL: {str(e)}") from e
+
 # New: List all images in uploads/ directory
 
 def list_uploaded_images():

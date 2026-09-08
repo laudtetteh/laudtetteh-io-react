@@ -14,7 +14,13 @@ from core.auth import verify_token
 from fastapi import APIRouter, Depends, HTTPException, Path
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from services.s3 import CV_PREFIX, delete_image, generate_presigned_upload_url, list_uploaded_images
+from services.s3 import (
+    CV_PREFIX,
+    delete_image,
+    generate_presigned_download_url,
+    generate_presigned_upload_url,
+    list_uploaded_images,
+)
 
 router = APIRouter()
 cv_uploads_collection = None
@@ -108,12 +114,23 @@ async def get_current_cv():
 @router.get("/cv/download")
 async def download_current_cv():
     """
-    Stable public CV URL. Redirects to the current retained S3 version.
+    Stable public CV URL. Redirects to a signed URL for the current retained S3 version.
     """
     document = await get_current_cv_document()
     if not document:
         raise HTTPException(status_code=404, detail="No CV has been uploaded")
-    return RedirectResponse(document["file_url"], status_code=307)
+    key = document.get("key", "")
+    if (
+        not isinstance(key, str)
+        or not key.startswith(CV_PREFIX)
+        or not key.lower().endswith(".pdf")
+    ):
+        raise HTTPException(status_code=500, detail="Current CV has an invalid storage key")
+    try:
+        download_url = generate_presigned_download_url(key)
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail="Unable to prepare the CV download") from e
+    return RedirectResponse(download_url, status_code=307)
 
 
 @router.get("/admin/cv/versions", dependencies=[Depends(verify_token)])

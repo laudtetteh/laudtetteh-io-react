@@ -13,15 +13,31 @@ export default function UseAuthRedirect(): boolean {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // Small delay to allow localStorage to be updated
-      await new Promise(resolve => setTimeout(resolve, 50));
-
       const token = localStorage.getItem("token");
 
       if (!token) {
         const encodedPath = encodeURIComponent(router.asPath);
         router.replace(`/admin/login?redirect-to=${encodedPath}`);
-      } else {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/session`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          const encodedPath = encodeURIComponent(router.asPath);
+          router.replace(`/admin/login?redirect-to=${encodedPath}`);
+          return;
+        }
+
+        // Keep the page available for transient API failures; protected requests
+        // still handle their own errors, while invalid credentials are redirected.
+        setIsChecking(false);
+      } catch {
         setIsChecking(false);
       }
     };

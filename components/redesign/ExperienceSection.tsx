@@ -251,7 +251,7 @@ export default function ExperienceSection({ cvHref }: ExperienceSectionProps) {
       className="mb-16 scroll-mt-16 bg-slate-50 dark:bg-slate-900 md:mb-24 lg:mb-36 lg:scroll-mt-24"
     >
       <MobileSectionTitle title="Experience" />
-      <div className="mx-auto max-w-4xl px-6 sm:px-10 lg:px-16">
+      <div className="mx-auto max-w-4xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <h2
             id="experience-heading"

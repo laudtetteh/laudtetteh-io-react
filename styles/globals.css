@@ -53,3 +53,11 @@ html[data-route='redesign']:not(.dark) body {
 html[data-route='redesign'] {
   font-feature-settings: 'cv02', 'cv11', 'ss03';
 }
+
+/* Match the reference shell's 26px reading rhythm and antialiased Inter
+ * rendering. Components with deliberate compact leading (for example, the
+ * text-sm timeline rows) still override this through their Tailwind classes. */
+html[data-route='redesign'] .font-inter {
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.625;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import UseAuthRedirect from "@/lib/UseAuthRedirect";
 import { useFlashMessage } from "@/lib/useFlashMessage";
@@ -29,6 +30,7 @@ const cvDownloadHref = (version: CvVersion) => (
 );
 
 export default function AdminCv() {
+  const router = useRouter();
   const isCheckingAuth = UseAuthRedirect();
   const { pushMessage } = useFlashMessage();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,17 +43,31 @@ export default function AdminCv() {
 
   const currentVersion = versions.find(version => version.is_current);
 
+  const redirectToLogin = () => {
+    localStorage.removeItem("token");
+    const encodedPath = encodeURIComponent(router.asPath);
+    router.replace(`/admin/login?redirect-to=${encodedPath}`);
+  };
+
   const fetchVersions = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
     setLoading(true);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/cv/versions`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.ok) {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BROWSER}/api/admin/cv/versions`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 401) {
+        redirectToLogin();
+        return;
+      }
+      if (!res.ok) throw new Error("Failed to load CV versions.");
       setVersions(await res.json());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load CV versions.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -107,6 +123,10 @@ export default function AdminCv() {
           size: selectedFile.size,
         }),
       });
+      if (uploadUrlRes.status === 401) {
+        redirectToLogin();
+        return;
+      }
       if (!uploadUrlRes.ok) throw new Error("Failed to prepare the CV upload.");
       const { upload_url, file_url, key } = await uploadUrlRes.json();
 
@@ -132,6 +152,10 @@ export default function AdminCv() {
           phone_number_confirmed_absent: confirmedNoPhone,
         }),
       });
+      if (publishRes.status === 401) {
+        redirectToLogin();
+        return;
+      }
       if (!publishRes.ok) {
         const payload = await publishRes.json().catch(() => ({}));
         throw new Error(payload.detail || "Failed to publish the CV.");
